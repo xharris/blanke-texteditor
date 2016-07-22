@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Insert this line above script imports  -->
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+    <!-- jQuery -->
+    <script src="includes/jquery/jquery-2.2.0.min.js"></script>
+    <script src="includes/jquery/colResizable-1.5.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="includes/font-awesome/css/font-awesome.min.css"/>
+
+    <!-- oCanvas -->
+    <script src="includes/oCanvas/ocanvas-2.8.4.min.js"></script>
+
+    <!-- jqTree -->
+    <script src="includes/jqTree/tree.jquery.js"></script>
+    <link rel="stylesheet" href="includes/jqTree/jqtree.css"/>
+
+    <!-- npm modules -->
+    <script src="node_modules/fs-extra/lib/index.js"></script>
+    <script src="node_modules/keystate/keystate.js"></script>
+
+    <link rel="stylesheet" href="main.css"/>
+
+    <script src="js/main.js"></script>
+    <script src="js/library.js"></script>
+    <script src="js/modals/modal_object.js"></script>
+    <script src="js/modals/modal_region.js"></script>
+    <script src="js/canvas.js"></script>
+    <script src="js/extra_box.js"></script>
+    <script src="js/tree.js"></script>
+
+    <!-- Insert this line after script imports -->
+    <script>if (window.module) module = window.module;</script>
+
+</head>
+<title>Blanke IDE</title>
+<body>
+
+    <div id="main_window">
+        <div id="library" class="no-select"></div>
+
+        <div id="modals">
+            <div id="modal_object">
+
+                <div id="buttons">
+                    <button id="btn_code" onclick="editCode()"><i class="fa fa-code"></i></button>
+                    <button id="btn_delete"><i class="fa fa-trash-o"></i></button>
+
+                    <button id="btn_close" onclick="closeObjectModal()"><i class="fa fa-times"></i></button>
+                    <!--button id="btn_save"><i class="fa fa-floppy-o"></i></button-->
+                </div>
+
+                <div id="titles" class="no-select">
+                    <p id="title1">properties</p>
+                    <p id="title2">sprites</p>
+                </div>
+
+                <div class="properties">
+                    <table>
+                        <tr>
+                            <td>Name</td>
+                            <td><input id="in_obj_name" type="text" value="object0"/></td>
+                        </tr>
+                        <tr>
+                            <td>Depth</td>
+                            <td><input id="in_obj_depth" type="number" value="0"/></td>
+                        </tr>
+                        <tr>
+                            <td>ID</td>
+                            <td><input id="in_obj_id" type="number" value="0" disabled/></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div id="sprites">
+
+                    <button id="btn_add_sprite" onclick="chooseSprite()"><i class="fa fa-plus"></i></button>
+                    <input style="display:none;" id="spriteFileDialog" type="file" />
+
+                </div>
+
+            </div>
+
+            <div id="modal_sprite">
+                <div id="buttons">
+                    <button id="btn_close" onclick="closeSpriteModal()"><i class="fa fa-times"></i></button>
+                    <button id="btn_save" onclick="saveSpriteModal()"><i class="fa fa-floppy-o"></i></button>
+                </div>
+
+                <div class="properties">
+                    <table>
+                        <tr>
+                            <td>Name</td>
+                            <td><input id="in_spr_name" type="text"/></td>
+                        </tr>
+                        <tr>
+                            <td>Width</td>
+                            <td><input id="in_spr_width" type="number" value="0" disabled/></td>
+                        </tr>
+                        <tr>
+                            <td>Height</td>
+                            <td><input id="in_spr_height" type="number" value="0" disabled/></td>
+                        </tr>
+                        <tr>
+                            <td>Rows</td>
+                            <td><input id="in_spr_rows" type="number" value="1"/></td>
+                        </tr>
+                        <tr>
+                            <td>Columns</td>
+                            <td><input id="in_spr_columns" type="number" value="1"/></td>
+                        </tr>
+                        <tr>
+                            <td>Frames</td>
+                            <td><input id="in_spr_frames" type="number" value="1"/></td>
+                        </tr>
+                        <tr>
+                            <td>Speed</td>
+                            <td><input id="in_spr_speed" type="number" value="1"/></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="preview"></div>
+            </div>
+
+            <div id="modal_region">
+                <input id="in_region_color" type="color">
+                <input id="in_region_name" type="text"/>
+                <div class="buttons">
+                    <button class="btn_close" onclick="closeRegionModal()"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="extra_box">
+            <p class="m_coordinates">(0,0)</p>
+            <!-- <input class="m_zoom" type="number" value="100"/>% -->
+        </div>
+
+        <div class="canvas_container">
+            <canvas id="canvas" class="hidden"></canvas>
+        </div>
+
+        <input style="display:none;" id="pj_open_dialog" type="file" />
+    </div>
+</body>
+</html>

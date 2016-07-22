@@ -1,0 +1,39 @@
+// main: main.less
+
+.hidden {
+    display: none;
+}
+
+.no-select{
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.win-drag{
+  -webkit-app-region: drag;
+}
+.win-nodrag{
+  -webkit-app-region: no-drag;
+}
+
+// add :hover{background-color,border-color}
+.btn-circle{
+  background-color:white;
+  color:black;
+  border:1px solid black;
+  height: 34px;
+  width: 34px;
+  border-radius: 100%;
+  font-size: 18px;
+  margin: 0px 4px;
+  transition: all 0.2s ease-in-out;
+
+  &:hover{
+    color:white;
+    cursor:pointer;
+  }
+}

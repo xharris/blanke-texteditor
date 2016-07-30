@@ -35,7 +35,11 @@ $.fn.comboBox = function(in_values) {
         }
 
         cb_selectOption(values[sel_index]);
-        values[sel_index]['action'](values[sel_index]);
+        try {
+            values[sel_index]['action'](values[sel_index]);
+        } catch (e) {
+            
+        }
     });
 
     el_selected.innerHTML = in_values[values[0]]['html'];

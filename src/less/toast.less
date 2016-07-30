@@ -1,0 +1,26 @@
+.toast-container {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+    z-index: 90;
+    text-align: right;
+
+    .toast {
+        .box-shadow();
+        .roboto();
+
+        border-radius: 2px;
+        background-color: white;
+        padding: 5px;
+        margin: 5px;
+        display: inline-block;
+
+        >.btn-close {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+        }
+    }
+}

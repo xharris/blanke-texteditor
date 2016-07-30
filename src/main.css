@@ -5,7 +5,7 @@
   bottom: 0;
   left: 0;
 }
-.ace_gutter.ace-chrome {
+.ace-chrome .ace-gutter {
   background: white !important;
 }
 .hidden {
@@ -39,6 +39,9 @@
 .btn-circle:hover {
   color: white;
   cursor: pointer;
+}
+.box-shadow {
+  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.23);
 }
 .combo-box .combo-box-option-selected {
   height: 30px;
@@ -108,6 +111,19 @@
   font-size: 35px;
   margin-bottom: 10px;
 }
+.label {
+  text-transform: uppercase;
+  font-size: 12px;
+  padding: 2px;
+  border-radius: 2px;
+  border-style: outset;
+  border-width: 1px;
+}
+.label-red {
+  background-color: red;
+  border-color: red;
+  color: white;
+}
 .search-bar-container {
   height: 30px;
   position: relative;
@@ -122,6 +138,7 @@
   border: none;
   outline: none;
   text-align-last: center;
+  cursor: pointer;
   -webkit-appearance: none;
   -moz-appearance: none;
   text-indent: 1px;
@@ -153,9 +170,35 @@
   outline: none;
   border-bottom: 1px solid #dcdcdc;
 }
+.toast-container {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  width: 100%;
+  z-index: 90;
+  text-align: right;
+}
+.toast-container .toast {
+  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.23);
+  font-family: 'Roboto', sans-serif;
+  border-radius: 2px;
+  background-color: white;
+  padding: 5px;
+  margin: 5px;
+  display: inline-block;
+}
+.toast-container .toast > .btn-close {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
 @font-face {
   font-family: "Roboto";
   src: url("includes/roboto/Roboto-Regular.ttf") format("truetype");
+}
+.roboto {
+  font-family: 'Roboto', sans-serif;
 }
 html,
 body {

@@ -27,7 +27,7 @@ function createWindow () {
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
 
-    mainWindow.setMenu(null);
+  mainWindow.setMenu(null);
 }
 
 // Emitted when the window is closed.
@@ -69,3 +69,7 @@ ipcMain.on('open-file-dialog', function (event) {
     if (files) event.sender.send('selected-directory', files)
   })
 })
+
+ipcMain.on('show-dev-tools', function(event) {
+    mainWindow.webContents.openDevTools();
+});

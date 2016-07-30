@@ -11,6 +11,9 @@
     "scripts": {
         "start": "grunt && electron ."
     },
+    "webkit": {
+      "plugin": true
+    },
     "dependencies": {
         "fs-extra": "^0.26.5",
         "image-size": "^0.4.0"

@@ -24,7 +24,9 @@
 
     <link rel="stylesheet" href="main.css" media="screen"/>
 
+    <script src="js/suggestions.js"></script>
     <script src="js/comboBox.js"></script>
+    <script src="js/toast.js"></script>
     <script src="js/main.js"></script>
 
     <!-- Insert this line after script imports -->
@@ -40,15 +42,17 @@
             <div class="input-wrapper">
                 <input type="text" id="in-search" placeholder="search">
             </div>
+            <div class="suggestions">
+                <div class="suggestion-container">php_file.php</div>
+            </div>
         </div>
 
         <div id="editor">
-            function foo(items) {
-            var x = "All this is syntax highlighted";
-            return x;
-            }
+function foo(items) {
+    var x = "All this is syntax highlighted";
+    return x;
+}
         </div>
-
 
         <div class="filedrop-overlay inactive">
             <div class="inner-border">
@@ -58,6 +62,8 @@
                 </div>
             </div>
         </div>
+
+        <div class="toast-container"></div>
     </div>
 </body>
 </html>

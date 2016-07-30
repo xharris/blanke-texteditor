@@ -1,0 +1,31 @@
+.combo-box {
+    .combo-box-option-selected {
+        height: 30px;
+        line-height: 30px;
+    }
+
+    .combo-box-option-container {
+        position: absolute;
+        top: 30px;
+        z-index: 100;
+        border: 1px solid black;
+        border-radius: 2px;
+        padding: 2px;
+        background-color: white;
+        visibility: hidden;
+
+        &.active {
+            visibility: visible;
+        }
+
+        .combo-box-option {
+            outline: none;
+            border: none;
+            text-align: center;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            font-size: 16px;
+            background-color: transparent;
+        }
+    }
+}

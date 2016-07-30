@@ -1,0 +1,50 @@
+.filedrop-overlay {
+    position: absolute;
+    z-index: 100;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: rgba(0,0,0,0.75);
+    pointer-events: none;
+
+    transition: all 0.2s ease-in-out;
+
+    &.inactive {
+        background-color: rgba(0,0,0,0);
+
+        *{
+            display: none !important;
+        }
+    }
+
+    >.inner-border {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        margin: 10px;
+        border: 5px dashed white;
+        border-radius: 30px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        >.text-container {
+            margin: 0;
+
+            >*{
+                margin: 0px;
+                color: white;
+            }
+
+            >.title {
+                font-weight: 900;
+                font-size: 35px;
+                margin-bottom: 10px;
+            }
+        }
+    }
+}

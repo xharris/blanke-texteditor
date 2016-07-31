@@ -43,9 +43,29 @@
 .box-shadow {
   box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.23);
 }
+.combo-box {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: color 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out;
+}
 .combo-box .combo-box-option-selected {
   height: 30px;
   line-height: 30px;
+}
+.combo-box .combo-box-option-selected.white * {
+  color: white;
+}
+.combo-box .combo-box-option-selected.black * {
+  color: black;
+}
+.combo-box .combo-box-option-selected span {
+  margin-left: 6px;
+  text-transform: uppercase;
 }
 .combo-box .combo-box-option-container {
   position: absolute;
@@ -129,16 +149,20 @@
   position: relative;
   margin: 5px;
 }
+.search-bar-container *:not(i) {
+  font-family: 'Roboto', sans-serif;
+}
 .search-bar-container .search-type {
   position: absolute;
   top: 0px;
   left: 0px;
-  width: 30px;
+  width: 75px;
   height: 30px;
   border: none;
   outline: none;
-  text-align-last: center;
   cursor: pointer;
+  padding-left: 5px;
+  border-radius: 5px;
   -webkit-appearance: none;
   -moz-appearance: none;
   text-indent: 1px;
@@ -152,7 +176,7 @@
   position: absolute;
   height: 30px;
   top: 0px;
-  left: 35px;
+  left: 76px;
   right: 0px;
   bottom: 0px;
 }
@@ -169,6 +193,23 @@
 .search-bar-container .input-wrapper > input:focus {
   outline: none;
   border-bottom: 1px solid #dcdcdc;
+}
+.suggestions {
+  position: relative;
+  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.23);
+  /* height: 30px; */
+  top: 5px;
+  left: 0px;
+  bottom: 0px;
+  z-index: 90;
+  background-color: white;
+  border-radius: 2px;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+.suggestions.active {
+  opacity: 1;
 }
 .toast-container {
   position: fixed;

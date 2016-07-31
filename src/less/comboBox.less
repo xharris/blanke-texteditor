@@ -1,7 +1,27 @@
 .combo-box {
+    .no-select();
+
+    transition: color 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
+
     .combo-box-option-selected {
         height: 30px;
         line-height: 30px;
+
+        &.white {
+            *{
+                color: white;
+            }
+        }
+        &.black {
+            *{
+                color: black;
+            }
+        }
+        span {
+            margin-left: 6px;
+            text-transform: uppercase;
+        }
     }
 
     .combo-box-option-container {

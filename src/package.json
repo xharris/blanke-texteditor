@@ -1,32 +1,40 @@
 {
-  "name": "textedit",
-  "description": "Attempt at simple text editor",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/xharris/texteditor.git"
-  },
-  "main": "main.js",
-  "author": "Xavier Harris <xhh950@gmail.com> (http://xhhstuff.me)",
-  "license": "CC-BY-NC-SA-4.0",
-  "scripts": {
-    "start": "grunt && electron ."
-  },
-  "webkit": {
-    "plugin": true
-  },
-  "dependencies": {
-    "fs-extra": "^0.26.5",
-    "image-size": "^0.4.0"
-  },
-  "devDependencies": {
-    "electron-prebuilt": "^1.2.0",
-    "file-finder": "^0.1.2",
-    "find": "^0.2.7",
-    "find-file": "^1.0.1",
-    "grunt": "^1.0.1",
-    "grunt-contrib-less": "^1.3.0",
-    "keystate": "^0.0.1",
-    "mdi": "^1.6.50",
-    "simple-grep": "0.0.1"
-  }
+    "name": "BlankE",
+    "description": "Attempt at simple text editor",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/xharris/texteditor.git"
+    },
+    "main": "main.js",
+    "author": "Xavier Harris <xhh950@gmail.com> (http://xhhstuff.me)",
+    "license": "CC-BY-NC-SA-4.0",
+    "scripts": {
+        "start": "grunt && electron .",
+        "build": "electron-packager . BlankE --all --out=../dist"
+    },
+    "webkit": {
+        "plugin": true
+    },
+    "dependencies": {
+        "fs-extra": "^0.26.5",
+        "image-size": "^0.4.0"
+    },
+    "devDependencies": {
+        "electron-prebuilt": "^1.2.0",
+        "file-finder": "^0.1.2",
+        "find": "^0.2.7",
+        "find-file": "^1.0.1",
+        "grunt": "^1.0.1",
+        "grunt-contrib-less": "^1.3.0",
+        "keystate": "^0.0.1",
+        "mdi": "^1.6.50",
+        "simple-grep": "0.0.1"
+    },
+    "build": {
+        "appID": "blanke",
+        "app-category-type": "public.app-category.developer-tools",
+        "win": {
+            "iconURL": "https://raw.githubusercontent.com/xharris/texteditor/master/src/build/icon.ico"
+        }
+    }
 }

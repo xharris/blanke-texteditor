@@ -15,11 +15,13 @@
     transition: opacity 0.2s ease-in-out;
     opacity: 0;
     overflow: hidden;
+    pointer-events: none;
 
     transition: opacity 0.2s ease-in-out;
 
     &.active {
         opacity: 1;
+        pointer-events: all;
     }
 
     .suggestion {

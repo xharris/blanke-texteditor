@@ -42,7 +42,7 @@ var findFile = {
 
         // previous suggestion (higher priority)
         for (var r = 0; r < ide_data['recent_files'].length; r++) {
-            var file_path = normalizePath(ide_data['recent_files'][r]);
+            var file_path = normalizePath(ide_data['recent_files'][r]).replace(curr_project,'');
             var prev_path = nwPATH.basename(file_path);
 
             if (prev_path.startsWith(input)) {

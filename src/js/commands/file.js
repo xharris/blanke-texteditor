@@ -23,7 +23,7 @@ folder
 
 var findFile = {
     suggest: function(input) {
-        var input_parts = input.split('\\');
+        var input_parts = input.split('/');
         var html = [];
 
         var files = proj_tree.children;
@@ -42,7 +42,7 @@ var findFile = {
 
         // create html suggestion array
         for (var f = 0; f < files.length; f++) {
-            var file_path = files[f].path.replace(/\//g, '\\').replace(curr_project,'');
+            var file_path = normalizePath(files[f].path).replace(curr_project,'');
 
             if (file_path.includes(input)) {
 

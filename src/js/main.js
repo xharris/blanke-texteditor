@@ -114,11 +114,10 @@ $(function(){
         var special_chars = {
             16: 'mdi-chevron-up', // shift
             20: 'mdi-chevron-double-up', // caps lock
-            224: 'mdi-apple-keyboard-command', // apple command key
+            91: 'mdi-apple-keyboard-command', // apple META/command key
+            93: 'mdi-apple-keyboard-command', // apple META/command key
         }
-
-        console.log(Object.keys(special_chars))
-        console.log(Object.keys(special_chars).includes(keyCode))
+        
         if (Object.keys(special_chars).includes(keyCode+"")) {
             key = '<i class="mdi ' + special_chars[keyCode] + '"></i>';
         }
@@ -236,7 +235,7 @@ function addProjectFolder(path) {
 function setProjectFolder(path) {
     $(".suggestions").removeClass("active");
     // set current project in settings
-    ide_data['current_project'] = path;
+    ide_data['current_project'] = normalizePath(path);
 
     // set current project in ide
     for (var p = 0; p < ide_data['project_paths'].length; p++) {
@@ -252,6 +251,10 @@ function setProjectFolder(path) {
             proj_tree = dirTree(curr_project);
         }
     });
+}
+
+function normalizePath(path) {
+    return path.replace(/(\/|\\)/g, '/');
 }
 
 function addCommands(new_commands) {

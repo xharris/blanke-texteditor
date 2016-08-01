@@ -24,6 +24,7 @@
 
     <link rel="stylesheet" href="main.css" media="screen"/>
 
+    <script src="js/api/editor.js"></script>
     <script src="js/suggestions.js"></script>
     <script src="js/comboBox.js"></script>
     <script src="js/toast.js"></script>
@@ -42,14 +43,14 @@
         <div class="search-bar-container">
             <div class="search-type"></div>
             <div class="input-wrapper">
-                <input type="text" id="in-search" placeholder="search">
+                <input type="text" id="in-search" placeholder="search" tabindex="0">
 
             <div class="suggestions">
-                <div class="suggestion-container">php_file.php</div>
+                <div class="suggestion-container"></div>
             </div></div>
         </div>
 
-        <div id="editor"></div>
+        <div id="editor" tabindex="1000"></div>
 
         <div class="filedrop-overlay inactive">
             <div class="inner-border">
@@ -61,6 +62,10 @@
         </div>
 
         <div class="toast-container"></div>
+
+        <div class="status-bar">
+
+        </div>
     </div>
 </body>
 </html>

@@ -1,5 +1,6 @@
 .suggestions {
     .box-shadow();
+    .roboto();
 
     position: relative;
     box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.23);
@@ -13,10 +14,25 @@
     padding: 10px;
     transition: opacity 0.2s ease-in-out;
     opacity: 0;
+    overflow: hidden;
 
     transition: opacity 0.2s ease-in-out;
 
     &.active {
         opacity: 1;
+    }
+
+    .suggestion {
+        .no-select();
+
+        margin-bottom: 5px;
+        padding: 2px;
+
+        transition: all 0.2s ease-in-out;
+
+        &.highlighted, &:focus {
+            outline: none;
+            background-color: gray;
+        }
     }
 }

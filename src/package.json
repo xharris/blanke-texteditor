@@ -20,6 +20,9 @@
   },
   "devDependencies": {
     "electron-prebuilt": "^1.2.0",
+    "file-finder": "^0.1.2",
+    "find": "^0.2.7",
+    "find-file": "^1.0.1",
     "grunt": "^1.0.1",
     "grunt-contrib-less": "^1.3.0",
     "keystate": "^0.0.1",

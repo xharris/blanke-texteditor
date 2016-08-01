@@ -37,7 +37,7 @@ function addToast(options) {
     $(el_toast_container).append(el_toast);
     $(el_toast_container).append(el_newline);
 
-    $(el_toast).fadeIn(300);
+    $(el_toast).show();
 
 
 }

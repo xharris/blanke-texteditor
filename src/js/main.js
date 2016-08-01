@@ -9,7 +9,8 @@ var eIPC = require('electron').ipcRenderer;
 
 var ide_data = {
     project_paths: [],  // folders dropped in the ide
-    unsaved_text: {},   // save text from unsaved files
+    unsaved_text: {},   // save text from unsaved files from each project
+    recent_files: {},   // recently searched files from each project
     current_project: ''
 };
 
@@ -18,7 +19,9 @@ var labels = {
 };
 
 var editor;
-var curr_project = {};
+var curr_project;
+var curr_folder;
+var proj_tree = [];
 var re_file_ext = /(?:\.([^.]+))?$/;
 
 var search_box_options = {
@@ -86,12 +89,6 @@ $(function(){
                 var folder_name = nwPATH.basename(in_path);
 
                 addProjectFolder(in_path)
-
-                addToast({
-                    message: 'added ' + labels['project'] + ' ' + folder_name,
-                    can_dismiss: true,
-                    timeout: 1500
-                });
             }
             else if (file_type.isFile()) {
                 addToast({
@@ -108,6 +105,46 @@ $(function(){
 
     $(".search-type").comboBox(search_box_options);
 });
+
+function indexDir(path) {
+    nwFILE.readdir(path, function(err, files){
+        for (var f = 0; f < files.length; f++) {
+            var file = nwPATH.join(path, files[f]);
+
+            console.log(file);
+            var file_type = nwFILE.lstatSync(file);
+
+            if (file_type.isDirectory()) {
+                var next_path = file;
+                proj_tree.concat(indexDir(nwPATH.join(path,files[f])));
+            } else if (file_type.isFile()) {
+                proj_tree.push(file);
+            }
+        }
+    });
+}
+
+function dirTree(filename) {
+    var stats = nwFILE.lstatSync(filename),
+        info = {
+            path: filename,
+            name: nwPATH.basename(filename)
+        };
+
+    if (stats.isDirectory()) {
+        info.type = "folder";
+        info.children = nwFILE.readdirSync(filename).map(function(child) {
+            return dirTree(filename + '/' + child);
+        });
+    } else {
+        // Assuming it's a file. In real life it could be a symlink or
+        // something else!
+        info.type = "file";
+    }
+
+    // proj_tree.push(info.path.replace(curr_project, '')); // my custom line
+    return info;
+}
 
 function searchTypeChange(new_type) {
     console.log('changed ' + new_type)
@@ -155,9 +192,12 @@ function loadData(path) {
 function addProjectFolder(path) {
     var folder_name = nwPATH.basename(path);
 
-    ide_data['project_paths'].push({
-        name: folder_name,
-        path: path
+    ide_data['project_paths'].push(path);
+
+    addToast({
+        message: 'added ' + labels['project'] + ' ' + folder_name,
+        can_dismiss: true,
+        timeout: 750
     });
 
     setProjectFolder(path);
@@ -170,11 +210,14 @@ function setProjectFolder(path) {
     ide_data['current_project'] = path;
 
     // set current project in ide
-    for (var p = 0; p < ide_data['project_paths']; p++) {
-        if (ide_data['project_paths'][p]['path'] === path) {
-            curr_project = ide_data['project_paths'][p]['path']
+    for (var p = 0; p < ide_data['project_paths'].length; p++) {
+        if (ide_data['project_paths'][p] === path) {
+            curr_project = ide_data['project_paths'][p];
         }
     }
+
+    proj_tree = dirTree(path);
+    console.log(proj_tree);
 }
 
 function addCommands(new_commands) {
@@ -182,13 +225,9 @@ function addCommands(new_commands) {
 
     for (var k = 0; k < keys.length; k++) {
         var key = keys[k];
-        for (var c = 0; c < new_commands[keys[k]].length; c++) {
-            if (!Object.keys(commands).includes(key)) {
-                commands[key] = [];
-            }
-            commands[key].push(new_commands[key][c]);
+        if (!Object.keys(commands).includes(key)) {
+            commands[key] = [];
         }
+        commands[key].push(new_commands[key]);
     }
-
-    console.log(commands);
 }

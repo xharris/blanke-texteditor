@@ -7,6 +7,7 @@ const BrowserWindow = electron.BrowserWindow
 
 const {ipcMain} = require('electron');
 const {ipcRenderer} = require('electron');
+const {globalShortcut} = require('electron');
 const dialog = require('electron').dialog
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -24,10 +25,11 @@ function createWindow () {
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`)
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
-
   mainWindow.setMenu(null);
+
+  globalShortcut.register('Control+R', () => {
+      mainWindow.webContents.send("focus-search");
+  });
 }
 
 // Emitted when the window is closed.
@@ -52,6 +54,11 @@ app.on('window-all-closed', function () {
       mainWindow = null;
   });
   app.quit();
+})
+
+app.on('will-quit', () => {
+    // Unregister all shortcuts.
+    globalShortcut.unregisterAll();
 })
 
 app.on('activate', function () {

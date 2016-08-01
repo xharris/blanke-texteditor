@@ -1,7 +1,9 @@
 var IDE_NAME = "TextEditor";
+var DEV_MODE = false;
 
 var nwFILE = require('fs');
 var nwPATH = require('path');
+var nwPROC = require('process');
 
 var nwGREP = require('simple-grep');
 
@@ -11,6 +13,7 @@ var ide_data = {
     project_paths: [],  // folders dropped in the ide
     unsaved_text: {},   // save text from unsaved files from each project
     recent_files: [],   // recently searched files from each project
+    recent_ide_commands: [], // recently used ide commands
     curr_file: '',      // currently opened file
     current_project: ''
 };
@@ -20,6 +23,7 @@ var labels = {
 };
 
 var editor, aceModeList;
+var data_path;
 var curr_project;
 var curr_folder;
 var proj_tree = [];
@@ -56,17 +60,19 @@ $(function(){
         return false;
     }
     */
-
-    loadData('data/ide_data.json');
+    data_path = nwPATH.join(nwPROC.cwd(),'data','ide_data.json');
+    loadData(data_path);
 
     editor = ace.edit("editor");
     aceModeList = ace.require("ace/ext/modelist");
 
-    console.log(aceModeList);
-
     b_editor.setMode('Text');
     editor.setTheme("ace/theme/chrome");
     editor.setFontSize(14);
+
+    if (DEV_MODE) {
+        b_ide.showDevTools();
+    }
 
     // set events for window close
     eIPC.on('window-close', function(event) {
@@ -74,6 +80,14 @@ $(function(){
             eIPC.send('confirm-window-close');
         });
     });
+
+    eIPC.on('focus-search', function(event) {
+        if (b_search.isFocus()) {
+            $(".search-type").trigger("nextOption");
+        } else {
+            b_search.focus();
+        }
+    })
 
     var drop_mainwin = document.getElementById("main_window");
 	drop_mainwin.ondragover = () => {
@@ -116,6 +130,21 @@ $(function(){
 
     $(".search-type").comboBox(search_box_options);
 
+    $("#in-search").on("keydown", function(evt) {
+        var keyCode = evt.keyCode || evt.which;;
+        var key = evt.key;
+
+        if (evt.ctrlKey && keyCode == 82) {
+            // previous option
+            if (evt.shiftKey) {
+                $(".search-type").trigger("prevOption");
+            }
+            // next option
+            else {
+                $(".search-type").trigger("nextOption");
+            }
+        }
+    });
     $("#editor").on("keydown", function(evt) {
         var keyCode = evt.keyCode || evt.which;;
         var key = evt.key;
@@ -146,12 +175,6 @@ $(function(){
         }
 
         $(".status-bar .keycode").html('<span class="char">' + key + '</span>' + keyCode);
-
-        // focus search box
-        if (evt.ctrlKey && keyCode == 82) {
-            $("#in-search").val('');
-            $("#in-search").focus();
-        }
     });
 
     editor.commands.addCommand({
@@ -162,23 +185,6 @@ $(function(){
     });
 });
 
-function indexDir(path) {
-    nwFILE.readdir(path, function(err, files){
-        for (var f = 0; f < files.length; f++) {
-            var file = nwPATH.join(path, files[f]);
-
-            console.log(file);
-            var file_type = nwFILE.lstatSync(file);
-
-            if (file_type.isDirectory()) {
-                var next_path = file;
-                proj_tree.concat(indexDir(nwPATH.join(path,files[f])));
-            } else if (file_type.isFile()) {
-                proj_tree.push(file);
-            }
-        }
-    });
-}
 
 function dirTree(filename) {
     var stats = nwFILE.lstatSync(filename),
@@ -203,7 +209,6 @@ function dirTree(filename) {
 }
 
 function searchTypeChange(new_type) {
-    console.log('changed ' + new_type)
     _search_type = new_type;
 }
 
@@ -219,7 +224,7 @@ function saveData() {
 
     // save file
     nwFILE.writeFileSync(
-        nwPATH.join('data','ide_data.json'),
+        data_path,
         JSON.stringify(ide_data),
         {
             flag: 'w+'

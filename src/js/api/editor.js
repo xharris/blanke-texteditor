@@ -25,7 +25,7 @@ $(function(){
                             $("#suggestions").removeClass("active");
                             editor.setValue(data);
                             editor.clearSelection();
-                            editor.focus();
+                            this.focus();
                         }
                     });
                 }
@@ -39,7 +39,6 @@ $(function(){
         saveFile: function() {
             if (ide_data['curr_file'] === '') {
                 try {
-                    console.log('save ' + ide_data['curr_file'])
                     nwFILE.writeFileSync(
                         ide_data['curr_file'],
                         editor.getValue(),
@@ -60,6 +59,10 @@ $(function(){
         setModeFromFile: function(file) {
             var mode = aceModeList.getModeForPath(file).mode;
             editor.getSession().setMode(mode);
+        },
+
+        focus: function(file) {
+            editor.focus();
         }
     }
 });

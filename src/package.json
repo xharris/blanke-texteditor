@@ -10,7 +10,7 @@
     "license": "CC-BY-NC-SA-4.0",
     "scripts": {
         "start": "grunt && electron .",
-        "build": "electron-packager . BlankE --all --out=../dist"
+        "build": "electron-packager . BlankE --platform=mas,darwin --asar-unpack-dir=data --arch=all --overwrite --out=../dist"
     },
     "webkit": {
         "plugin": true

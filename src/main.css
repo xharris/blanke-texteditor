@@ -279,6 +279,9 @@
   outline: none;
   cursor: pointer;
 }
+.suggestions .suggestion .options {
+  color: #9e9e9e;
+}
 .toast-container {
   position: fixed;
   bottom: 25px;

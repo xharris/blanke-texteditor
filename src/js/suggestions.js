@@ -58,7 +58,7 @@ $(function(){
         else if (keyCode == 27) {
             $("#in-search").val('');
             $(".suggestions").removeClass("active");
-            editor.focus();
+            b_editor.focus();
         } else {
             $(".suggestion").each(function() {
                 $(this).remove('highlighted');
@@ -80,22 +80,21 @@ $(function(){
 });
 
 function newInput() {
-    if (curr_project != undefined && curr_project != '') {
-        var input_text = this.value;
-        var search_type = getSearchType();
+    var input_text = this.value;
+    var search_type = getSearchType();
 
-        // hide box if nothing is in the search box
-        if (input_text === '') {
-            $(".suggestions").removeClass("active");
-        }
+    // hide box if nothing is in the search box
+    if (input_text === '') {
+        $(".suggestions").removeClass("active");
+    }
 
-        if (Object.keys(commands).includes(search_type)) {
-            for (var c = 0; c < commands[search_type].length; c++) {
-                var html = commands[search_type][c].suggest(input_text);
-                $(".suggestions").html(html);
-                if (html.length > 1) {
-                    $(".suggestions").addClass("active");
-                }
+    if (Object.keys(commands).includes(search_type)) {
+        for (var c = 0; c < commands[search_type].length; c++) {
+            var html = "";
+            html = commands[search_type][c].suggest(input_text);
+            $(".suggestions").html(html);
+            if (html.length > 1) {
+                $(".suggestions").addClass("active");
             }
         }
     }
@@ -107,14 +106,12 @@ function newInput() {
 }
 
 function submitSearch() {
-    if (curr_project != undefined && curr_project != '') {
-        var input_text = $(el_searchbox).val();
-        var search_type = getSearchType();
+    var input_text = $(el_searchbox).val();
+    var search_type = getSearchType();
 
-        if (Object.keys(commands).includes(search_type)) {
-            for (var c = 0; c < commands[search_type].length; c++) {
-                commands[search_type][c].submit(input_text);
-            }
+    if (Object.keys(commands).includes(search_type)) {
+        for (var c = 0; c < commands[search_type].length; c++) {
+            commands[search_type][c].submit(input_text);
         }
     }
 }

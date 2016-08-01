@@ -21,13 +21,26 @@ $.fn.comboBox = function(in_values) {
     $(el_selected).mousedown(function(ev){
         switch (event.which) {
             case 1:
-                sel_index++;
+                cb_moveOption(1);
                 break;
 
             case 3:
-                sel_index--;
+                cb_moveOption(-1);
                 break;
         }
+
+
+    });
+
+    $(el_main).on("nextOption", function() {
+        cb_moveOption(1);
+    });
+    $(el_main).on("prevOption", function() {
+        cb_moveOption(-1);
+    });
+
+    function cb_moveOption(amt) {
+        sel_index += amt;
 
         if (sel_index < 0) {
             sel_index = values.length - 1;
@@ -40,9 +53,9 @@ $.fn.comboBox = function(in_values) {
         try {
             in_values[values[sel_index]]['action'](values[sel_index]);
         } catch (e) {
-            console.log('nope')
+            console.log(e);
         }
-    });
+    }
 
     function cb_selectOption(val) {
         var icon = in_values[val]['icon'];

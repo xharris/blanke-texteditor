@@ -195,12 +195,34 @@
   border-bottom: 1px solid #dcdcdc;
 }
 .status-bar {
+  font-family: 'Roboto', sans-serif;
   background-color: white;
   position: absolute;
   left: 0px;
   right: 0px;
   bottom: 0px;
-  height: 25px;
+  height: 28px;
+  padding: 0px;
+  z-index: 90;
+}
+.status-bar .keycode {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: inline-block;
+  margin: 4px;
+}
+.status-bar .keycode > .char {
+  border-radius: 100%;
+  background-color: #e0e0e0;
+  height: 20px;
+  width: 20px;
+  display: inline-block;
+  text-align: center;
+  margin-right: 2px;
 }
 .suggestions {
   font-family: 'Roboto', sans-serif;

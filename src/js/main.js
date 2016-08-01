@@ -10,7 +10,8 @@ var eIPC = require('electron').ipcRenderer;
 var ide_data = {
     project_paths: [],  // folders dropped in the ide
     unsaved_text: {},   // save text from unsaved files from each project
-    recent_files: {},   // recently searched files from each project
+    recent_files: [],   // recently searched files from each project
+    curr_file: '',      // currently opened file
     current_project: ''
 };
 
@@ -104,6 +105,33 @@ $(function(){
 	}
 
     $(".search-type").comboBox(search_box_options);
+
+    $("#editor").on("keydown", function(evt) {
+        var keyCode = evt.keyCode || evt.which;;
+        var key = evt.key;
+        // command 224
+
+        var special_chars = {
+            16: 'mdi-chevron-up', // shift
+            20: 'mdi-chevron-double-up', // caps lock
+            224: 'mdi-apple-keyboard-command', // apple command key
+        }
+
+        console.log(Object.keys(special_chars))
+        console.log(Object.keys(special_chars).includes(keyCode))
+        if (Object.keys(special_chars).includes(keyCode+"")) {
+            key = '<i class="mdi ' + special_chars[keyCode] + '"></i>';
+        }
+
+        $(".status-bar .keycode").html('<span class="char">' + key + '</span>' + keyCode);
+    });
+
+    editor.commands.addCommand({
+        name: 'save_file',
+        bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+        exec: b_editor.saveFile(),
+        readOnly: true // false if this command should not apply in readOnly mode
+    });
 });
 
 function indexDir(path) {
@@ -206,6 +234,7 @@ function addProjectFolder(path) {
 }
 
 function setProjectFolder(path) {
+    $(".suggestions").removeClass("active");
     // set current project in settings
     ide_data['current_project'] = path;
 
@@ -217,7 +246,12 @@ function setProjectFolder(path) {
     }
 
     proj_tree = dirTree(path);
-    console.log(proj_tree);
+
+    nwFILE.watch(path, (eventType, filename) => {
+        if (filename) {
+            proj_tree = dirTree(curr_project);
+        }
+    });
 }
 
 function addCommands(new_commands) {

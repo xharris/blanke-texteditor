@@ -30,7 +30,7 @@ $(function(){
                 sugg_index++;
                 if (sugg_index > sugg_count - 1) {
                     sugg_index = 0;
-                    $('.suggestion')[sugg_count - 1].classList.remove('highlighted');
+                    $($('.suggestion')[sugg_count - 1]).removeClass('highlighted');
                 }
             }
             // go down
@@ -53,6 +53,12 @@ $(function(){
             // add highlight to selected
             $('.suggestion')[sugg_index].classList.add('highlighted');
 
+        }
+        // ESCAPE key
+        else if (keyCode == 27) {
+            $("#in-search").val('');
+            $(".suggestions").removeClass("active");
+            editor.focus();
         } else {
             $(".suggestion").each(function() {
                 $(this).remove('highlighted');
@@ -92,6 +98,11 @@ function newInput() {
                 }
             }
         }
+    }
+
+    // hide suggestions if there are none
+    if ($(".suggestions").html().length <= 1) {
+        $(".suggestions").removeClass("active");
     }
 }
 

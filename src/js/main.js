@@ -19,7 +19,7 @@ var labels = {
     project: '<span class="label label-red">project</span>'
 };
 
-var editor;
+var editor, aceModeList;
 var curr_project;
 var curr_folder;
 var proj_tree = [];
@@ -27,13 +27,13 @@ var re_file_ext = /(?:\.([^.]+))?$/;
 
 var search_box_options = {
     file: {
-        icon: 'fa fa-file-o',
+        icon: 'mdi mdi-file-outline',
         color: '#00bcd4',
         text: 'white',
         action: searchTypeChange
     },
-    text: {
-        icon: 'fa fa-font',
+    ide: {
+        icon: 'mdi mdi-application',
         color: '#8bc34a',
         text: 'white',
         action: searchTypeChange
@@ -51,11 +51,21 @@ var commands = {};
 var _search_type = Object.keys(search_box_options)[0];
 
 $(function(){
+    /* prevent page reload
+    window.onbeforeunload = function() {
+        return false;
+    }
+    */
+
     loadData('data/ide_data.json');
 
     editor = ace.edit("editor");
+    aceModeList = ace.require("ace/ext/modelist");
+
+    console.log(aceModeList);
+
+    b_editor.setMode('Text');
     editor.setTheme("ace/theme/chrome");
-    editor.getSession().setMode("ace/mode/javascript");
     editor.setFontSize(14);
 
     // set events for window close
@@ -111,18 +121,37 @@ $(function(){
         var key = evt.key;
         // command 224
 
+        // uses mdi
         var special_chars = {
+            13: 'mdi-keyboard-return', // enter
             16: 'mdi-chevron-up', // shift
             20: 'mdi-chevron-double-up', // caps lock
-            91: 'mdi-apple-keyboard-command', // apple META/command key
-            93: 'mdi-apple-keyboard-command', // apple META/command key
+            32: 'mdi-dots-horizontal', // space
+            91: 'mdi-apple-keyboard-command', // apple META/command
+            93: 'mdi-apple-keyboard-command', // apple META/command
         }
-        
+
+        // doesn't use mdi
+        var special_chars2 = {
+            12: 'Clr', // clear
+            17: 'Ctrl', // ctrl
+            27: 'Esc', // escape
+        }
+
         if (Object.keys(special_chars).includes(keyCode+"")) {
             key = '<i class="mdi ' + special_chars[keyCode] + '"></i>';
         }
+        else if (Object.keys(special_chars2).includes(keyCode+"")) {
+            key = special_chars2[keyCode];
+        }
 
         $(".status-bar .keycode").html('<span class="char">' + key + '</span>' + keyCode);
+
+        // focus search box
+        if (evt.ctrlKey && keyCode == 82) {
+            $("#in-search").val('');
+            $("#in-search").focus();
+        }
     });
 
     editor.commands.addCommand({
@@ -267,4 +296,8 @@ function addCommands(new_commands) {
         }
         commands[key].push(new_commands[key]);
     }
+}
+
+function winSetTitle(new_title) {
+    eIPC.send('set-win-title', new_title)
 }

@@ -17,11 +17,15 @@ $(function(){
 
                     saveData();
 
-                    console.log('opening ' + file_path);
+                    this.setModeFromFile(file_path);
+                    winSetTitle(file_path.replace(curr_project,''));
+
                     nwFILE.readFile(file_path, 'utf-8', function(err, data) {
                         if (!err) {
+                            $("#suggestions").removeClass("active");
                             editor.setValue(data);
                             editor.clearSelection();
+                            editor.focus();
                         }
                     });
                 }
@@ -47,6 +51,15 @@ $(function(){
 
                 }
             }
+        },
+
+        setMode: function(new_mode) {
+            editor.getSession().setMode(new_mode);
+        },
+
+        setModeFromFile: function(file) {
+            var mode = aceModeList.getModeForPath(file).mode;
+            editor.getSession().setMode(mode);
         }
     }
 });

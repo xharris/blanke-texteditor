@@ -73,3 +73,7 @@ ipcMain.on('open-file-dialog', function (event) {
 ipcMain.on('show-dev-tools', function(event) {
     mainWindow.webContents.openDevTools();
 });
+
+ipcMain.on('set-win-title', function(event, title) {
+    mainWindow.setTitle(title);
+});

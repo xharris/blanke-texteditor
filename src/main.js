@@ -18,8 +18,8 @@ function createWindow () {
   mainWindow = new BrowserWindow({
       title: "TextEditor",
       center: true,
-      width: 640,//1200,
-      height: 480//900
+      width: 1200,
+      height: 900
   })
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`)

@@ -40,6 +40,17 @@ var findFile = {
             }
         }
 
+        // previous suggestion (higher priority)
+        for (var r = 0; r < ide_data['recent_files'].length; r++) {
+            var file_path = normalizePath(ide_data['recent_files'][r]);
+            var prev_path = nwPATH.basename(file_path);
+
+            if (prev_path.startsWith(input)) {
+                var result_txt = prev_path.replace(input, "<b>" + input + "</b>");
+                html.push("<div class='suggestion high-priority' tabIndex='$1' data-value='" + file_path + "'>" + result_txt + "<button class='remove-sugg' onclick='b_search.removeSuggestion(\"" + file_path + "\");$(this).parent().remove();'><i class='mdi mdi-close'></i></button></div>");
+            }
+        }
+
         // create html suggestion array
         for (var f = 0; f < files.length; f++) {
             var file_path = normalizePath(files[f].path).replace(curr_project,'');
@@ -48,13 +59,8 @@ var findFile = {
 
                 var result_txt = file_path.replace(input, "<b>" + input + "</b>");
 
-
-                // previous suggestion (higher priority)
-                if (previous_sugg.includes(result_txt)) {
-                    html.splice(0, 0, "<div class='suggestion high-priority' tabIndex='$1' data-value='" + file_path + "'>" + result_txt + "</div>");
-                }
                 // normal priority suggestion
-                else {
+                if (!ide_data['recent_files'].includes(file_path)) {
                     html.push("<div class='suggestion' tabIndex='$1' data-value='" + file_path + "'>" + result_txt + "</div>");
                 }
             }
@@ -68,14 +74,6 @@ var findFile = {
     },
 
     submit: function(input) {
-        if (previous_sugg.includes(input)) {
-            previous_sugg.splice(previous_sugg.indexOf(input), 1, input);
-        }
-        else {
-            // add to previous_sugg array
-            previous_sugg.splice(0, 0, input);
-        }
-
         // open file
         b_editor.setFile(nwPATH.join(curr_project, input));
     }

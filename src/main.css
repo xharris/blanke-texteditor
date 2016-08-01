@@ -2,7 +2,7 @@
   position: absolute;
   top: 40px;
   right: 0;
-  bottom: 0;
+  bottom: 28px;
   left: 0;
 }
 .ace-chrome .ace-gutter {
@@ -203,7 +203,7 @@
   bottom: 0px;
   height: 28px;
   padding: 0px;
-  z-index: 90;
+  z-index: 80;
 }
 .status-bar .keycode {
   -webkit-touch-callout: none;
@@ -252,12 +252,29 @@
   user-select: none;
   margin-bottom: 5px;
   padding: 2px;
+  position: relative;
   transition: all 0.2s ease-in-out;
 }
 .suggestions .suggestion.highlighted,
 .suggestions .suggestion:focus {
   outline: none;
   background-color: gray;
+}
+.suggestions .suggestion.high-priority {
+  color: #512da8;
+}
+.suggestions .suggestion .remove-sugg {
+  position: absolute;
+  right: 0px;
+  height: 23px;
+  width: 23px;
+  text-align: center;
+  padding: 0px;
+  font-size: 18px;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
 }
 .toast-container {
   position: fixed;

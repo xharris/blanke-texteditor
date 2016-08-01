@@ -27,12 +27,31 @@
 
         margin-bottom: 5px;
         padding: 2px;
+        position: relative;
 
         transition: all 0.2s ease-in-out;
 
         &.highlighted, &:focus {
             outline: none;
             background-color: gray;
+        }
+
+        &.high-priority {
+            color: #512da8;
+        }
+
+        .remove-sugg {
+            position: absolute;
+            right: 0px;
+            height: 23px;
+            width: 23px;
+            text-align: center;
+            padding: 0px;
+            font-size: 18px;
+            background: none;
+            border: none;
+            outline: none;
+            cursor: pointer;
         }
     }
 }

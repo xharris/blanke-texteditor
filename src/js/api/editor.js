@@ -3,15 +3,21 @@ var b_editor;
 $(function(){
     b_editor = {
         setFile: function(file_path) {
-            try {
+            //try {
                 file_path = nwPATH.normalize(file_path);
                 var stat = nwFILE.lstatSync(file_path);
 
                 if (stat.isFile()) {
                     // add file to ide_data['recent_files']
-                    ide_data['recent_files'].splice(0,0,nwPATH.basename(file_path));
+                    var new_recent = nwPATH.basename(file_path);
+                    b_search.removeSuggestion(file_path);
+                    b_search.addSuggestion(file_path);
+
                     ide_data['curr_file'] = file_path;
 
+                    saveData();
+
+                    console.log('opening ' + file_path);
                     nwFILE.readFile(file_path, 'utf-8', function(err, data) {
                         if (!err) {
                             editor.setValue(data);
@@ -19,9 +25,11 @@ $(function(){
                         }
                     });
                 }
+                /*
             } catch (e) {
 
             }
+            */
         },
 
         saveFile: function() {

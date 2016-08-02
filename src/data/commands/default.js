@@ -33,12 +33,13 @@ var findFile = {
 
         // previous suggestion (higher priority)
         for (var r = 0; r < ide_data['recent_files'].length; r++) {
-            var file_path = normalizePath(ide_data['recent_files'][r]).replace(curr_project,'');
+            var full_path = normalizePath(ide_data['recent_files'][r]);
+            var file_path = full_path.replace(curr_project,'');
             var prev_path = nwPATH.basename(file_path);
 
             if (prev_path.startsWith(input)) {
                 var result_txt = prev_path.replace(input, "<b>" + input + "</b>");
-                html.push("<div class='suggestion high-priority' tabIndex='$1' data-value='" + file_path + "'>" + result_txt + "<button class='remove-sugg' onclick='b_search.removeSuggestion(\"" + file_path + "\");$(this).parent().remove();'><i class='mdi mdi-close'></i></button></div>");
+                html.push("<div class='suggestion high-priority' tabIndex='$1' data-value='" + file_path + "'>" + result_txt + "<button class='remove-sugg' onclick='b_search.removeSuggestion(\"" + full_path + "\");$(this).parent().remove();'><i class='mdi mdi-close'></i></button></div>");
             }
         }
 

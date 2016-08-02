@@ -13,8 +13,9 @@ $(function(){
                     b_search.removeSuggestion(file_path);
                     b_search.addSuggestion(file_path);
 
-                    ide_data['curr_file'] = file_path;
+                    b_history.addFile(file_path);
 
+                    ide_data['curr_file'] = file_path;
                     saveData();
 
                     this.setModeFromFile(file_path);
@@ -29,15 +30,14 @@ $(function(){
                         }
                     });
                 }
-                /*
-            } catch (e) {
 
-            }
-            */
+            //} catch (e) {
+
+            //}
         },
 
         saveFile: function() {
-            if (ide_data['curr_file'] === '') {
+            if (ide_data['curr_file'] !== '') {
                 try {
                     nwFILE.writeFileSync(
                         ide_data['curr_file'],

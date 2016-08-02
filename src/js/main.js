@@ -1,5 +1,5 @@
 var IDE_NAME = "TextEditor";
-var DEV_MODE = false;
+var DEV_MODE = true;
 
 var nwFILE = require('fs');
 var nwPATH = require('path');
@@ -13,6 +13,7 @@ var ide_data = {
     project_paths: [],  // folders dropped in the ide
     unsaved_text: {},   // save text from unsaved files from each project
     recent_files: [],   // recently searched files from each project
+    history: [],
     recent_ide_commands: [], // recently used ide commands
     curr_file: '',      // currently opened file
     current_project: ''
@@ -68,7 +69,7 @@ $(function(){
 
     b_editor.setMode('Text');
     editor.setTheme("ace/theme/chrome");
-    editor.setFontSize(14);
+    editor.setFontSize(12);
 
     if (DEV_MODE) {
         b_ide.showDevTools();
@@ -180,7 +181,9 @@ $(function(){
     editor.commands.addCommand({
         name: 'save_file',
         bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
-        exec: b_editor.saveFile(),
+        exec: function(editor) {
+            b_editor.saveFile()
+        },
         readOnly: true // false if this command should not apply in readOnly mode
     });
 });
@@ -217,6 +220,7 @@ function getSearchType() {
 }
 
 function saveData() {
+    ide_data['history'] = b_history.save();
     // create data directory
     try {
         nwFILE.mkdirSync('data');
@@ -232,7 +236,7 @@ function saveData() {
     );
 }
 
-function loadData(path) {
+function loadData(path, callback) {
     try {
         var stat = nwFILE.lstatSync(path);
 
@@ -242,6 +246,10 @@ function loadData(path) {
                     ide_data = JSON.parse(data);
 
                     setProjectFolder(ide_data['current_project']);
+                    
+                    b_editor.setFile(ide_data['curr_file']);
+                    b_history.load(ide_data['history']);
+
                 }
             });
         }

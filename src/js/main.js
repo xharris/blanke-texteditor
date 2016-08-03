@@ -16,7 +16,8 @@ var ide_data = {
     history: [],
     recent_ide_commands: [], // recently used ide commands
     curr_file: '',      // currently opened file
-    current_project: ''
+    current_project: '',
+    zoom: 12
 };
 
 var labels = {
@@ -69,8 +70,8 @@ $(function(){
 
     b_editor.setMode('Text');
     editor.setTheme("ace/theme/chrome");
-    editor.setFontSize(12);
-    b_editor.font_size = 12;
+    editor.setFontSize(ide_data['zoom']);
+    b_editor.font_size = ide_data['zoom'];
 
     if (DEV_MODE) {
         b_ide.showDevTools();

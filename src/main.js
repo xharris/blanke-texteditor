@@ -1,18 +1,18 @@
 /* electron start */
-const electron = require('electron')
+const electron = require('electron');
 // Module to control application life.
-const app = electron.app
+const app = electron.app;
 // Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
+const BrowserWindow = electron.BrowserWindow;
 
 const {ipcMain} = require('electron');
 const {ipcRenderer} = require('electron');
 const {globalShortcut} = require('electron');
-const dialog = require('electron').dialog
+const dialog = require('electron').dialog;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+let mainWindow;
 
 function createWindow () {
   // Create the browser window.
@@ -21,9 +21,9 @@ function createWindow () {
       center: true,
       width: 640,//1200,
       height: 480,//900
-  })
+  });
   // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/index.html`)
+  mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   mainWindow.setMenu(null);
 
@@ -44,7 +44,7 @@ app.on('closed', function () {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
@@ -55,28 +55,28 @@ app.on('window-all-closed', function () {
       mainWindow = null;
   });
   app.quit();
-})
+});
 
 app.on('will-quit', () => {
     // Unregister all shortcuts.
     globalShortcut.unregisterAll();
-})
+});
 
 app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
-    createWindow()
+    createWindow();
   }
-})
+});
 
 ipcMain.on('open-file-dialog', function (event) {
   dialog.showOpenDialog({
     properties: ['openFile', 'openDirectory']
   }, function (files) {
-    if (files) event.sender.send('selected-directory', files)
-  })
-})
+    if (files) event.sender.send('selected-directory', files);
+  });
+});
 
 ipcMain.on('show-dev-tools', function(event) {
     mainWindow.webContents.openDevTools();

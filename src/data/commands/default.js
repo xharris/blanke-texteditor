@@ -39,7 +39,7 @@ var findFile = {
 
             if (prev_path.startsWith(input)) {
                 var result_txt = prev_path.replace(input, "<b>" + input + "</b>");
-                html.push("<div class='suggestion high-priority' tabIndex='$1' data-value='" + file_path + "'>" + result_txt + "<button class='remove-sugg' onclick='b_search.removeSuggestion(\"" + full_path + "\");$(this).parent().remove();'><i class='mdi mdi-close'></i></button></div>");
+                html.push("<div class='suggestion high-priority' tabIndex='$1' data-value='" + file_path + "'>" + result_txt +  "<span class='full-path'>" + full_path + "</span>" + "<button class='remove-sugg' onclick='b_search.removeSuggestion(\"" + full_path + "\");$(this).parent().remove();'><i class='mdi mdi-close'></i></button></div>");
             }
         }
 

@@ -20,6 +20,13 @@ $(function(){
             }
         },
 
+        refreshList: function() {
+            // create element for each history index
+            // ...
+            // add them to history list
+            // ...
+        },
+
         addFile: function(path) {
             if (this.history.includes(path)) {
                 this.history.splice(this.history.indexOf(path), 1);

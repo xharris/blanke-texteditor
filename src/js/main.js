@@ -70,6 +70,7 @@ $(function(){
     b_editor.setMode('Text');
     editor.setTheme("ace/theme/chrome");
     editor.setFontSize(12);
+    b_editor.font_size = 12;
 
     if (DEV_MODE) {
         b_ide.showDevTools();
@@ -168,6 +169,15 @@ $(function(){
             27: 'Esc', // escape
         }
 
+        // zoom in
+        if (evt.ctrlKey && keyCode == 187) {
+            b_editor.zoom(2);
+        }
+        // zoom out
+        if (evt.ctrlKey && keyCode == 189) {
+            b_editor.zoom(-2);
+        }
+
         if (Object.keys(special_chars).includes(keyCode+"")) {
             key = '<i class="mdi ' + special_chars[keyCode] + '"></i>';
         }
@@ -178,6 +188,7 @@ $(function(){
         $(".status-bar .keycode").html('<span class="char">' + key + '</span>' + keyCode);
     });
 
+    // saving
     editor.commands.addCommand({
         name: 'save_file',
         bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
@@ -187,7 +198,6 @@ $(function(){
         readOnly: true // false if this command should not apply in readOnly mode
     });
 });
-
 
 function dirTree(filename) {
     var stats = nwFILE.lstatSync(filename),
@@ -245,9 +255,8 @@ function loadData(path, callback) {
                 if (!err) {
                     ide_data = JSON.parse(data);
 
-                    setProjectFolder(ide_data['current_project']);
-                    
                     b_editor.setFile(ide_data['curr_file']);
+                    setProjectFolder(ide_data['current_project']);
                     b_history.load(ide_data['history']);
 
                 }
@@ -280,11 +289,7 @@ function setProjectFolder(path) {
     ide_data['current_project'] = normalizePath(path);
 
     // set current project in ide
-    for (var p = 0; p < ide_data['project_paths'].length; p++) {
-        if (ide_data['project_paths'][p] === path) {
-            curr_project = ide_data['project_paths'][p];
-        }
-    }
+    curr_project = ide_data['current_project'];
 
     proj_tree = dirTree(path);
 

@@ -19,8 +19,8 @@ function createWindow () {
   mainWindow = new BrowserWindow({
       title: "TextEditor",
       center: true,
-      width: 1200,
-      height: 900
+      width: 640,//1200,
+      height: 480,//900
   })
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`)
@@ -30,6 +30,7 @@ function createWindow () {
   globalShortcut.register('Control+R', () => {
       mainWindow.webContents.send("focus-search");
   });
+
 }
 
 // Emitted when the window is closed.

@@ -45,7 +45,8 @@ var findFile = {
 
         // create html suggestion array
         for (var f = 0; f < files.length; f++) {
-            var file_path = normalizePath(files[f].path).replace(curr_project,'');
+            var full_path = normalizePath(files[f].path)
+            var file_path = full_path.replace(curr_project,'');
 
             if (file_path.includes(input)) {
 

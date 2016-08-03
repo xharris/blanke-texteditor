@@ -2,12 +2,23 @@ var b_editor;
 
 $(function(){
     b_editor = {
+        font_size: 12,
+
         setFile: function(file_path) {
             //try {
                 file_path = nwPATH.normalize(file_path);
                 var stat = nwFILE.lstatSync(file_path);
 
                 if (stat.isFile()) {
+                    nwFILE.readFile(file_path, 'utf-8', function(err, data) {
+                        if (!err) {
+                            $("#suggestions").removeClass("active");
+                            editor.setValue(data);
+                            editor.clearSelection();
+                            this.focus();
+                        }
+                    });
+
                     // add file to ide_data['recent_files']
                     var new_recent = nwPATH.basename(file_path);
                     b_search.removeSuggestion(file_path);
@@ -20,15 +31,6 @@ $(function(){
 
                     this.setModeFromFile(file_path);
                     winSetTitle(file_path.replace(curr_project,''));
-
-                    nwFILE.readFile(file_path, 'utf-8', function(err, data) {
-                        if (!err) {
-                            $("#suggestions").removeClass("active");
-                            editor.setValue(data);
-                            editor.clearSelection();
-                            this.focus();
-                        }
-                    });
                 }
 
             //} catch (e) {
@@ -63,6 +65,11 @@ $(function(){
 
         focus: function(file) {
             editor.focus();
+        },
+
+        zoom: function(amt) {
+            this.font_size += amt;
+            editor.setFontSize(this.font_size);
         }
     }
 });

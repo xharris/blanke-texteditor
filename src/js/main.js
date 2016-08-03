@@ -1,5 +1,5 @@
 var IDE_NAME = "TextEditor";
-var DEV_MODE = true;
+var DEV_MODE = false;
 
 var nwFILE = require('fs');
 var nwPATH = require('path');

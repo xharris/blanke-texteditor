@@ -24,8 +24,8 @@ var findFile = {
         }
 
         // previous suggestion (higher priority)
-        for (var r = 0; r < ide_data['recent_files'].length; r++) {
-            var full_path = normalizePath(ide_data['recent_files'][r]);
+        for (var r = 0; r < getProjectSetting('recent_files').length; r++) {
+            var full_path = normalizePath(getProjectSetting('recent_files')[r]);
             var file_path = full_path.replace(curr_project,'');
             var prev_path = nwPATH.basename(file_path);
 
@@ -45,7 +45,7 @@ var findFile = {
                 var result_txt = file_path.replace(input, "<b>" + input + "</b>");
 
                 // normal priority suggestion
-                if (!ide_data['recent_files'].includes(file_path)) {
+                if (!getProjectSetting('recent_files').includes(file_path)) {
                     html.push("<div class='suggestion' tabIndex='$1' data-value='" + file_path + "'>" + result_txt + "</div>");
                 }
             }

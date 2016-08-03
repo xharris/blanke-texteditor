@@ -10,16 +10,19 @@ var nwGREP = require('simple-grep');
 var eIPC = require('electron').ipcRenderer;
 
 var ide_data = {
-    project_paths: [],  // folders dropped in the ide
+    project_paths: [],      // folders dropped in the ide
+    project_settings: {},
+    recent_ide_commands: [], // recently used ide commands
+    current_project: '',
+    zoom: 12,
+};
+var project_settings_template = {
     unsaved_text: {},   // save text from unsaved files from each project
     recent_files: [],   // recently searched files from each project
     history: [],
-    recent_ide_commands: [], // recently used ide commands
     curr_file: '',      // currently opened file
-    current_project: '',
-    zoom: 12,
     cursor_pos: {}
-};
+}
 
 var labels = {
     project: '<span class="label label-red">project</span>',
@@ -197,7 +200,7 @@ $(function(){
             ignore_first_selection = false;
         } else {
             b_ide.addDataValue('cursor', {});
-            ide_data['cursor'][ide_data['curr_file']] = editor.selection.getCursor();
+            getProjectSetting('cursor_pos')[getProjectSetting('curr_file')] = editor.selection.getCursor();
         }
     })
 
@@ -280,10 +283,12 @@ var dirTree = function(dir, done) {
 
 function refreshProjectTree(path, callback) {
     b_ide.showProgressBar();
+    $("#in-search").prop('disabled', true);
     dirTree(path, function(err, res) {
         if (!err) {
             proj_tree = res;
             b_ide.hideProgressBar();
+            $("#in-search").prop('disabled', false);
 
             if (callback) {
                 callback(res);
@@ -301,7 +306,7 @@ function getSearchType() {
 }
 
 function saveData() {
-    ide_data['history'] = b_history.save();
+    setProjectSetting('history', b_history.save());
     // create data directory
     try {
         nwFILE.mkdirSync('data');
@@ -326,9 +331,9 @@ function loadData(path, callback) {
                 if (!err) {
                     ide_data = JSON.parse(data);
 
-                    b_editor.setFile(ide_data['curr_file']);
                     setProjectFolder(ide_data['current_project']);
-                    b_history.load(ide_data['history']);
+                    b_editor.setFile(getProjectSetting('curr_file'));
+                    b_history.load(getProjectSetting('history'));
 
                 }
             });
@@ -338,28 +343,7 @@ function loadData(path, callback) {
     }
 }
 
-function addProjectFolder(path) {
-    var folder_name = nwPATH.basename(path);
-
-    ide_data['project_paths'].push(path);
-
-    addToast({
-        message: 'added ' + labels['project'] + ' ' + folder_name,
-        can_dismiss: true,
-        timeout: 1000
-    });
-
-    setProjectFolder(path);
-    saveData();
-}
-
-function setProjectFolder(new_path) {
-    // set current project in settings
-    ide_data['current_project'] = normalizePath(new_path);
-    
-    // set current project in ide
-    curr_project = ide_data['current_project'];
-
+function refreshProjectList() {
     // remake project list
     $(".projects").empty();
     var proj_html = '';
@@ -373,9 +357,40 @@ function setProjectFolder(new_path) {
     }
     $(".projects").html(proj_html);
 
+    if (ide_data['project_paths'].length == 1) {
+        setProjectFolder(path);
+    }
+}
+
+function addProjectFolder(path) {
+    var folder_name = nwPATH.basename(path);
+
+    ide_data['project_paths'].push(path);
+    ide_data['project_settings'][path] = project_settings_template;
+
+    addToast({
+        message: 'added ' + labels['project'] + ' ' + folder_name,
+        can_dismiss: true,
+        timeout: 1000
+    });
+
+    refreshProjectList();
+    saveData();
+}
+
+function setProjectFolder(new_path) {
+    // set current project in settings
+    ide_data['current_project'] = normalizePath(new_path);
+
+    // set current project in ide
+    curr_project = ide_data['current_project'];
+
+
     $(".suggestions").removeClass("active");
 
+    refreshProjectList();
     refreshProjectTree(curr_project);
+    b_editor.setFile(getProjectSetting("curr_file"));
 
     nwFILE.watch(curr_project, (eventType, filename) => {
         if (filename) {
@@ -388,6 +403,18 @@ function setProjectFolder(new_path) {
         can_dismiss: true,
         timeout: 1000
     });
+}
+
+function getProjectSetting(setting_name) {
+    if (b_ide.isProjectSet()) {
+        return ide_data['project_settings'][curr_project][setting_name];
+    }
+}
+
+function setProjectSetting(setting_name, new_value) {
+    if (b_ide.isProjectSet()) {
+        ide_data['project_settings'][curr_project][setting_name] = new_value;
+    }
 }
 
 function normalizePath(path) {

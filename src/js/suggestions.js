@@ -13,10 +13,8 @@ $(function(){
             evt.preventDefault();
             if (sugg_index != -1) {
                 $(el_searchbox).val($(".suggestion")[sugg_index].dataset.value);
-                //$(".suggestions").removeClass("active");
-                sugg_index = -1;
-            } else {
                 $(".suggestions").removeClass("active");
+                sugg_index = -1;
                 submitSearch();
             }
         }
@@ -52,12 +50,15 @@ $(function(){
 
             // add highlight to selected
             $('.suggestion')[sugg_index].classList.add('highlighted');
+            $('.suggestion')[sugg_index].scrollIntoView({behavior: "smooth"});
+            $(el_searchbox).val($(".suggestion")[sugg_index].dataset.value);
 
         }
         // ESCAPE key
         else if (keyCode == 27) {
             $("#in-search").val('');
             $(".suggestions").removeClass("active");
+            sugg_index = -1;
             b_editor.focus();
         } else {
             $(".suggestion").each(function() {
@@ -71,37 +72,42 @@ $(function(){
     });
 
     // on suggestion selection
-    $(".suggestion-container").on('click', '.suggestion', function() {
-        sugg_index = this.tabIndex - 1;
-        $(el_searchbox).val($(this).data('value'));
+    $(".suggestions").on('click', '.suggestion', function() {
+        console.log(this)
+        console.log('hi')
+        $(el_searchbox).val($(this)[0].dataset.value);
         $(".suggestions").removeClass("active");
         sugg_index = -1;
+        submitSearch();
     });
 });
 
 function newInput() {
     var input_text = this.value;
     var search_type = getSearchType();
-
-    // hide box if nothing is in the search box
-    if (input_text === '') {
+    
+    // hide box if nothing is in the search box    
+    if (input_text.length < 1) {
         $(".suggestions").removeClass("active");
-    }
-
-    if (Object.keys(commands).includes(search_type)) {
-        for (var c = 0; c < commands[search_type].length; c++) {
-            var html = "";
-            html = commands[search_type][c].suggest(input_text);
-            $(".suggestions").html(html);
-            if (html.length > 1) {
-                $(".suggestions").addClass("active");
+        sugg_index = -1;
+    } else {
+        if (Object.keys(commands).includes(search_type)) {
+            for (var c = 0; c < commands[search_type].length; c++) {
+                var html = "";
+                html = commands[search_type][c].suggest(input_text);
+                $(".suggestions").html(html);
+                if (html.length > 1) {
+                    $(".suggestions").addClass("active");
+                    sugg_index = -1;
+                }
             }
         }
-    }
-
-    // hide suggestions if there are none
-    if ($(".suggestions").html().length <= 1) {
-        $(".suggestions").removeClass("active");
+    
+        // hide suggestions if there are none
+        if ($(".suggestions").html().length <= 1) {
+            $(".suggestions").removeClass("active");
+            sugg_index = -1;
+        }
     }
 }
 

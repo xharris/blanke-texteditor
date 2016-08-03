@@ -16,6 +16,8 @@
     opacity: 0;
     overflow: hidden;
     pointer-events: none;
+    max-height: 500px;
+    overflow-y: auto;
 
     transition: opacity 0.2s ease-in-out;
 
@@ -27,6 +29,7 @@
     .suggestion {
         .no-select();
 
+        outline: none;
         padding: 6px;
         position: relative;
 

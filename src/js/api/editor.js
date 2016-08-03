@@ -12,27 +12,27 @@ $(function(){
 
                 if (stat.isFile()) {
                     ignore_first_selection = true;
-                    
+
                     nwFILE.readFile(file_path, 'utf-8', function(err, data) {
                         if (!err) {
                             $("#suggestions").removeClass("active");
                             editor.setValue(data);
                             // editor.clearSelection();
-                            if (Object.keys(ide_data['cursor']).includes(file_path)) {
-                                editor.gotoLine(ide_data['cursor'][file_path].row, ide_data['cursor'][file_path].column);
+                            if (Object.keys(getProjectSetting('cursor_pos')).includes(file_path)) {
+                                editor.gotoLine(getProjectSetting('cursor_pos')[file_path].row, getProjectSetting('cursor_pos')[file_path].column);
                             }
                             this.focus();
                         }
                     });
 
-                    // add file to ide_data['recent_files']
+                    // add file to getProjectSetting('recent_files')
                     var new_recent = nwPATH.basename(file_path);
                     b_search.removeSuggestion(file_path);
                     b_search.addSuggestion(file_path);
 
                     b_history.addFile(file_path);
 
-                    ide_data['curr_file'] = file_path;
+                    setProjectSetting('curr_file', file_path);
                     saveData();
 
                     this.setModeFromFile(file_path);
@@ -45,10 +45,10 @@ $(function(){
         },
 
         saveFile: function() {
-            if (ide_data['curr_file'] !== '') {
+            if (getProjectSetting('curr_file') !== '') {
                 //try {
                     nwFILE.writeFileSync(
-                        ide_data['curr_file'],
+                        getProjectSetting('curr_file'),
                         editor.getValue(),
                         {
                             flag: 'w+'

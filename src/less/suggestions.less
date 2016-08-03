@@ -11,7 +11,7 @@
     z-index: 90;
     background-color: white;
     border-radius: 2px;
-    padding: 10px;
+    // padding: 10px;
     transition: opacity 0.2s ease-in-out;
     opacity: 0;
     overflow: hidden;
@@ -27,15 +27,14 @@
     .suggestion {
         .no-select();
 
-        margin-bottom: 5px;
-        padding: 2px;
+        padding: 6px;
         position: relative;
 
         transition: all 0.2s ease-in-out;
 
         &.highlighted, &:focus {
             outline: none;
-            background-color: gray;
+            background-color: #cfd8dc;
         }
 
         &.high-priority {
@@ -50,7 +49,8 @@
 
         .remove-sugg {
             position: absolute;
-            right: 0px;
+            right: 4px;
+            top: 4px;
             height: 23px;
             width: 23px;
             text-align: center;

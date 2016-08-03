@@ -6,15 +6,21 @@ $(function(){
 
         setFile: function(file_path) {
             //try {
+            console.log(file_path);
                 file_path = nwPATH.normalize(file_path);
                 var stat = nwFILE.lstatSync(file_path);
 
                 if (stat.isFile()) {
+                    ignore_first_selection = true;
+                    
                     nwFILE.readFile(file_path, 'utf-8', function(err, data) {
                         if (!err) {
                             $("#suggestions").removeClass("active");
                             editor.setValue(data);
-                            editor.clearSelection();
+                            // editor.clearSelection();
+                            if (Object.keys(ide_data['cursor']).includes(file_path)) {
+                                editor.gotoLine(ide_data['cursor'][file_path].row, ide_data['cursor'][file_path].column);
+                            }
                             this.focus();
                         }
                     });
@@ -40,7 +46,7 @@ $(function(){
 
         saveFile: function() {
             if (ide_data['curr_file'] !== '') {
-                try {
+                //try {
                     nwFILE.writeFileSync(
                         ide_data['curr_file'],
                         editor.getValue(),
@@ -48,9 +54,10 @@ $(function(){
                             flag: 'w+'
                         }
                     )
-                } catch (e) {
+                    console.log("saved")
+                //} catch (e) {
 
-                }
+                //}
             }
         },
 

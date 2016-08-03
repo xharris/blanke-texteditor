@@ -1,11 +1,3 @@
-/*
-    [
-        regex,
-        'match'/'grep'/'file',
-        'callbacks'
-    ]
-*/
-
 $(function(){
     addCommands(default_commands);
 })
@@ -17,7 +9,7 @@ var findFile = {
         var input_parts = input.split('/');
         var html = [];
 
-        var files = proj_tree.children;
+        var files = proj_tree;
         // iterate through already typed path dirs
         for (var p = 0; p < input_parts.length; p++) {
             var part = input_parts[p];

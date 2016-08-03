@@ -17,11 +17,12 @@ var ide_data = {
     recent_ide_commands: [], // recently used ide commands
     curr_file: '',      // currently opened file
     current_project: '',
-    zoom: 12
+    zoom: 12,
+    cursor_pos: {}
 };
 
 var labels = {
-    project: '<span class="label label-red">project</span>'
+    project: '<span class="label label-red">project</span>',
 };
 
 var editor, aceModeList;
@@ -30,6 +31,7 @@ var curr_project;
 var curr_folder;
 var proj_tree = [];
 var re_file_ext = /(?:\.([^.]+))?$/;
+var ignore_first_selection = true;
 
 var search_box_options = {
     file: {
@@ -62,6 +64,7 @@ $(function(){
         return false;
     }
     */
+
     data_path = nwPATH.join(nwPROC.cwd(),'data','ide_data.json');
     loadData(data_path);
 
@@ -79,9 +82,8 @@ $(function(){
 
     // set events for window close
     eIPC.on('window-close', function(event) {
-        closeProject(function(){
-            eIPC.send('confirm-window-close');
-        });
+        saveData();
+        eIPC.send('confirm-window-close');
     });
 
     eIPC.on('focus-search', function(event) {
@@ -189,6 +191,16 @@ $(function(){
         $(".status-bar .keycode").html('<span class="char">' + key + '</span>' + keyCode);
     });
 
+    // remember cursor position
+    editor.getSession().selection.on('changeCursor', function(e) {
+        if (ignore_first_selection) {
+            ignore_first_selection = false;
+        } else {
+            b_ide.addDataValue('cursor', {});
+            ide_data['cursor'][ide_data['curr_file']] = editor.selection.getCursor();
+        }
+    })
+
     // saving
     editor.commands.addCommand({
         name: 'save_file',
@@ -198,28 +210,86 @@ $(function(){
         },
         readOnly: true // false if this command should not apply in readOnly mode
     });
+
+    // history
+    editor.commands.addCommand({
+        name: 'history_back',
+        bindKey: {win: 'Ctrl-Left',  mac: 'Command-Left'},
+        exec: function(editor) {
+            b_history.back();
+        },
+        readOnly: true // false if this command should not apply in readOnly mode
+    });
+    editor.commands.addCommand({
+        name: 'history_forward',
+        bindKey: {win: 'Ctrl-Right',  mac: 'Command-Right'},
+        exec: function(editor) {
+            b_history.forward();
+        },
+        readOnly: true // false if this command should not apply in readOnly mode
+    });
+
+    // project selection box
+    $(".projects")[0].addEventListener("change", function() {
+        var choice = this.options[this.selectedIndex].text;
+        console.log(choice);
+        setProjectFolder(choice);
+    })
 });
 
-function dirTree(filename) {
-    var stats = nwFILE.lstatSync(filename),
-        info = {
-            path: filename,
-            name: nwPATH.basename(filename)
-        };
+var dirTree = function(dir, done) {
+    var results = [];
 
-    if (stats.isDirectory()) {
-        info.type = "folder";
-        info.children = nwFILE.readdirSync(filename).map(function(child) {
-            return dirTree(filename + '/' + child);
+    nwFILE.readdir(dir, function(err, list) {
+        if (err)
+            return done(err);
+
+        var pending = list.length;
+
+        if (!pending)
+            return done(null, {name: nwPATH.basename(dir), type: 'folder', children: results});
+
+        list.forEach(function(file) {
+            file = nwPATH.resolve(dir, file);
+            nwFILE.stat(file, function(err, stat) {
+                if (stat && stat.isDirectory()) {
+                    dirTree(file, function(err, res) {
+                        results.push({
+                            name: nwPATH.basename(file),
+                            path: file,
+                            type: 'folder',
+                            children: res
+                        });
+                        if (!--pending)
+                            done(null, results);
+                    });
+                }
+                else {
+                    results.push({
+                        type: 'file',
+                        path: file,
+                        name: nwPATH.basename(file)
+                    });
+                    if (!--pending)
+                        done(null, results);
+                }
+            });
         });
-    } else {
-        // Assuming it's a file. In real life it could be a symlink or
-        // something else!
-        info.type = "file";
-    }
+    });
+};
 
-    // proj_tree.push(info.path.replace(curr_project, '')); // my custom line
-    return info;
+function refreshProjectTree(path, callback) {
+    b_ide.showProgressBar();
+    dirTree(path, function(err, res) {
+        if (!err) {
+            proj_tree = res;
+            b_ide.hideProgressBar();
+
+            if (callback) {
+                callback(res);
+            }
+        }
+    })
 }
 
 function searchTypeChange(new_type) {
@@ -276,28 +346,47 @@ function addProjectFolder(path) {
     addToast({
         message: 'added ' + labels['project'] + ' ' + folder_name,
         can_dismiss: true,
-        timeout: 750
+        timeout: 1000
     });
 
     setProjectFolder(path);
-
     saveData();
 }
 
-function setProjectFolder(path) {
-    $(".suggestions").removeClass("active");
+function setProjectFolder(new_path) {
     // set current project in settings
-    ide_data['current_project'] = normalizePath(path);
-
+    ide_data['current_project'] = normalizePath(new_path);
+    
     // set current project in ide
     curr_project = ide_data['current_project'];
 
-    proj_tree = dirTree(path);
-
-    nwFILE.watch(path, (eventType, filename) => {
-        if (filename) {
-            proj_tree = dirTree(curr_project);
+    // remake project list
+    $(".projects").empty();
+    var proj_html = '';
+    for (var p = 0; p < ide_data['project_paths'].length; p++) {
+        var path = ide_data['project_paths'][p];
+        var selected = '';
+        if (path === curr_project) {
+            selected = "selected='selected'";
         }
+        proj_html += "<option value='" + path + "' " + selected + " >" + path + "</option>";
+    }
+    $(".projects").html(proj_html);
+
+    $(".suggestions").removeClass("active");
+
+    refreshProjectTree(curr_project);
+
+    nwFILE.watch(curr_project, (eventType, filename) => {
+        if (filename) {
+            refreshProjectTree(curr_project);
+        }
+    });
+
+    addToast({
+        message: 'set ' + labels['project'] + ' ' + curr_project,
+        can_dismiss: true,
+        timeout: 1000
     });
 }
 

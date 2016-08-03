@@ -8,8 +8,10 @@ $(function(){
         load: function(data) {
             console.log(data);
             if (data != undefined) {
-                this.history_index = data.history_index;
-                this.history = data.history;
+                this.history_index = data['history_index'];
+                for (var h = 0; h < data['history'].length; h++) {
+                    this.addFile(data['history'][h]);
+                }
             }
         },
 
@@ -31,24 +33,25 @@ $(function(){
             if (this.history.includes(path)) {
                 this.history.splice(this.history.indexOf(path), 1);
             }
-            this.history.unshift(path);
+            this.history.splice(this.history_index, 0, path);
             saveData();
         },
 
         goToPosition: function(position) {
-            var new_path = history[position];
+            this.history_index = position
+            var new_path = this.history[position];
             b_editor.setFile(new_path);
         },
-
+        
         back: function() {
-            if (this.history_index > 0) {
-                this.goToPosition(this.history_index - 1);
-            }
-        },
-
-        forward: function() {
             if (this.history_index < this.history.length - 1) {
                 this.goToPosition(this.history_index + 1);
+            }
+        },
+        
+        forward: function() {
+            if (this.history_index > 0) {
+                this.goToPosition(this.history_index - 1);
             }
         }
     }

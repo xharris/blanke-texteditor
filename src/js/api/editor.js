@@ -5,51 +5,68 @@ $(function(){
         font_size: 12,
 
         setFile: function(file_path) {
-            //try {
             console.log(file_path);
-                file_path = nwPATH.normalize(file_path);
+            file_path = nwPATH.normalize(file_path);
+            try {
                 var stat = nwFILE.lstatSync(file_path);
-
-                if (stat.isFile()) {
-                    ignore_first_selection = true;
-                    
-                    console.log(file_path);
-                    console.log(Object.keys(getProjectSetting("unsaved_text")));
-                    
-                    // has file been edited earlier without saving?
-                    if (Object.keys(getProjectSetting("unsaved_text")).includes(file_path)) {
-                        editor.setValue(getProjectSetting("unsaved_text")[file_path]);
-                        this.post_setFile(file_path);
-                    }
-                    // file has not been previously edited and will be loaded 'classically'
-                    else {
-                        nwFILE.readFile(file_path, 'utf-8', function(err, data) {
-                            if (!err) {
-                                $("#suggestions").removeClass("active");
-                                editor.setValue(data);
-                                editor.clearSelection();
-                                b_editor.post_setFile(file_path);
+            } catch (e) {
+                // ask user if they want to create the file
+                console.log('hey' +file_path);
+                b_alert.showYesNo({
+                    message: "\"" + file_path + "\" does not exist. <br><br><b>Would you like to create this file?<b>",
+                    // YES
+                    onYes: function(ans) {
+                        nwFILE.writeFileSync(
+                            file_path,
+                            "",
+                            {
+                                flag: 'w+'
                             }
-                        });
+                        );
+                        b_editor.setFile(file_path);
+                    },
+                    // NO
+                    onNo: function (ans) {
+                        // show file not found toast
                     }
+                });
+                
+                return;
+            }
 
-                    // add file to getProjectSetting('recent_files')
-                    var new_recent = nwPATH.basename(file_path);
-                    b_search.removeSuggestion(file_path);
-                    b_search.addSuggestion(file_path);
-
-                    b_history.addFile(file_path);
-
-                    setProjectSetting('curr_file', file_path);
-                    saveData();
-
-                    this.setModeFromFile(file_path);
-                    winSetTitle(file_path.replace(curr_project,''));
+            if (stat.isFile()) {
+                ignore_first_selection = true;
+                
+                // has file been edited earlier without saving?
+                if (Object.keys(getProjectSetting("unsaved_text")).includes(file_path)) {
+                    editor.setValue(getProjectSetting("unsaved_text")[file_path]);
+                    this.post_setFile(file_path);
+                }
+                // file has not been previously edited and will be loaded 'classically'
+                else {
+                    nwFILE.readFile(file_path, 'utf-8', function(err, data) {
+                        if (!err) {
+                            $("#suggestions").removeClass("active");
+                            editor.setValue(data);
+                            editor.clearSelection();
+                            b_editor.post_setFile(file_path);
+                        }
+                    });
                 }
 
-            //} catch (e) {
+                // add file to getProjectSetting('recent_files')
+                var new_recent = nwPATH.basename(file_path);
+                b_search.removeSuggestion(file_path);
+                b_search.addSuggestion(file_path);
 
-            //}
+                b_history.addFile(file_path);
+
+                setProjectSetting('curr_file', file_path);
+                saveData();
+
+                this.setModeFromFile(file_path);
+                winSetTitle(file_path.replace(curr_project,''));
+            } 
         },
         
         post_setFile: function(file_path) {

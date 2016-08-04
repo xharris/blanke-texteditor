@@ -15,8 +15,8 @@ $(function(){
                 $(el_searchbox).val($(".suggestion")[sugg_index].dataset.value);
                 $(".suggestions").removeClass("active");
                 sugg_index = -1;
-                submitSearch();
             }
+            submitSearch();
         }
         // TAB key
         else if (keyCode == 9) {

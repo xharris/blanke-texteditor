@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Blanke</title>
+    
     <!-- Insert this line above script imports  -->
     <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
@@ -27,6 +29,7 @@
 
     <link rel="stylesheet" href="main.css" media="screen"/>
 
+    <script src="js/api/alert.js"></script>
     <script src="js/api/ide.js"></script>
     <script src="js/api/editor.js"></script>
     <script src="js/api/history.js"></script>
@@ -43,7 +46,6 @@
     <script>if (window.module) module = window.module;</script>
 
 </head>
-<title>Blanke IDE</title>
 <body>
 
     <div id="main_window">
@@ -61,6 +63,8 @@
                 <div class="suggestion-container"></div>
             </div></div>
         </div>
+        
+        <div class="file-history"></div>
 
         <div id="editor" tabindex="1000"></div>
 
@@ -78,6 +82,14 @@
         <div class="status-bar">
             <div class="keycode"></div>
             <select class="projects"></select>
+        </div>
+        
+        <div class="alert">
+            <div class="message"></div>
+            <div class="btn-container">
+                <button class="btn-yes">YES</button>
+                <button class="btn-no">NO</button>
+            </div>
         </div>
     </div>
 </body>

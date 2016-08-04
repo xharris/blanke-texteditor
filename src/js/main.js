@@ -400,8 +400,11 @@ function setProjectFolder(new_path) {
     $(".suggestions").removeClass("active");
 
     refreshProjectTree(curr_project);
+    
+    // TODO: will be a problem once alerts is implemented and USED
     b_editor.setFile(getProjectSetting("curr_file"));
 
+    // TODO: needs a closer look at. will this continue to watch previous projects?
     nwFILE.watch(curr_project, (eventType, filename) => {
         if (filename) {
             refreshProjectTree(curr_project);

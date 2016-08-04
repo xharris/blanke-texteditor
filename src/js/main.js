@@ -194,9 +194,9 @@ $(function(){
         }
 
         $(".status-bar .keycode").html('<span class="char">' + key + '</span>' + keyCode);
-        
+
         // text changes autosave
-        if (b_editor) {
+        if (b_ide.isProjectSet()) {
             getProjectSetting('unsaved_text')[getProjectSetting('curr_file')] = editor.getValue();
         };
     });
@@ -337,9 +337,14 @@ function loadData(path, callback) {
                 if (!err) {
                     ide_data = JSON.parse(data);
 
-                    setProjectFolder(ide_data['current_project']);
-                    b_editor.setFile(getProjectSetting('curr_file'));
-                    b_history.load(getProjectSetting('history'));
+                    try {
+                        setProjectFolder(ide_data['current_project']);
+                        b_editor.setFile(getProjectSetting('curr_file'));
+                        b_history.load(getProjectSetting('history'));
+                    } catch(e) {
+                        // make a whole new json
+                        // ...
+                    }
 
                 }
             });
@@ -379,6 +384,8 @@ function addProjectFolder(path) {
 
     if (ide_data['project_paths'].length == 1) {
         setProjectFolder(path);
+    } else {
+        refreshProjectList();
     }
     saveData();
 }

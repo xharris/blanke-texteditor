@@ -15,6 +15,7 @@ const dialog = require('electron').dialog;
 let mainWindow;
 
 function createWindow () {
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
       title: "TextEditor",

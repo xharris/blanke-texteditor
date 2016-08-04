@@ -1,5 +1,5 @@
 var IDE_NAME = "TextEditor";
-var DEV_MODE = false;
+var DEV_MODE = true;
 
 var nwFILE = require('fs');
 var nwPATH = require('path');
@@ -235,7 +235,6 @@ $(function(){
     // project selection box
     $(".projects")[0].addEventListener("change", function() {
         var choice = this.options[this.selectedIndex].text;
-        console.log(choice);
         setProjectFolder(choice);
     })
 });
@@ -356,13 +355,10 @@ function refreshProjectList() {
         proj_html += "<option value='" + path + "' " + selected + " >" + path + "</option>";
     }
     $(".projects").html(proj_html);
-
-    if (ide_data['project_paths'].length == 1) {
-        setProjectFolder(path);
-    }
 }
 
 function addProjectFolder(path) {
+    path = normalizePath(path);
     var folder_name = nwPATH.basename(path);
 
     ide_data['project_paths'].push(path);
@@ -374,7 +370,9 @@ function addProjectFolder(path) {
         timeout: 1000
     });
 
-    refreshProjectList();
+    if (ide_data['project_paths'].length == 1) {
+        setProjectFolder(path);
+    }
     saveData();
 }
 
@@ -385,10 +383,8 @@ function setProjectFolder(new_path) {
     // set current project in ide
     curr_project = ide_data['current_project'];
 
-
     $(".suggestions").removeClass("active");
 
-    refreshProjectList();
     refreshProjectTree(curr_project);
     b_editor.setFile(getProjectSetting("curr_file"));
 
@@ -403,6 +399,7 @@ function setProjectFolder(new_path) {
         can_dismiss: true,
         timeout: 1000
     });
+    refreshProjectList();
 }
 
 function getProjectSetting(setting_name) {

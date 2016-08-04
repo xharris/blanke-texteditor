@@ -289,6 +289,10 @@
   border: none;
   border-bottom: solid 1px #9e9e9e;
 }
+.status-bar .projects:empty {
+  opacity: 0;
+  pointer-events: none;
+}
 .suggestions {
   font-family: 'Roboto', sans-serif;
   position: relative;

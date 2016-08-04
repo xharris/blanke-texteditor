@@ -12,18 +12,26 @@ $(function(){
 
                 if (stat.isFile()) {
                     ignore_first_selection = true;
-
-                    nwFILE.readFile(file_path, 'utf-8', function(err, data) {
-                        if (!err) {
-                            $("#suggestions").removeClass("active");
-                            editor.setValue(data);
-                            // editor.clearSelection();
-                            if (Object.keys(getProjectSetting('cursor_pos')).includes(file_path)) {
-                                editor.gotoLine(getProjectSetting('cursor_pos')[file_path].row, getProjectSetting('cursor_pos')[file_path].column);
+                    
+                    console.log(file_path);
+                    console.log(Object.keys(getProjectSetting("unsaved_text")));
+                    
+                    // has file been edited earlier without saving?
+                    if (Object.keys(getProjectSetting("unsaved_text")).includes(file_path)) {
+                        editor.setValue(getProjectSetting("unsaved_text")[file_path]);
+                        this.post_setFile(file_path);
+                    }
+                    // file has not been previously edited and will be loaded 'classically'
+                    else {
+                        nwFILE.readFile(file_path, 'utf-8', function(err, data) {
+                            if (!err) {
+                                $("#suggestions").removeClass("active");
+                                editor.setValue(data);
+                                editor.clearSelection();
+                                b_editor.post_setFile(file_path);
                             }
-                            this.focus();
-                        }
-                    });
+                        });
+                    }
 
                     // add file to getProjectSetting('recent_files')
                     var new_recent = nwPATH.basename(file_path);
@@ -43,6 +51,13 @@ $(function(){
 
             //}
         },
+        
+        post_setFile: function(file_path) {
+            if (Object.keys(getProjectSetting('cursor_pos')).includes(file_path)) {
+                editor.gotoLine(getProjectSetting('cursor_pos')[file_path].row, getProjectSetting('cursor_pos')[file_path].column);
+            }
+            this.focus();
+        },
 
         saveFile: function() {
             if (getProjectSetting('curr_file') !== '') {
@@ -54,6 +69,7 @@ $(function(){
                             flag: 'w+'
                         }
                     )
+                    getProjectSetting("unsaved_text")[getProjectSetting("curr_file")] = editor.getValue();
                     console.log("saved")
                 //} catch (e) {
 

@@ -1,6 +1,8 @@
 var IDE_NAME = "TextEditor";
 var DEV_MODE = true;
 
+var ZOOM_AMT = 1;
+
 var nwFILE = require('fs');
 var nwPATH = require('path');
 var nwPROC = require('process');
@@ -177,11 +179,11 @@ $(function(){
 
         // zoom in
         if (evt.ctrlKey && keyCode == 187) {
-            b_editor.zoom(2);
+            b_editor.zoom(ZOOM_AMT);
         }
         // zoom out
         if (evt.ctrlKey && keyCode == 189) {
-            b_editor.zoom(-2);
+            b_editor.zoom(-ZOOM_AMT);
         }
 
         if (Object.keys(special_chars).includes(keyCode+"")) {
@@ -192,6 +194,11 @@ $(function(){
         }
 
         $(".status-bar .keycode").html('<span class="char">' + key + '</span>' + keyCode);
+        
+        // text changes autosave
+        if (b_editor) {
+            getProjectSetting('unsaved_text')[getProjectSetting('curr_file')] = editor.getValue();
+        };
     });
 
     // remember cursor position
@@ -236,7 +243,7 @@ $(function(){
     $(".projects")[0].addEventListener("change", function() {
         var choice = this.options[this.selectedIndex].text;
         setProjectFolder(choice);
-    })
+    });
 });
 
 var dirTree = function(dir, done) {

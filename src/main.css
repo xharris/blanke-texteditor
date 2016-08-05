@@ -68,6 +68,7 @@
 .alert > .message {
   margin: 16px;
   font-size: 14px;
+  word-wrap: break-word;
 }
 .alert > .btn-container {
   width: 100%;
@@ -83,6 +84,7 @@
   opacity: 0;
   cursor: pointer;
   pointer-events: none;
+  outline: none;
   transition: all 0.2s ease-in-out;
 }
 .alert > .btn-container > button.active {
@@ -209,12 +211,20 @@
   border-left: none;
   padding-left: 20px;
   font-size: 13px;
+  background-color: white;
+  transition: all 0.2s ease-in-out;
 }
 .file-history .file.is-open {
   font-weight: 900;
   text-decoration: underline;
 }
-.file-history .file:before {
+.file-history .file:hover {
+  background-color: #e0e0e0;
+}
+.file-history .file:hover::before {
+  border-left: 17px solid #e0e0e0;
+}
+.file-history .file::before {
   border-left: 17px solid white;
   border-top: 13px solid transparent;
   border-bottom: 12px solid transparent;
@@ -225,8 +235,9 @@
   top: 0px;
   width: 0;
   z-index: 75;
+  transition: all 0.2s ease-in-out;
 }
-.file-history .file:after {
+.file-history .file::after {
   border-left: 18px solid black;
   border-top: 14.5px solid transparent;
   border-bottom: 13px solid transparent;
@@ -405,7 +416,7 @@
   position: relative;
   box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.23);
   /* height: 30px; */
-  top: 5px;
+  top: 4px;
   left: 0px;
   bottom: 0px;
   z-index: 90;

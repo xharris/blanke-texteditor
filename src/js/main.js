@@ -51,12 +51,13 @@ var search_box_options = {
         text: 'white',
         action: searchTypeChange
     },
+    /*
     cmd: {
         icon: 'fa fa-terminal',
         color: '#f44336',
         text: 'white',
         action: searchTypeChange
-    }
+    }*/
 }
 
 var commands = {};
@@ -78,8 +79,6 @@ $(function(){
 
     b_editor.setMode('Text');
     editor.setTheme("ace/theme/chrome");
-    editor.setFontSize(ide_data['zoom']);
-    b_editor.font_size = ide_data['zoom'];
 
     if (DEV_MODE) {
         b_ide.showDevTools();
@@ -339,6 +338,7 @@ function loadData(path, callback) {
 
                     try {
                         setProjectFolder(ide_data['current_project']);
+                        b_editor.setZoom(ide_data['zoom']);
                         b_editor.setFile(getProjectSetting('curr_file'));
                         b_history.load(getProjectSetting('history'));
                     } catch(e) {

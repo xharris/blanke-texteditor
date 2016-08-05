@@ -28,12 +28,22 @@ $(function(){
                 file_name;
             for (var h = this.history.length - 1; h >= 0; h--) {
                 var is_current = '';
+                var is_not_saved = '';
+
+                full_path = this.history[h];
+                file_name = nwPATH.basename(this.history[h]);
+
+                // is this the file that is currenty opened/being edited
                 if (h == this.history_index) {
                     is_current = ' is-open';
                 }
-                full_path = this.history[h];
-                file_name = nwPATH.basename(this.history[h]);
-                $(".file-history").append("<span class='file" + is_current + "' title='" + full_path + "' onclick='b_history.goToPosition(" + h + ");'>" + file_name + "</span>");
+                console.log(Object.keys(getProjectSetting('unsaved_text')));
+                if (Object.keys(getProjectSetting('unsaved_text')).includes(full_path)) {
+                    is_not_saved = '*';
+                }
+                $(".file-history").append("<span class='file" + is_current + "' title='" + full_path + "' onclick='b_history.goToPosition(" + h + ");'>" + file_name + is_not_saved + "</span>");
+
+                // $(".file-history > .file.is-open")[0].scrollIntoView();
             }
         },
 
@@ -52,13 +62,13 @@ $(function(){
             b_editor.setFile(new_path);
             this.refreshList();
         },
-        
+
         back: function() {
             if (this.history_index < this.history.length - 1) {
                 this.goToPosition(this.history_index + 1);
             }
         },
-        
+
         forward: function() {
             if (this.history_index > 0) {
                 this.goToPosition(this.history_index - 1);

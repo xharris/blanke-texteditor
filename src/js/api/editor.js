@@ -86,7 +86,8 @@ $(function(){
                             flag: 'w+'
                         }
                     )
-                    getProjectSetting("unsaved_text")[getProjectSetting("curr_file")] = editor.getValue();
+                    delete getProjectSetting("unsaved_text")[getProjectSetting("curr_file")];
+                    b_history.refreshList();
                     console.log("saved")
                 //} catch (e) {
 
@@ -108,7 +109,11 @@ $(function(){
         },
 
         zoom: function(amt) {
-            this.font_size += amt;
+            this.setZoom(this.font_size + amt);
+        },
+        
+        setZoom: function(amt) {
+            this.font_size = amt;
             editor.setFontSize(this.font_size);
             ide_data['zoom'] = this.font_size;
             saveData();

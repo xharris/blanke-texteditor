@@ -1,6 +1,6 @@
 $(function(){
     addCommands(default_commands);
-})
+});
 
 var findFile = {
     suggest: function(input) {
@@ -41,7 +41,6 @@ var findFile = {
             var file_path = full_path.replace(curr_project,'');
 
             if (file_path.includes(input)) {
-
                 var result_txt = file_path.replace(input, "<b>" + input + "</b>");
 
                 // normal priority suggestion
@@ -65,12 +64,13 @@ var findFile = {
         // open file
         b_editor.setFile(nwPATH.join(curr_project, input));
     }
-}
+};
 
 // [command, arg hints]
 var ideCommands = [
-    ['dev-tools','']
-]
+    ['dev-tools',''],
+    ['cmd','<command-name> -global -delete'],
+];
 
 var ideActions = {
     suggest: function(input) {
@@ -83,7 +83,7 @@ var ideActions = {
 
             if (command.startsWith(input)) {
                 var result_txt = command.replace(input, "<b>" + input + "</b>");
-                html.push("<div class='suggestion high-priority' tabIndex='$1' data-value='" + command + "'>" + command + "<button class='remove-sugg' onclick='b_search.removeSuggestion(\"" + file_path + "\");$(this).parent().remove();'><i class='mdi mdi-close'></i></button></div>");
+                html.push("<div class='suggestion high-priority' tabIndex='$1' data-value='" + command + "'>" + result_txt + "<button class='remove-sugg' onclick='b_search.removeSuggestion(\"" + file_path + "\");$(this).parent().remove();'><i class='mdi mdi-close'></i></button></div>");
             }
         }
 
@@ -116,10 +116,15 @@ var ideActions = {
             b_ide.showDevTools();
             b_editor.focus();
         }
+        if (input_parts[0] === "cmd") {
+            if (input_parts.length >= 2) {
+                var extra_options = input_parts.slice(2, input_parts.length);
+            }
+        }
     }
-}
+};
 
 var default_commands = {
     file: findFile,
     ide: ideActions
-}
+};

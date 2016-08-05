@@ -17,13 +17,24 @@
         border-left: none;
         padding-left: 20px;
         font-size: 13px;
+        background-color: white;
+        
+        transition: all 0.2s ease-in-out;
         
         &.is-open {
             font-weight: 900;
             text-decoration: underline;
         }
         
-        &:before {
+        &:hover {
+            background-color: #e0e0e0;
+            
+            &::before {
+                border-left: 17px solid #e0e0e0;
+            }
+        }
+        
+        &::before {
             border-left: 17px solid white;
             border-top: 13px solid transparent;
             border-bottom: 12px solid transparent;
@@ -34,9 +45,11 @@
             top: 0px;
             width: 0;
             z-index: 75;
+            
+            transition: all 0.2s ease-in-out;
         }
         
-        &:after {
+        &::after {
             border-left: 18px solid black;
             border-top: 14.5px solid transparent;
             border-bottom: 13px solid transparent;

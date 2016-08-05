@@ -6,8 +6,7 @@ $(function(){
         history: [],
 
         load: function(data) {
-            console.log(data);
-            if (data != undefined) {
+            if (data !== undefined) {
                 this.history_index = data['history_index'];
                 for (var h = 0; h < data['history'].length; h++) {
                     this.addFile(data['history'][h]);
@@ -23,10 +22,19 @@ $(function(){
         },
 
         refreshList: function() {
+            $(".file-history").empty();
             // create element for each history index
-            // ...
-            // add them to history list
-            // ...
+            var full_path,
+                file_name;
+            for (var h = this.history.length - 1; h >= 0; h--) {
+                var is_current = '';
+                if (h == this.history_index) {
+                    is_current = ' is-open';
+                }
+                full_path = this.history[h];
+                file_name = nwPATH.basename(this.history[h]);
+                $(".file-history").append("<span class='file" + is_current + "' title='" + full_path + "' onclick='b_history.goToPosition(" + h + ");'>" + file_name + "</span>");
+            }
         },
 
         addFile: function(path) {
@@ -34,6 +42,7 @@ $(function(){
                 this.history.splice(this.history.indexOf(path), 1);
             }
             this.history.splice(this.history_index, 0, path);
+            this.refreshList();
             saveData();
         },
 
@@ -41,6 +50,7 @@ $(function(){
             this.history_index = position
             var new_path = this.history[position];
             b_editor.setFile(new_path);
+            this.refreshList();
         },
         
         back: function() {

@@ -1,0 +1,52 @@
+.file-history {
+    .roboto();
+    .no-select();
+    
+    position: absolute;
+    top: 38px;
+    height: 30px;
+    width: 100%;
+    cursor: pointer;
+    
+    .file {
+        line-height: 30px;
+        padding: 5px;
+        border: 1px solid black;
+        position: relative;
+        border-right: none;
+        border-left: none;
+        padding-left: 20px;
+        font-size: 13px;
+        
+        &.is-open {
+            font-weight: 900;
+            text-decoration: underline;
+        }
+        
+        &:before {
+            border-left: 17px solid white;
+            border-top: 13px solid transparent;
+            border-bottom: 12px solid transparent;
+            content: "";
+            height: 0;
+            right: -16px;
+            position: absolute;
+            top: 0px;
+            width: 0;
+            z-index: 75;
+        }
+        
+        &:after {
+            border-left: 18px solid black;
+            border-top: 14.5px solid transparent;
+            border-bottom: 13px solid transparent;
+            content: "";
+            height: 0;
+            right: -17px;
+            position: absolute;
+            top: -1px;
+            width: 0;
+            z-index: 70;
+        }
+    }
+}

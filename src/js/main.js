@@ -6,6 +6,7 @@ var ZOOM_AMT = 1;
 var nwFILE = require('fs');
 var nwPATH = require('path');
 var nwPROC = require('process');
+var nwZIP = require("unzip");
 
 var nwGREP = require('simple-grep');
 
@@ -17,6 +18,7 @@ var ide_data = {
     recent_ide_commands: [], // recently used ide commands
     current_project: '',
     zoom: 12,
+    plugins: []
 };
 var project_settings_template = {
     unsaved_text: {},   // save text from unsaved files from each project
@@ -337,6 +339,7 @@ function loadData(path, callback) {
                     ide_data = JSON.parse(data);
 
                     try {
+                        b_plugin.load(ide_data['plugins']);
                         setProjectFolder(ide_data['current_project']);
                         b_editor.setZoom(ide_data['zoom']);
                         b_editor.setFile(getProjectSetting('curr_file'));

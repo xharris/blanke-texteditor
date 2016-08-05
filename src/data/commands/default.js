@@ -70,6 +70,7 @@ var findFile = {
 var ideCommands = [
     ['dev-tools',''],
     ['cmd','<command-name> -global -delete'],
+    ['plugins','(opens plugin dialog)']
 ];
 
 var ideActions = {

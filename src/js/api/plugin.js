@@ -34,6 +34,7 @@ $(function(){
                     }
                 } catch (e) {
                     console.log('ERR: unable to load plugin: ' + p_name);
+                    b_plugin.removePlugin(p_name);
                     return;
                 }
 
@@ -98,7 +99,6 @@ $(function(){
                     }
                 }
             }
-            this.showViewer();
         },
 
         update: function(name) {
@@ -166,16 +166,34 @@ $(function(){
             var list_html = '';
 
             for (var p = 0; p < ide_data['plugins'].length; p++) {
-                var p_info = plugin_info[ide_data['plugins'][p]];
-                list_html += ""+
-                "<div class='plugin'>"+
-                    "<span class='name'>" + p_info.name + "</span>"+
-                    "<span class='plugin-actions'>"+
-                        "<button class='btn-delete' onclick='b_plugin.uninstallPlugin(\"" + p_info.folder_name + "\")'><i class='mdi mdi-delete'></i></button>"+
-                    "</span>"+
-                "</div>";
+                var p_dirname = ide_data['plugins'][p];
+                var p_info = plugin_info[p_dirname];
+                try {
+                    var stat = nwFILE.lstatSync(nwPATH.join(nwPROC.cwd(),'data','plugins',p_dirname));
+
+                    if (stat.isDirectory()) {
+                        list_html += ""+
+                        "<div class='plugin " + p_dirname + "'>"+
+                            "<span class='name'>" + p_info.name + "</span>"+
+                            "<span class='plugin-actions'>"+
+                                "<button class='btn-delete' onclick='b_plugin.uninstallPlugin(\"" + p_info.folder_name + "\")' title='Remove plugin (requires restart)'><i class='mdi mdi-delete'></i></button>"+
+                            "</span>"+
+                        "</div>";
+                    } else {
+                        b_plugin.removePlugin(p_dirname);
+                    }
+                } catch(e) {
+                    b_plugin.removePlugin(p_dirname);
+                }
+
             }
             $(".plugin-viewer > .list").html(list_html);
+        },
+
+        // incomplete
+        removePlugin: function(plugin_name) {
+            $(".plugin ." + plugin_name).addClass("removed");
+            ide_data['plugins'].splice(ide_data['plugins'].indexOf(plugin_name), 1);
         },
 
         hideViewer: function() {

@@ -1,0 +1,87 @@
+.ide-options {
+    .roboto();
+    .box-shadow();
+
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    right: -110%;
+    width: 500px;
+    z-index: 85;
+
+    background-color: white;
+
+    transition: all 1s ease-in-out;
+
+    &.active {
+        padding: 5px;
+        right: 0px;
+    }
+
+    >.btn-close {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    >h1 {
+        margin: 0px;
+        margin-bottom: 10px;
+        font-size: 28px;
+    }
+
+    >.option-tabs {
+        position: absolute;
+        top: 44px;
+        left: 0px;
+        width: 30%;
+        height: auto;
+        border-right: 1px solid #e0e0e0;
+
+        >.option {
+            display: block;
+            width: 100%;
+            padding: 10px 4px;
+            background-color: white;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+
+            transition: all 0.2s ease-in-out;
+
+            &:hover {
+                background-color: #e0e0e0;
+            }
+
+            &.selected {
+                text-decoration: underline;
+                font-weight: 700;
+                border-right: 2px solid #757575;
+            }
+        }
+    }
+
+    >.option-viewer {
+        position: absolute;
+        top: 44px;
+        right: 0px;
+        width: 70%;
+        bottom: 0px;
+        padding: 10px;
+        box-sizing: border-box;
+
+        >.panel {
+            display: none;
+
+            &.active {
+                display: block;
+            }
+        }
+    }
+}

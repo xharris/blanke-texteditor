@@ -3,11 +3,11 @@
     .box-shadow();
 
     position: absolute;
-    top: 34px;
-    bottom: 20px;
+    top: 0px;
+    bottom: 0px;
     right: -110%;
     width: 300px;
-    z-index: 75;
+    z-index: 85;
 
     background-color: white;
 
@@ -56,6 +56,12 @@
             padding: 5px;
             height: 20px;
             position: relative;
+            margin-bottom: 5px;
+
+            &.removed {
+                pointer-events: none;
+                color: #bdbdbd;
+            }
 
             >.plugin-actions {
                 position: absolute;

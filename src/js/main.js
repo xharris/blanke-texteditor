@@ -19,6 +19,7 @@ var ide_data = {
     recent_ide_commands: [], // recently used ide commands
     current_project: '',
     zoom: 12,
+    options: {},
     plugins: []
 };
 var project_settings_template = {
@@ -352,7 +353,7 @@ function loadData(path, callback) {
                     try {
                         b_plugin.loadPlugins(ide_data['plugins']);
                         setProjectFolder(ide_data['current_project']);
-                        b_editor.setZoom(ide_data['zoom']);
+                        b_editor.setZoom(b_ide.getOption('zoom'));
                         b_editor.setFile(getProjectSetting('curr_file'));
                         b_history.loadHistory(getProjectSetting('history'));
                     } catch(e) {

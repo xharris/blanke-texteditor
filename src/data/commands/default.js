@@ -68,9 +68,10 @@ var findFile = {
 
 // [command, arg hints]
 var ideCommands = [
-    ['dev-tools',''],
+    ['dev-tools','(Show developer tool for this IDE)'],
     ['cmd','<command-name> -global -delete'],
-    ['plugins','(opens plugin dialog)']
+    ['plugins','(opens plugin dialog)'],
+    ['options ide','(Change IDE Appearance, Editor settings, etc.)'],
 ];
 
 var ideActions = {
@@ -124,6 +125,11 @@ var ideActions = {
         }
         if (input_parts[0] === "plugins") {
             b_plugin.showViewer();
+        }
+        if (input_parts[0] === "options") {
+            if (input_parts[1] === "ide") {
+                b_ide.showIdeOptions();
+            }
         }
     }
 };

@@ -81,11 +81,28 @@
         </div>
 
         <div class="plugin-viewer">
-            <button class="btn-close" onclick="b_plugin.hideViewer()"><i class='mdi mdi-close'></i></button>
+            <button class="btn-close" onclick="b_plugin.hideViewer()" title="Close plugin panel"><i class='mdi mdi-close'></i></button>
             <div class="actions">
-                <button class="btn-add" onclick="b_plugin.install()"><i class='mdi mdi-plus'></i></button>
+                <button class="btn-add" onclick="b_plugin.install()" title="Install a plugin"><i class='mdi mdi-plus'></i></button>
             </div>
             <div class="list"></div>
+        </div>
+
+        <div class="ide-options">
+            <h1>Options</h1>
+            <button class="btn-close" onclick="b_ide.hideIdeOptions()" title="Close ide panel"><i class='mdi mdi-close'></i></button>
+            <div class="option-tabs">
+                <button class="option appearance" for="appearance">Appearance</button>
+                <button class="option editor" for="editor">Editor</button>
+            </div>
+            <div class="option-viewer">
+                <div class="panel appearance">
+                    hi
+                </div>
+                <div class="panel editor">
+                    itsa me
+                </div>
+            </div>
         </div>
 
         <div class="toast-container"></div>

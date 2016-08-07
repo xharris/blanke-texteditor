@@ -122,6 +122,9 @@ var ideActions = {
                 var extra_options = input_parts.slice(2, input_parts.length);
             }
         }
+        if (input_parts[0] === "plugins") {
+            b_plugin.showViewer();
+        }
     }
 };
 

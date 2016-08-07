@@ -62,6 +62,9 @@
   color: white;
   cursor: pointer;
 }
+.btn-circle:focus {
+  outline: none;
+}
 .box-shadow {
   box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.23);
 }
@@ -298,6 +301,11 @@
   border-color: red;
   color: white;
 }
+.label-orange {
+  background-color: #ff5722;
+  border-color: #ff5722;
+  color: white;
+}
 .loading-bar {
   position: fixed;
   top: 0px;
@@ -355,6 +363,92 @@
     right: 0px;
   }
 }
+.plugin-viewer {
+  font-family: 'Roboto', sans-serif;
+  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.23);
+  position: absolute;
+  top: 34px;
+  bottom: 20px;
+  right: -110%;
+  width: 300px;
+  z-index: 75;
+  background-color: white;
+  transition: all 1s ease-in-out;
+}
+.plugin-viewer.active {
+  padding: 5px;
+  right: 0px;
+}
+.plugin-viewer > .btn-close {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  font-size: 20px;
+  cursor: pointer;
+}
+.plugin-viewer > .actions > .btn-add {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  height: 34px;
+  width: 34px;
+  border-radius: 100%;
+  font-size: 18px;
+  margin: 0px 4px;
+  transition: all 0.2s ease-in-out;
+}
+.plugin-viewer > .actions > .btn-add:hover {
+  color: white;
+  cursor: pointer;
+}
+.plugin-viewer > .actions > .btn-add:focus {
+  outline: none;
+}
+.plugin-viewer > .actions > .btn-add:hover {
+  border-color: #8bc34a;
+  background-color: #8bc34a;
+  color: white;
+}
+.plugin-viewer > .list {
+  position: absolute;
+  bottom: 0px;
+  top: 40px;
+  left: 0px;
+  right: 0px;
+  padding: 10px;
+}
+.plugin-viewer > .list .plugin {
+  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.23);
+  border-radius: 2px;
+  padding: 5px;
+  height: 20px;
+  position: relative;
+}
+.plugin-viewer > .list .plugin > .plugin-actions {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+.plugin-viewer > .list .plugin > .plugin-actions > button {
+  height: 100%;
+  width: 30px;
+  padding: 0px;
+  color: black;
+  cursor: pointer;
+  font-size: 20px;
+  text-align: center;
+  background-color: white;
+  outline: none;
+  border: none;
+  transition: all 0.2s ease-in-out;
+}
+.plugin-viewer > .list .plugin > .plugin-actions > button:hover {
+  background-color: #e0e0e0;
+}
 .search-bar-container {
   height: 30px;
   position: absolute;
@@ -362,7 +456,7 @@
   right: 0px;
   left: 0px;
   padding: 5px;
-  box-sizing: border-box;
+  z-index: 80;
 }
 .search-bar-container *:not(i) {
   font-family: 'Roboto', sans-serif;

@@ -38,6 +38,4 @@ function addToast(options) {
     $(el_toast_container).append(el_newline);
 
     $(el_toast).show();
-
-
 }

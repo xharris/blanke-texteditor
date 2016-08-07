@@ -6,7 +6,8 @@ var ZOOM_AMT = 1;
 var nwFILE = require('fs');
 var nwPATH = require('path');
 var nwPROC = require('process');
-var nwZIP = require("zlib");
+var nwZIP = require("unzip");
+var nwRAF = require("rimraf");
 
 var nwGREP = require('simple-grep');
 
@@ -30,6 +31,7 @@ var project_settings_template = {
 
 var labels = {
     project: '<span class="label label-red">project</span>',
+    plugin: '<span class="label label-orange">plugin</span>'
 };
 
 var editor, aceModeList;
@@ -462,4 +464,20 @@ function addCommands(new_commands) {
 
 function winSetTitle(new_title) {
     eIPC.send('set-win-title', new_title)
+}
+
+function chooseFile(path, callback) {
+    eIPC.send('open-file-dialog');
+    eIPC.on('selected-directory', function (event, path) {
+        callback(path);
+    })
+}
+
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4();
 }

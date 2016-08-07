@@ -1,0 +1,87 @@
+.plugin-viewer {
+    .roboto();
+    .box-shadow();
+
+    position: absolute;
+    top: 34px;
+    bottom: 20px;
+    right: -110%;
+    width: 300px;
+    z-index: 75;
+
+    background-color: white;
+
+    transition: all 1s ease-in-out;
+
+    &.active {
+        padding: 5px;
+        right: 0px;
+    }
+
+    >.btn-close {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    >.actions {
+        >.btn-add {
+            .btn-circle();
+
+            &:hover {
+                border-color: #8bc34a;
+                background-color: #8bc34a;
+                color: white;
+            }
+        }
+    }
+
+    >.list {
+        position: absolute;
+        bottom: 0px;
+        top: 40px;
+        left: 0px;
+        right: 0px;
+        padding: 10px;
+
+        .plugin {
+            .box-shadow();
+            // border: 1px solid black;
+            border-radius: 2px;
+            padding: 5px;
+            height: 20px;
+            position: relative;
+
+            >.plugin-actions {
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                bottom: 0px;
+
+                >button {
+                    height: 100%;
+                    width: 30px;
+                    padding: 0px;
+                    color: black;
+                    cursor: pointer;
+                    font-size: 20px;
+                    text-align: center;
+                    background-color: white;
+                    outline: none;
+                    border: none;
+
+                    transition: all 0.2s ease-in-out;
+
+                    &:hover {
+                        background-color: #e0e0e0;
+                    }
+                }
+            }
+        }
+    }
+}

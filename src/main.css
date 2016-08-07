@@ -361,6 +361,16 @@
 .ide-options > .option-viewer > .panel.active {
   display: block;
 }
+.ide-options > .option-viewer > .panel h3 {
+  margin: 0px;
+  margin-bottom: 10px;
+}
+.ide-options > .option-viewer > .panel .input-group {
+  margin-bottom: 8px;
+}
+.ide-options > .option-viewer > .panel .input-group.select > span {
+  margin-right: 10px;
+}
 .label {
   text-transform: uppercase;
   font-size: 12px;

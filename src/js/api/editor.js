@@ -2,10 +2,11 @@ var b_editor;
 
 $(function(){
     b_editor = {
-        font_size: 12,
+        font_size: 14,
 
         setFile: function(file_path) {
-            console.log('set file ' + file_path);
+            if (file_path === undefined) return;
+
             b_ide.hideSideContent();
 
             file_path = nwPATH.normalize(file_path);
@@ -119,7 +120,7 @@ $(function(){
         setZoom: function(amt) {
             this.font_size = amt;
             editor.setFontSize(this.font_size);
-            b_ide.setOption('zoom', this.font_size);
+            b_ide.setOption('editor', 'zoom', this.font_size);
             saveData();
         }
     }

@@ -13,13 +13,25 @@ var nwGREP = require('simple-grep');
 
 var eIPC = require('electron').ipcRenderer;
 
+var ide_themes = ["light", "dark"];
+var editor_themes = ["ambiance", "chaos", "chrome", "clouds", "clouds_midnight", "cobalt"];
+
+var default_options = {
+    "appearance": {
+        "ide": "light",
+        "editor": "chrome"
+    },
+    "editor": {
+        "zoom": 14
+    }
+}
+
 var ide_data = {
     project_paths: [],      // folders dropped in the ide
     project_settings: {},
     recent_ide_commands: [], // recently used ide commands
     current_project: '',
-    zoom: 12,
-    options: {},
+    options: default_options,
     plugins: []
 };
 var project_settings_template = {
@@ -250,8 +262,10 @@ $(function(){
 function saveCursor() {
     console.log("save cursor");
     b_ide.addDataValue('cursor', {});
-    getProjectSetting('cursor_pos')[getProjectSetting('curr_file')] = editor.selection.getCursor();
-    getProjectSetting('cursor_pos')[getProjectSetting('curr_file')].row += 1
+    if (b_ide.isProjectSet()) {
+        getProjectSetting('cursor_pos')[getProjectSetting('curr_file')] = editor.selection.getCursor();
+        getProjectSetting('cursor_pos')[getProjectSetting('curr_file')].row += 1;
+    }
 }
 
 var dirTree = function(dir, done) {
@@ -350,16 +364,17 @@ function loadData(path, callback) {
                 if (!err) {
                     ide_data = JSON.parse(data);
 
-                    try {
+                    //try {
                         b_plugin.loadPlugins(ide_data['plugins']);
+                        b_ide.loadOptions();
                         setProjectFolder(ide_data['current_project']);
-                        b_editor.setZoom(b_ide.getOption('zoom'));
+                        b_editor.setZoom(b_ide.getOption('editor').zoom);
                         b_editor.setFile(getProjectSetting('curr_file'));
                         b_history.loadHistory(getProjectSetting('history'));
-                    } catch(e) {
+                    //} catch(e) {
                         // make a whole new json
                         // ...
-                    }
+                    //}
 
                 }
             });
@@ -406,6 +421,8 @@ function addProjectFolder(path) {
 }
 
 function setProjectFolder(new_path) {
+    console.log(new_path)
+    if (new_path === undefined || new_path === "") return;
     // set current project in settings
     ide_data['current_project'] = normalizePath(new_path);
 

@@ -80,13 +80,13 @@ $(function(){
             if (name === "appearance") {
                 if (key === "ide") {
                     // set ide theme
+                    $("#main_window").attr("theme", value);
                 }
                 if (key === "editor") {
                     // set editor theme
                     editor.setTheme("ace/theme/" + value);
                 }
             }
-            console.log(name + key + value)
             ide_data.options[name][key] = value;
         },
 

@@ -718,6 +718,9 @@
   cursor: pointer;
   pointer-events: all;
 }
+#main_window[theme=dark] {
+  background-color: black;
+}
 @font-face {
   font-family: "Roboto";
   src: url("includes/roboto/Roboto-Regular.ttf") format("truetype");

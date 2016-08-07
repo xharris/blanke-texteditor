@@ -49,3 +49,4 @@ node_modules/
 ide_data.json
 dist/
 src/main.css
+plugins/

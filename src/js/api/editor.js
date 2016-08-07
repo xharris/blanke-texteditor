@@ -5,13 +5,14 @@ $(function(){
         font_size: 12,
 
         setFile: function(file_path) {
-            console.log(file_path);
+            console.log('set file ' + file_path);
+            b_ide.hideSideContent();
+
             file_path = nwPATH.normalize(file_path);
             try {
                 var stat = nwFILE.lstatSync(file_path);
             } catch (e) {
                 // ask user if they want to create the file
-                console.log('hey' +file_path);
                 b_alert.showYesNo({
                     message: "\"" + file_path + "\" does not exist. <br><br><b>Would you like to create this file?<b>",
                     // YES
@@ -30,13 +31,11 @@ $(function(){
                         // show file not found toast
                     }
                 });
-                
+
                 return;
             }
 
             if (stat.isFile()) {
-                ignore_first_selection = true;
-                
                 // has file been edited earlier without saving?
                 if (Object.keys(getProjectSetting("unsaved_text")).includes(file_path)) {
                     editor.setValue(getProjectSetting("unsaved_text")[file_path]);
@@ -62,13 +61,18 @@ $(function(){
                 b_history.addFile(file_path);
 
                 setProjectSetting('curr_file', file_path);
+                dispatchEvent("editor_set_file", {
+                    'detail': {
+                        'file': file_path
+                    }
+                });
                 saveData();
 
                 this.setModeFromFile(file_path);
                 winSetTitle(file_path.replace(curr_project,''));
-            } 
+            }
         },
-        
+
         post_setFile: function(file_path) {
             if (Object.keys(getProjectSetting('cursor_pos')).includes(file_path)) {
                 editor.gotoLine(getProjectSetting('cursor_pos')[file_path].row, getProjectSetting('cursor_pos')[file_path].column);
@@ -111,7 +115,7 @@ $(function(){
         zoom: function(amt) {
             this.setZoom(this.font_size + amt);
         },
-        
+
         setZoom: function(amt) {
             this.font_size = amt;
             editor.setFontSize(this.font_size);

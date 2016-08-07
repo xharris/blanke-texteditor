@@ -5,6 +5,28 @@
   bottom: 28px;
   left: 0;
 }
+#editor.side-content-open {
+  right: 50%;
+}
+.side-content {
+  position: absolute;
+  top: 72px;
+  left: 100%;
+  right: -100%;
+  bottom: 28px;
+  pointer-events: none;
+  opacity: 0;
+}
+.side-content.active {
+  position: absolute;
+  top: 72px;
+  left: 50%;
+  right: 0;
+  bottom: 28px;
+  pointer-events: all;
+  opacity: 1;
+  border: 1px solid #e0e0e0;
+}
 .ace-chrome .ace-gutter {
   background: white !important;
 }
@@ -528,6 +550,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  position: absolute;
 }
 html {
   box-sizing: border-box;

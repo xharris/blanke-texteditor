@@ -1,4 +1,4 @@
-var IDE_NAME = "TextEditor";
+var IDE_NAME = "BlankE";
 var DEV_MODE = true;
 
 var ZOOM_AMT = 1;
@@ -6,7 +6,7 @@ var ZOOM_AMT = 1;
 var nwFILE = require('fs');
 var nwPATH = require('path');
 var nwPROC = require('process');
-var nwZIP = require("unzip");
+var nwZIP = require("zlib");
 
 var nwGREP = require('simple-grep');
 
@@ -38,7 +38,6 @@ var curr_project;
 var curr_folder;
 var proj_tree = [];
 var re_file_ext = /(?:\.([^.]+))?$/;
-var ignore_first_selection = true;
 
 var search_box_options = {
     file: {
@@ -77,6 +76,7 @@ $(function(){
     loadData(data_path);
 
     editor = ace.edit("editor");
+    editor.$blockScrolling = Infinity;
     aceModeList = ace.require("ace/ext/modelist");
 
     b_editor.setMode('Text');
@@ -142,7 +142,7 @@ $(function(){
     $(".search-type").comboBox(search_box_options);
 
     $("#in-search").on("keydown", function(evt) {
-        var keyCode = evt.keyCode || evt.which;;
+        var keyCode = evt.keyCode || evt.which;
         var key = evt.key;
 
         if (evt.ctrlKey && keyCode == 82) {
@@ -157,7 +157,7 @@ $(function(){
         }
     });
     $("#editor").on("keydown", function(evt) {
-        var keyCode = evt.keyCode || evt.which;;
+        var keyCode = evt.keyCode || evt.which;
         var key = evt.key;
         // command 224
 
@@ -200,17 +200,14 @@ $(function(){
         if (b_ide.isProjectSet()) {
             getProjectSetting('unsaved_text')[getProjectSetting('curr_file')] = editor.getValue();
         };
+
+        saveCursor();
     });
 
     // remember cursor position
-    editor.getSession().selection.on('changeCursor', function(e) {
-        if (ignore_first_selection) {
-            ignore_first_selection = false;
-        } else {
-            b_ide.addDataValue('cursor', {});
-            getProjectSetting('cursor_pos')[getProjectSetting('curr_file')] = editor.selection.getCursor();
-        }
-    })
+    $("#editor").on('click', function(e) {
+        saveCursor();
+    });
 
     // saving
     editor.commands.addCommand({
@@ -246,6 +243,13 @@ $(function(){
         setProjectFolder(choice);
     });
 });
+
+function saveCursor() {
+    console.log("save cursor");
+    b_ide.addDataValue('cursor', {});
+    getProjectSetting('cursor_pos')[getProjectSetting('curr_file')] = editor.selection.getCursor();
+    getProjectSetting('cursor_pos')[getProjectSetting('curr_file')].row += 1
+}
 
 var dirTree = function(dir, done) {
     var results = [];
@@ -329,6 +333,11 @@ function saveData() {
     );
 }
 
+function dispatchEvent(ev_name, ev_properties) {
+    var new_event = new CustomEvent(ev_name, ev_properties);
+    document.dispatchEvent(new_event);
+}
+
 function loadData(path, callback) {
     try {
         var stat = nwFILE.lstatSync(path);
@@ -339,11 +348,11 @@ function loadData(path, callback) {
                     ide_data = JSON.parse(data);
 
                     try {
-                        b_plugin.load(ide_data['plugins']);
+                        b_plugin.loadPlugins(ide_data['plugins']);
                         setProjectFolder(ide_data['current_project']);
                         b_editor.setZoom(ide_data['zoom']);
                         b_editor.setFile(getProjectSetting('curr_file'));
-                        b_history.load(getProjectSetting('history'));
+                        b_history.loadHistory(getProjectSetting('history'));
                     } catch(e) {
                         // make a whole new json
                         // ...
@@ -403,7 +412,7 @@ function setProjectFolder(new_path) {
     $(".suggestions").removeClass("active");
 
     refreshProjectTree(curr_project);
-    
+
     // TODO: will be a problem once alerts is implemented and USED
     b_editor.setFile(getProjectSetting("curr_file"));
 
@@ -447,6 +456,7 @@ function addCommands(new_commands) {
             commands[key] = [];
         }
         commands[key].push(new_commands[key]);
+
     }
 }
 

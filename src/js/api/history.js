@@ -5,7 +5,7 @@ $(function(){
         history_index: 0,
         history: [],
 
-        load: function(data) {
+        loadHistory: function(data) {
             if (data !== undefined) {
                 this.history_index = data['history_index'];
                 for (var h = 0; h < data['history'].length; h++) {

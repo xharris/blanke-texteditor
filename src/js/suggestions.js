@@ -49,9 +49,11 @@ $(function(){
             }
 
             // add highlight to selected
-            $('.suggestion')[sugg_index].classList.add('highlighted');
-            $('.suggestion')[sugg_index].scrollIntoView({behavior: "smooth"});
-            $(el_searchbox).val($(".suggestion")[sugg_index].dataset.value);
+            if ($('.suggestion')[sugg_index] !== undefined) {
+                $('.suggestion')[sugg_index].classList.add('highlighted');
+                $('.suggestion')[sugg_index].scrollIntoView({behavior: "smooth"});
+                $(el_searchbox).val($(".suggestion")[sugg_index].dataset.value);
+            }
 
         }
         // ESCAPE key

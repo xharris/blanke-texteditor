@@ -11,14 +11,16 @@ var findFile = {
 
         var files = proj_tree;
         // iterate through already typed path dirs
-        for (var p = 0; p < input_parts.length; p++) {
-            var part = input_parts[p];
+        if (files != undefined) {
+            for (var p = 0; p < input_parts.length; p++) {
+                var part = input_parts[p];
 
-            // find next directory to go down
-            for (var f = 0; f < files.length; f++) {
-                // TODO: if there is for example, '/.git' and '/.gitattributes', the first one gets priority (make this better)
-                if (files[f].name === part) {
-                    files = files[f].children;
+                // find next directory to go down
+                for (var f = 0; f < files.length; f++) {
+                    // TODO: if there is for example, '/.git' and '/.gitattributes', the first one gets priority (make this better)
+                    if (files[f].name === part) {
+                        files = files[f].children;
+                    }
                 }
             }
         }

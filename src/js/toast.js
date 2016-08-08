@@ -20,7 +20,7 @@ function addToast(options) {
     if (options['can_dismiss']) {
         var el_btn_dismiss = document.createElement("button");
         $(el_btn_dismiss).addClass('btn-close');
-        $(el_btn_dismiss).html('<i class="fa fa-times" aria-hidden="true"></i>');
+        $(el_btn_dismiss).html('<i class="mdi mdi-close" aria-hidden="true"></i>');
         el_btn_dismiss.addEventListener("click", function(){
             $(this).parent(".toast").next('br').remove();
             $(this).parent(".toast").fadeOut(300, function() { $(this).remove(); })

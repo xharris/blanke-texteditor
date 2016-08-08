@@ -313,6 +313,7 @@
   top: 0px;
   font-size: 20px;
   cursor: pointer;
+  margin: 10px;
 }
 .ide-options > h1 {
   margin: 0px;
@@ -331,7 +332,7 @@
   display: block;
   width: 100%;
   padding: 10px 4px;
-  background-color: white;
+  background-color: transparent;
   outline: none;
   border: none;
   cursor: pointer;
@@ -471,6 +472,7 @@
   top: 0px;
   font-size: 20px;
   cursor: pointer;
+  margin: 10px;
 }
 .plugin-viewer > .actions > .btn-add {
   background-color: white;
@@ -529,7 +531,7 @@
   cursor: pointer;
   font-size: 20px;
   text-align: center;
-  background-color: white;
+  background-color: transparent;
   outline: none;
   border: none;
   transition: all 0.2s ease-in-out;
@@ -611,7 +613,7 @@
   min-width: 32px;
   display: inline-block;
   text-align: center;
-  margin-right: 2px;
+  margin-right: 6px;
   padding: 0px 4px;
 }
 .status-bar .projects {
@@ -621,6 +623,7 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  margin: 5px;
   outline: none;
   border: none;
   border-bottom: solid 1px #9e9e9e;
@@ -717,9 +720,102 @@
   outline: none;
   cursor: pointer;
   pointer-events: all;
+  padding: 3px;
+  font-size: 15px;
 }
 #main_window[theme=dark] {
-  background-color: black;
+  background-color: #424242;
+}
+#main_window[theme=dark] input[type=text] {
+  background-color: #212121;
+  color: #f5f5f5;
+}
+#main_window[theme=dark] input[type=text]:focus {
+  outline: none;
+  box-shadow: 0px 1px 0px 0px #dcdcdc;
+}
+#main_window[theme=dark] .side-content {
+  background-color: white;
+}
+#main_window[theme=dark] .search-bar-container #in-search:focus {
+  box-shadow: 0px 1px 0px 0px #9e9e9e;
+}
+#main_window[theme=dark] .suggestions .suggestion {
+  background-color: #616161;
+  color: #bdbdbd;
+}
+#main_window[theme=dark] .suggestions .suggestion.highlighted {
+  background-color: #9e9e9e;
+  color: #424242;
+}
+#main_window[theme=dark] .suggestions .suggestion.highlighted .options {
+  color: #bdbdbd;
+}
+#main_window[theme=dark] .suggestions .suggestion.high-priority {
+  color: #b2ebf2;
+}
+#main_window[theme=dark] .suggestions .suggestion.high-priority .full-path {
+  color: #bdbdbd;
+}
+#main_window[theme=dark] .suggestions .suggestion.high-priority.highlighted {
+  background-color: #9e9e9e;
+  color: #006064;
+}
+#main_window[theme=dark] .suggestions .suggestion.high-priority.highlighted .full-path {
+  color: #212121;
+}
+#main_window[theme=dark] .status-bar {
+  background-color: #424242;
+}
+#main_window[theme=dark] .status-bar .keycode {
+  color: #e0e0e0;
+}
+#main_window[theme=dark] .status-bar .keycode .char {
+  color: #424242;
+}
+#main_window[theme=dark] .status-bar .projects {
+  background-color: #616161;
+  color: #e0e0e0;
+  border-bottom: none;
+}
+#main_window[theme=dark] .file-history .file {
+  border-color: #9e9e9e;
+  background-color: #212121;
+  color: #9e9e9e;
+}
+#main_window[theme=dark] .file-history .file::before {
+  border-left-color: #212121;
+}
+#main_window[theme=dark] .file-history .file::after {
+  border-left-color: #9e9e9e;
+}
+#main_window[theme=dark] .plugin-viewer {
+  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.8);
+  background-color: #bdbdbd;
+}
+#main_window[theme=dark] .plugin-viewer .plugin {
+  background-color: #757575;
+  color: #eeeeee;
+}
+#main_window[theme=dark] .plugin-viewer .plugin .plugin-actions button {
+  color: #eeeeee;
+}
+#main_window[theme=dark] .plugin-viewer .plugin .plugin-actions button:hover {
+  background-color: #e0e0e0;
+  color: #212121;
+}
+#main_window[theme=dark] .ide-options {
+  background-color: #bdbdbd;
+}
+#main_window[theme=dark] .ide-options .option-tabs .option.selected {
+  background-color: #e0e0e0;
+}
+#main_window[theme=dark] .toast-container .toast {
+  background-color: #757575;
+  color: #eeeeee;
+}
+#main_window[theme=dark] .toast-container .toast .btn-close {
+  color: #eeeeee;
 }
 @font-face {
   font-family: "Roboto";

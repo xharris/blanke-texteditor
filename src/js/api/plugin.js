@@ -99,6 +99,8 @@ $(function(){
                     }
                 }
             }
+
+            b_plugin.refreshPluginViewerList();
         },
 
         update: function(name) {

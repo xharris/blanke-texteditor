@@ -14,7 +14,15 @@ var nwGREP = require('simple-grep');
 var eIPC = require('electron').ipcRenderer;
 
 var ide_themes = ["light", "dark"];
-var editor_themes = ["ambiance", "chaos", "chrome", "clouds", "clouds_midnight", "cobalt"];
+var editor_themes = [
+    "ambiance", "chaos", "chrome", "clouds", "clouds_midnight", "cobalt",
+    "crimson_editor", "dawn", "dreamweaver", "eclipse", "github", "idle_fingers",
+    "iplastic", "katzenmilch", "kr_theme", "kuroir", "merbivore",
+    "merbivore_soft", "mono_industrial", "monokai", "pastel_on_dark", "solarized_dark",
+    "solarized_light", "sqlserver", "terminal", "textmate", "tomorrow", "tomorrow_night",
+    "tomorrow_night_blue", "tomorrow_night_bright", "tomorrow_night_eighties",
+    "twilight", "vibrant_ink", "xcode"
+];
 
 var default_options = {
     "appearance": {

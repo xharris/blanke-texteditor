@@ -311,12 +311,16 @@
   right: -110%;
   width: 500px;
   z-index: 85;
+  opacity: 0;
+  pointer-events: none;
   background-color: white;
   transition: all 1s ease-in-out;
 }
 .ide-options.active {
   padding: 5px;
   right: 0px;
+  opacity: 1;
+  pointer-events: all;
 }
 .ide-options > .btn-close {
   background-color: transparent;

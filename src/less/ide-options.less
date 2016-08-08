@@ -6,9 +6,10 @@
     top: 0px;
     bottom: 0px;
     right: -110%;
-    width: 500px;
+    width: 450px;
     z-index: 85;
-
+    opacity: 0;
+    pointer-events: none;
     background-color: white;
 
     transition: all 1s ease-in-out;
@@ -16,6 +17,8 @@
     &.active {
         padding: 5px;
         right: 0px;
+        opacity: 1;
+        pointer-events: all;
     }
 
     >.btn-close {

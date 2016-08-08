@@ -16,10 +16,11 @@
     "plugin": true
   },
   "dependencies": {
+    "electron-prebuilt": "^1.2.0",
     "fs-extra": "^0.26.5",
     "image-size": "^0.4.0",
     "mdi": "^1.6.50",
-    "electron-prebuilt": "^1.2.0"
+    "rimraf": "^2.5.4"
   },
   "devDependencies": {
     "electron-packager": "^7.4.0",

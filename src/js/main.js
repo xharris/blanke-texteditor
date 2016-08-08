@@ -8,7 +8,6 @@ var nwPATH = require('path');
 var nwPROC = require('process');
 var nwZIP = require("unzip");
 var nwRAF = require("rimraf");
-
 var nwGREP = require('simple-grep');
 
 var eIPC = require('electron').ipcRenderer;
@@ -457,6 +456,12 @@ function setProjectFolder(new_path) {
         timeout: 1000
     });
     refreshProjectList();
+
+    dispatchEvent("post_set_project", {
+        'detail': {
+            'project': curr_project
+        }
+    });
 }
 
 function getProjectSetting(setting_name) {

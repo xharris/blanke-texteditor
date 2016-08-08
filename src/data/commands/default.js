@@ -1,5 +1,7 @@
 $(function(){
-    addCommands(default_commands);
+    //document.addEventListener("on_set_project", function(e) {
+        addCommands(default_commands);
+    //});
 });
 
 var findFile = {

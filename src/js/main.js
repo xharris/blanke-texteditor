@@ -191,14 +191,14 @@ $(function(){
             32: 'mdi-dots-horizontal', // space
             91: 'mdi-apple-keyboard-command', // apple META/command
             93: 'mdi-apple-keyboard-command', // apple META/command
-        }
+        };
 
         // doesn't use mdi
         var special_chars2 = {
             12: 'Clr', // clear
             17: 'Ctrl', // ctrl
             27: 'Esc', // escape
-        }
+        };
 
         // zoom in
         if (evt.ctrlKey && keyCode == 187) {
@@ -217,11 +217,12 @@ $(function(){
         }
 
         $(".status-bar .keycode").html('<span class="char">' + key + '</span>' + keyCode);
-
+        
         // text changes autosave
-        if (b_ide.isProjectSet()) {
+        if (b_ide.isProjectSet() && /^[a-z0-9]+$/i.test(key)) {
             getProjectSetting('unsaved_text')[getProjectSetting('curr_file')] = editor.getValue();
-        };
+            b_history.refreshList();
+        }
 
         saveCursor();
     });

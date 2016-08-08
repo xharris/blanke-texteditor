@@ -44,6 +44,10 @@ $(function(){
                 $(".file-history").append("<span class='file" + is_current + "' title='" + full_path + "' onclick='b_history.goToPosition(" + h + ");'>" + file_name + is_not_saved + "</span>");
 
             }
+            // clear history button
+            if (this.history.length > 0) {
+                $(".file-history").append("<button class='clear-history' onclick='b_history.clear();' title='Clear history'><i class='mdi mdi-close'></i></button>");
+            }
 
             $(".file-history > .file.is-open")[0].scrollIntoView({
                 behavior: "smooth"
@@ -75,6 +79,16 @@ $(function(){
         forward: function() {
             if (this.history_index > 0) {
                 this.goToPosition(this.history_index - 1);
+            }
+        },
+        
+        clear: function() {
+            this.history = [];
+            this.history_index = 0;
+            
+            // add currently opened file as first value in history
+            if (getProjectSetting("curr_file") != '') {
+                this.addFile(getProjectSetting("curr_file"));
             }
         }
     }

@@ -3,6 +3,8 @@
 
 @box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.8);
 
+@scrollbar-thumb-color: #616161;
+
 @input-background-color: #212121;
 @input-text-color: #f5f5f5;
 
@@ -15,7 +17,8 @@
 @history-text-color: #9e9e9e;
 @history-background-color: #212121;
 @history-border-color: #9e9e9e;
-@history-clear-color: #bdbdbd;
+@history-clear-color: initial;
+@history-clear-background-color: #bdbdbd;
 @history-hover-background-color: #424242;
 @history-hover-text-color: #bdbdbd;
 
@@ -48,6 +51,10 @@
 
 #main_window[theme=dark] {
     background-color: @background-color;
+
+    *::-webkit-scrollbar-thumb {
+    	background-color: @scrollbar-thumb-color;
+    }
 
     input[type=text] {
         background-color: @input-background-color;
@@ -148,6 +155,7 @@
         
         .clear-history {
             color: @history-clear-color;
+            background-color: @history-clear-background-color;
         }
     }
 

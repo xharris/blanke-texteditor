@@ -51,7 +51,8 @@ var project_settings_template = {
 
 var labels = {
     project: '<span class="label label-red">project</span>',
-    plugin: '<span class="label label-orange">plugin</span>'
+    plugin: '<span class="label label-orange">plugin</span>',
+    file: '<span class="label label-gray">file</span>'
 };
 
 var editor, aceModeList;
@@ -148,11 +149,18 @@ $(function(){
 
                 addProjectFolder(in_path)
             }
+            else if (file_type.isSymbolicLink()) {
+                addToast({
+                    message: " symoblic! " + in_path,
+                    can_dismiss: false,
+                    timeout: 2000
+                });
+            }
             else if (file_type.isFile()) {
                 addToast({
-                    message: "file: " + in_path,
+                    message: labels['file'] + " " + in_path,
                     can_dismiss: false,
-                    timeout: 1500
+                    timeout: 2000
                 });
             }
 
@@ -217,7 +225,7 @@ $(function(){
         }
 
         $(".status-bar .keycode").html('<span class="char">' + key + '</span>' + keyCode);
-        
+
         // text changes autosave
         if (b_ide.isProjectSet() && /^[a-z0-9]+$/i.test(key)) {
             getProjectSetting('unsaved_text')[getProjectSetting('curr_file')] = editor.getValue();
@@ -441,7 +449,7 @@ function setProjectFolder(new_path) {
 
     refreshProjectTree(curr_project);
 
-    // TODO: will be a problem once alerts is implemented and USED
+    // TODO: will be a problem once alerts is implemented and USED (huh?)
     b_editor.setFile(getProjectSetting("curr_file"));
 
     // TODO: needs a closer look at. will this continue to watch previous projects?
@@ -467,12 +475,14 @@ function setProjectFolder(new_path) {
 
 function getProjectSetting(setting_name) {
     if (b_ide.isProjectSet()) {
+        console.log('get ' + curr_project + ' > ' + setting_name);
         return ide_data['project_settings'][curr_project][setting_name];
     }
 }
 
 function setProjectSetting(setting_name, new_value) {
     if (b_ide.isProjectSet()) {
+        console.log('set ' + curr_project + ' > ' + setting_name + ' = ' + new_value);
         ide_data['project_settings'][curr_project][setting_name] = new_value;
     }
 }

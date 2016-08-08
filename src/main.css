@@ -414,6 +414,11 @@
   border-color: #ff5722;
   color: white;
 }
+.label-gray {
+  background-color: #616161;
+  border-color: #616161;
+  color: white;
+}
 .loading-bar {
   position: fixed;
   top: 0px;
@@ -896,5 +901,5 @@ html {
   background-color: transparent;
 }
 *::-webkit-scrollbar-thumb {
-  background-color: #616161;
+  background-color: #bdbdbd;
 }

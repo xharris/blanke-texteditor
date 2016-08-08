@@ -13,11 +13,12 @@ var findFile = {
 
         var files = proj_tree;
         // iterate through already typed path dirs
-        if (files != undefined) {
+        if (files && files.length) {
             for (var p = 0; p < input_parts.length; p++) {
                 var part = input_parts[p];
 
                 // find next directory to go down
+                console.log(files);
                 for (var f = 0; f < files.length; f++) {
                     // TODO: if there is for example, '/.git' and '/.gitattributes', the first one gets priority (make this better)
                     if (files[f].name === part) {

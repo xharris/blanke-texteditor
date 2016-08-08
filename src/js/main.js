@@ -475,14 +475,14 @@ function setProjectFolder(new_path) {
 
 function getProjectSetting(setting_name) {
     if (b_ide.isProjectSet()) {
-        console.log('get ' + curr_project + ' > ' + setting_name);
+        //console.log('get ' + curr_project + ' > ' + setting_name);
         return ide_data['project_settings'][curr_project][setting_name];
     }
 }
 
 function setProjectSetting(setting_name, new_value) {
     if (b_ide.isProjectSet()) {
-        console.log('set ' + curr_project + ' > ' + setting_name + ' = ' + new_value);
+        //console.log('set ' + curr_project + ' > ' + setting_name + ' = ' + new_value);
         ide_data['project_settings'][curr_project][setting_name] = new_value;
     }
 }

@@ -1,0 +1,1 @@
+{ "name": "Grep", "version": "1", "main_js": "grep.js", "js": ["node_modules/simple-grep/simple-grep.js"], "css": ["grep.css"]}

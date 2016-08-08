@@ -24,7 +24,7 @@ $(function(){
                 // look at plugin.json (contains info about plugin)
                 var p_json = '';
                 try {
-                    var stat = nwFILE.lstatSync(p_info);
+                    //var stat = nwFILE.lstatSync(p_info);
 
                     if (stat.isFile()) {
                         p_json = nwFILE.readFileSync(p_info).toString();
@@ -33,9 +33,9 @@ $(function(){
                         plugin_info[p_name].folder_name = p_name;
                     }
                 } catch (e) {
-                    console.log('ERR: unable to load plugin: ' + p_name);
-                    b_plugin.removePlugin(p_name);
-                    return;
+                   console.log('ERR: unable to load plugin: ' + p_name);
+                   b_plugin.removePlugin(p_name);
+                   return;
                 }
 
                 var json_keys = Object.keys(p_json);
@@ -88,7 +88,8 @@ $(function(){
                             fileref.onload = function() {
                                 dispatchEvent("plugin_js_loaded", {
                                     'detail': {
-                                        'plugin': p_json
+                                        'plugin': p_json,
+                                        'path': p_path
                                     }
                                 });
                             }

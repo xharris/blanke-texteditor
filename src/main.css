@@ -227,6 +227,7 @@
   left: 0px;
   height: 34px;
   padding: 0px;
+  white-space: nowrap;
   overflow-x: auto;
   overflow-y: hidden;
 }
@@ -244,14 +245,19 @@
 }
 .file-history .clear-history {
   position: absolute;
-  right: 0px;
-  width: 40px;
-  height: 40px;
+  right: 6px;
+  width: 20px;
+  height: 20px;
   background: none;
   outline: none;
   border: none;
   font-size: 16px;
   cursor: pointer;
+  bottom: 8px;
+  background-color: gray;
+  border-radius: 100%;
+  z-index: 80;
+  padding: 0px;
 }
 .file-history .file {
   line-height: 30px;
@@ -264,7 +270,7 @@
   font-size: 13px;
   background-color: white;
   cursor: pointer;
-  top: 5px;
+  bottom: 1px;
   transition: all 0.2s ease-in-out;
 }
 .file-history .file.is-open {
@@ -309,7 +315,7 @@
   top: 0px;
   bottom: 0px;
   right: -110%;
-  width: 500px;
+  width: 450px;
   z-index: 85;
   opacity: 0;
   pointer-events: none;
@@ -474,10 +480,14 @@
   right: -110%;
   width: 300px;
   z-index: 85;
+  opacity: 0;
+  pointer-events: none;
   background-color: white;
   transition: all 1s ease-in-out;
 }
 .plugin-viewer.active {
+  opacity: 1;
+  pointer-events: all;
   padding: 5px;
   right: 0px;
 }

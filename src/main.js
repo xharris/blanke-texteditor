@@ -1,3 +1,5 @@
+var DEV_MODE = true;
+
 /* electron start */
 const electron = require('electron');
 // Module to control application life.
@@ -18,13 +20,15 @@ function createWindow () {
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
-      title: "TextEditor",
+      title: "BlankE",
       center: true,
       //width: 1200,
       //height: 900
   });
 
-  //mainWindow.webContents.openDevTools();
+  if (DEV_MODE) {
+      mainWindow.webContents.openDevTools();
+  }
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 

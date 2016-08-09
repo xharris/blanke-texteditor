@@ -37,8 +37,8 @@ $(function(){
                 if (h == this.history_index) {
                     is_current = ' is-open';
                 }
-                // console.log(Object.keys(getProjectSetting('unsaved_text')));
-                if (Object.keys(getProjectSetting('unsaved_text')).includes(full_path)) {
+                // console.log(Object.keys(b_project.getSetting('unsaved_text')));
+                if (Object.keys(b_project.getSetting('unsaved_text')).includes(full_path)) {
                     is_not_saved = '*';
                 }
                 $(".file-history").append("<span class='file" + is_current + "' title='" + full_path + "' onclick='b_history.goToPosition(" + h + ");'>" + file_name + is_not_saved + "</span>");
@@ -60,7 +60,7 @@ $(function(){
             }
             this.history.splice(this.history_index, 0, path);
             this.refreshList();
-            saveData();
+            b_ide.saveData();
         },
 
         goToPosition: function(position) {
@@ -87,8 +87,8 @@ $(function(){
             this.history_index = 0;
             
             // add currently opened file as first value in history
-            if (getProjectSetting("curr_file") != '') {
-                this.addFile(getProjectSetting("curr_file"));
+            if (b_project.getSetting("curr_file") != '') {
+                this.addFile(b_project.getSetting("curr_file"));
             }
         }
     }

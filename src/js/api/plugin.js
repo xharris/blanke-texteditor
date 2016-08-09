@@ -129,7 +129,7 @@ $(function(){
             nwFILE.mkdirSync(folder_path);
 
             // add to ide_data as that dir_name
-            ide_data['plugins'].push(folder_name);
+            b_ide.getData()['plugins'].push(folder_name);
 
             // unzip into plugin directory
             nwFILE.createReadStream(path).pipe(nwZIP.Extract({ path: folder_path }).on("close", function(){
@@ -143,14 +143,14 @@ $(function(){
             nwRAF(nwPATH.join(nwPROC.cwd(),'data','plugins',plugin_name), function() {
                 // remove from list
                 delete plugin_info[plugin_name];
-                ide_data['plugins'].splice(ide_data['plugins'].indexOf(plugin_name), 1);
+                b_ide.getData()['plugins'].splice(b_ide.getData()['plugins'].indexOf(plugin_name), 1);
 
                 $(".js-" + plugin_name).remove();
                 $(".css-" + plugin_name).remove();
 
                 b_plugin.refreshPluginViewerList();
 
-                addToast({
+                b_ide.addToast({
                     message: 'removed ' + labels['project'] + ' ' + plugin_info[plugin_name].name,
                     can_dismiss: true,
                     timeout: 1000
@@ -168,8 +168,8 @@ $(function(){
             $(".plugin-viewer > .list").empty();
             var list_html = '';
 
-            for (var p = 0; p < ide_data['plugins'].length; p++) {
-                var p_dirname = ide_data['plugins'][p];
+            for (var p = 0; p < b_ide.getData()['plugins'].length; p++) {
+                var p_dirname = b_ide.getData()['plugins'][p];
                 var p_info = plugin_info[p_dirname];
                 try {
                     var stat = nwFILE.lstatSync(nwPATH.join(nwPROC.cwd(),'data','plugins',p_dirname));
@@ -196,7 +196,7 @@ $(function(){
         // incomplete
         removePlugin: function(plugin_name) {
             $(".plugin ." + plugin_name).addClass("removed");
-            ide_data['plugins'].splice(ide_data['plugins'].indexOf(plugin_name), 1);
+            b_ide.getData()['plugins'].splice(b_ide.getData()['plugins'].indexOf(plugin_name), 1);
         },
 
         hideViewer: function() {

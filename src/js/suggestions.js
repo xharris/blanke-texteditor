@@ -75,8 +75,6 @@ $(function(){
 
     // on suggestion selection
     $(".suggestions").on('click', '.suggestion', function() {
-        console.log(this)
-        console.log('hi')
         $(el_searchbox).val($(this)[0].dataset.value);
         $(".suggestions").removeClass("active");
         sugg_index = -1;
@@ -86,25 +84,64 @@ $(function(){
 
 function newInput() {
     var input_text = this.value;
-    var search_type = getSearchType();
-    
-    // hide box if nothing is in the search box    
+    var search_type = b_search.getType();
+    var commands = b_search.getCommands(search_type);
+
+    // hide box if nothing is in the search box
     if (input_text.length < 1) {
         $(".suggestions").removeClass("active");
         sugg_index = -1;
     } else {
-        if (Object.keys(commands).includes(search_type)) {
-            for (var c = 0; c < commands[search_type].length; c++) {
-                var html = "";
-                html = commands[search_type][c].suggest(input_text);
-                $(".suggestions").html(html);
-                if (html.length > 1) {
-                    $(".suggestions").addClass("active");
-                    sugg_index = -1;
+        for (var c = 0; c < commands.length; c++) {
+            var final_html = "";
+
+            if (search_type === "file") {
+                final_html = commands[c].suggest(input_text);
+
+            } else if (search_type === "ide") {
+                var input_parts = input_text.split(' ');
+                var html = [];
+
+                // previous suggestion (higher priority)
+                for (var r = 0; r < b_project.getSetting('recent_ide_commands').length; r++) {
+                    var command = b_project.getSetting('recent_ide_commands')[r];
+
+                    if (command.startsWith(input_text)) {
+                        var result_txt = command.replace(input_text, "<b>" + input_text + "</b>");
+                        html.push("<div class='suggestion high-priority' tabIndex='$1' data-value='" + command + "'>" + result_txt + "<button class='remove-sugg' onclick='b_search.removeSuggestion(\"" + file_path + "\");$(this).parent().remove();'><i class='mdi mdi-close'></i></button></div>");
+                    }
+                }
+
+                // create html suggestion array
+                for (var c = 0; c < commands.length; c++) {
+                    for (var d = 0; d < commands[c].length; d++) {
+                        var command_start = commands[c][d][0];
+
+                        if (command_start.includes(input_text)) {
+
+                            var result_txt = command_start.replace(input_text, "<b>" + input_text + "</b>") + " <span class='options'>" + ideCommands[c][1] + "</span>";
+
+                            // normal priority suggestion
+                            if (!b_project.getSetting('recent_ide_commands').includes(command_start)) {
+                                html.push("<div class='suggestion' tabIndex='$1' data-value='" + command_start + "'>" + result_txt + "</div>");
+                            }
+                        }
+                    }
+                }
+
+                // turn it into a string
+                for (var h = 0; h < html.length; h++) {
+                    final_html += html[h].replace('$1', h+1);
                 }
             }
+
+            $(".suggestions").html(final_html);
+            if (final_html.length > 1) {
+                $(".suggestions").addClass("active");
+                sugg_index = -1;
+            }
         }
-    
+
         // hide suggestions if there are none
         if ($(".suggestions").html().length <= 1) {
             $(".suggestions").removeClass("active");
@@ -114,12 +151,22 @@ function newInput() {
 }
 
 function submitSearch() {
+    var search_type = b_search.getType();
     var input_text = $(el_searchbox).val();
-    var search_type = getSearchType();
 
-    if (Object.keys(commands).includes(search_type)) {
-        for (var c = 0; c < commands[search_type].length; c++) {
-            commands[search_type][c].submit(input_text);
+    if (search_type === 'file') {
+        var commands = b_search.getCommands(b_search.getType());
+
+
+        for (var c = 0; c < commands.length; c++) {
+            commands[c].submit(input_text);
+        }
+    }
+    else if (search_type === 'ide') {
+        var commands = b_search.getIdeCmdSubmits();
+
+        for (var c = 0; c < commands.length; c++) {
+            commands[c](input_text);
         }
     }
 }

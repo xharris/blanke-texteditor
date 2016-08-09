@@ -9,7 +9,7 @@
   "author": "Xavier Harris <xhh950@gmail.com> (http://xhhstuff.me)",
   "license": "CC-BY-NC-SA-4.0",
   "scripts": {
-    "start": "grunt && electron .",
+    "start": "grunt && /Users/xharris1/Documents/texteditor/electron/Electron.app/Contents/MacOS/Electron .",
     "dev": "electron . --enable-logging",
     "clean": "rm -rf ./dist",
     "clean:osx": "rm -rf ./dist/osx",

@@ -38,8 +38,8 @@ $(function(){
 
             if (stat.isFile()) {
                 // has file been edited earlier without saving?
-                if (Object.keys(getProjectSetting("unsaved_text")).includes(file_path)) {
-                    editor.setValue(getProjectSetting("unsaved_text")[file_path]);
+                if (Object.keys(b_project.getSetting("unsaved_text")).includes(file_path)) {
+                    editor.setValue(b_project.getSetting("unsaved_text")[file_path]);
                     this.post_setFile(file_path);
                 }
                 // file has not been previously edited and will be loaded 'classically'
@@ -54,44 +54,44 @@ $(function(){
                     });
                 }
 
-                // add file to getProjectSetting('recent_files')
+                // add file to b_project.getSetting('recent_files')
                 var new_recent = nwPATH.basename(file_path);
                 b_search.removeSuggestion(file_path);
                 b_search.addSuggestion(file_path);
 
                 b_history.addFile(file_path);
 
-                setProjectSetting('curr_file', file_path);
+                b_project.setSetting('curr_file', file_path);
                 dispatchEvent("editor_set_file", {
                     'detail': {
                         'file': file_path
                     }
                 });
-                saveData();
+                b_ide.saveData();
 
                 this.setModeFromFile(file_path);
-                winSetTitle(file_path.replace(curr_project,''));
+                b_ide.setWinTitle(file_path.replace(b_project.curr_project,''));
             }
         },
 
         post_setFile: function(file_path) {
-            if (Object.keys(getProjectSetting('cursor_pos')).includes(file_path)) {
-                editor.gotoLine(getProjectSetting('cursor_pos')[file_path].row, getProjectSetting('cursor_pos')[file_path].column);
+            if (Object.keys(b_project.getSetting('cursor_pos')).includes(file_path)) {
+                editor.gotoLine(b_project.getSetting('cursor_pos')[file_path].row, b_project.getSetting('cursor_pos')[file_path].column);
             }
             this.focus();
         },
 
         saveFile: function() {
-            if (getProjectSetting('curr_file') !== '') {
+            if (b_project.getSetting('curr_file') !== '') {
                 //try {
                     nwFILE.writeFileSync(
-                        getProjectSetting('curr_file'),
+                        b_project.getSetting('curr_file'),
                         editor.getValue(),
                         {
                             flag: 'w+'
                         }
                     )
-                    delete getProjectSetting("unsaved_text")[getProjectSetting("curr_file")];
+                    delete b_project.getSetting("unsaved_text")[b_project.getSetting("curr_file")];
                     b_history.refreshList();
                     console.log("saved")
                 //} catch (e) {
@@ -121,7 +121,7 @@ $(function(){
             this.font_size = amt;
             editor.setFontSize(this.font_size);
             b_ide.setOption('editor', 'zoom', this.font_size);
-            saveData();
+            b_ide.saveData();
         }
     }
 });

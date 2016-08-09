@@ -34,7 +34,7 @@ var ideActions = {
                 var result_txt = command_start.replace(input, "<b>" + input + "</b>") + " <span class='options'>" + ideCommands[c][1] + "</span>";
 
                 // normal priority suggestion
-                if (!ide_data['recent_ide_commands'].includes(command_start)) {
+                if (!b_project.getOption('recent_ide_commands').includes(command_start)) {
                     html.push("<div class='suggestion' tabIndex='$1' data-value='" + command_start + "'>" + result_txt + "</div>");
                 }
             }

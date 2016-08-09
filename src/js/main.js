@@ -1,5 +1,5 @@
 var IDE_NAME = "BlankE";
-var DEV_MODE = true;
+var DEV_MODE = false;
 
 var ZOOM_AMT = 1;
 
@@ -496,11 +496,12 @@ function addCommands(new_commands) {
 
     for (var k = 0; k < keys.length; k++) {
         var key = keys[k];
-        if (!Object.keys(commands).includes(key)) {
-            commands[key] = [];
+        if (undefined !== commands) {
+            if (!Object.keys(commands).includes(key)) {
+                commands[key] = [];
+            }
+            commands[key].push(new_commands[key]);
         }
-        commands[key].push(new_commands[key]);
-
     }
 }
 

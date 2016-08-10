@@ -28,8 +28,6 @@ var findFile = {
         }
 
         // previous suggestion (higher priority)
-        console.log(b_project.settings)
-        console.log(b_project.getSetting('recent_files'))
         for (var r = 0; r < b_project.getSetting('recent_files').length; r++) {
             var full_path = normalizePath(b_project.getSetting('recent_files')[r]);
             var file_path = full_path.replace(b_project.curr_project,'');

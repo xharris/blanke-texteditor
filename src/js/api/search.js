@@ -9,6 +9,11 @@ $(function(){
         ide_commands: [],
         ide_cmd_submit: [],
 
+        // clear in-search input value
+        clear: function() {
+            $("#in-search").val();
+        },
+
         setOptions: function(new_options) {
             b_search.options = new_options;
             b_search.setType(Object.keys(new_options)[0]);
@@ -40,7 +45,7 @@ $(function(){
         },
 
         focus: function() {
-            $("#in-search").val('');
+            b_search.clear();
             $("#in-search").focus();
         },
 

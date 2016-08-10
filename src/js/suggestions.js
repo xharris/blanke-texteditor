@@ -58,7 +58,7 @@ $(function(){
         }
         // ESCAPE key
         else if (keyCode == 27) {
-            $("#in-search").val('');
+            b_search.clear();
             $(".suggestions").removeClass("active");
             sugg_index = -1;
             b_editor.focus();

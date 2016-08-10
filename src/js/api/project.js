@@ -11,7 +11,7 @@ var project_settings_template = {
 
 $(function(){
     b_project = {
-        settings: {},
+        settings: project_settings_template,
         curr_project: '',
         curr_file: '',      // currently opened file
         data_path: '',
@@ -35,6 +35,16 @@ $(function(){
 
         addFolder: function(path) {
             path = normalizePath(path);
+
+            // don't add project if it was previously added
+            if (b_ide.getData()['project_paths'].includes(path)) {
+                b_ide.addToast({
+                    message: labels['project'] + ' already added',
+                    can_dismiss: true,
+                    timeout: 1000
+                });
+                return;
+            }
             var folder_name = nwPATH.basename(path);
 
             b_ide.getData()['project_paths'].push(path);
@@ -56,6 +66,12 @@ $(function(){
 
         setFolder: function(new_path) {
             if (new_path === undefined || new_path === "") return;
+
+            if (b_ide.isProjectSet()) {
+                b_project.saveData();
+                b_history.clear();
+            }
+
             // set current project in settings
             b_ide.getData()['current_project'] = normalizePath(new_path);
 
@@ -63,34 +79,39 @@ $(function(){
             b_project.curr_project = b_ide.getData()['current_project'];
             b_project.data_path = nwPATH.join(b_ide.data_folder, new_path.hashCode() + '.json');
 
-            $(".suggestions").removeClass("active");
+            b_project.loadData(function(){
+                b_search.clear();
+                b_editor.clear();
 
-            b_project.refreshTree(b_project.curr_project);
+                $(".suggestions").removeClass("active");
 
-            // TODO: will be a problem once alerts is implemented and USED (huh?)
-            b_editor.setFile(b_project.getSetting("curr_file"));
+                b_history.loadHistory(b_project.settings.history);
+                b_project.refreshTree(b_project.curr_project);
 
-            /* TODO: needs a closer look at. will this continue to watch previous projects?
-            nwFILE.watch(b_project.curr_project, (eventType, filename) => {
-                if (filename) {
-                    b_project.refreshTree(b_project.curr_project);
-                }
-            })*/
+                // TODO: will be a problem once alerts is implemented and USED (huh?)
+                b_editor.setFile(b_project.getSetting("curr_file"));
 
-            b_ide.addToast({
-                message: 'set ' + labels['project'] + ' ' + b_project.curr_project,
-                can_dismiss: true,
-                timeout: 1000
+                /* TODO: needs a closer look at. will this continue to watch previous projects?
+                nwFILE.watch(b_project.curr_project, (eventType, filename) => {
+                    if (filename) {
+                        b_project.refreshTree(b_project.curr_project);
+                    }
+                })*/
+
+                b_ide.addToast({
+                    message: 'set ' + labels['project'] + ' ' + b_project.curr_project,
+                    can_dismiss: true,
+                    timeout: 1000
+                });
+                b_project._refreshList();
+
+                dispatchEvent("post_set_project", {
+                    'detail': {
+                        'project': b_project.curr_project
+                    }
+                });
             });
-            b_project._refreshList();
 
-            dispatchEvent("post_set_project", {
-                'detail': {
-                    'project': b_project.curr_project
-                }
-            });
-
-            b_project.loadData();
         },
 
         _refreshList: function() {
@@ -126,42 +147,36 @@ $(function(){
         },
 
         // load current project's .blanke file or make a new one if it doesn't exist
-        loadData: function() {
-            try {
-                var stat = nwFILE.lstatSync(b_project.data_path);
-
-                if (stat.isFile()) {
-                    nwFILE.readFile(b_project.data_path, function(err, data) {
+        loadData: function(done_callback) {
+            nwFILE.lstat(b_project.data_path, function(err, stats) {
+                if (!err && stats.isFile()) {
+                    nwFILE.readFile(b_project.data_path, 'utf-8', function(err, data) {
                         if (!err) {
-                            b_project.settings = JSON.parse(data);
+                            try {
+                                b_project.settings = JSON.parse(data);
+                            } catch (e) {
+                                console.log('ERR: could\'t load project for whatever reason. probably unexpected end of json.')
+                            }
+                                done_callback();
                         }
                     });
+                } else {
+                    console.log('ERR: cannot project file. creating new one.');
+                    b_project.settings = project_settings_template;
+                    b_project.saveData();
+                    b_project.loadData(done_callback);
                 }
-            } catch (e) {
-                // no data file
-                b_project.settings = project_settings_template;
-                b_project.saveData();
-            }
+            });
         },
 
         // save current project's .blanke file
         saveData: function() {
-            b_project.getSetting('history') = b_history.save();
-
-            try {
-                nwFILE.mkdirSync(nwPATH.join(eAPP.getPath("userData"),'data'));
-            } catch (e) {}
-
-            console.log('saving')
-            console.log(b_project.settings)
-            // save ide settings file
-            nwFILE.writeFileSync(
-                b_project.data_path,
-                JSON.stringify(b_project.settings),
-                {
-                    flag: 'w+'
-                }
-            );
+            b_project.settings.history = b_history.save();
+            nwFILE.mkdir(nwPATH.join(eAPP.getPath("userData"),'data'), function() {
+                // save ide settings file
+                nwFILE.writeFile(b_project.data_path, JSON.stringify(b_project.settings), {flag: 'w+'});
+            });
         }
     }
+
 });

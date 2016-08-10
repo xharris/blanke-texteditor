@@ -127,6 +127,8 @@ $(function(){
                 }
             }
             b_ide.getData().options[name][key] = value;
+
+            b_ide.saveData();
         },
 
         // get option from ide_data
@@ -137,6 +139,7 @@ $(function(){
             return b_ide.getData().options[name];
         },
 
+        // fill input boxes for option panel
         loadOptions: function() {
             // APPEARANCE
             var set_appear = b_ide.getOption("appearance");
@@ -177,52 +180,38 @@ $(function(){
         },
 
         loadData: function(callback) {
-            try {
-                var stat = nwFILE.lstatSync(b_ide.data_path);
-
-                if (stat.isFile()) {
-                    nwFILE.readFile(b_ide.data_path, function(err, data) {
+            nwFILE.lstat(b_ide.data_path, function(err, stats) {
+                if (!err && stats.isFile()) {
+                    nwFILE.readFile(b_ide.data_path, 'utf-8', function(err, data) {
                         if (!err) {
                             b_ide.data = JSON.parse(data);
 
-                            //try {
-                                b_plugin.loadPlugins(b_ide.getData()['plugins']);
-                                b_ide.loadOptions();
-                                b_project.setFolder(b_ide.getData()['current_project']);
-                                b_editor.setZoom(b_ide.getOption('editor').zoom);
-                                b_editor.setFile(b_project.getSetting('curr_file'));
-                                b_history.loadHistory(b_project.getSetting('history'));
-                            //} catch(e) {
-                                // make a whole new json
-                                // ...
-                            //}
+                            b_ide.loadOptions();
+                            b_plugin.loadPlugins(b_ide.getData()['plugins']);
+                            b_project.setFolder(b_ide.getData()['current_project']);
+                            b_editor.setZoom(b_ide.getOption('editor').zoom);
+
 
                         }
                     });
+                } else {
+                    console.log('ERR: cannot ide file ide_data.json. creating new one.');
+                    b_ide.saveData();
                 }
-            } catch (e) {
-
-            }
+            });
         },
 
         saveData: function() {
-            b_project.setSetting('history', b_history.save());
-            // create data directory
-            try {
-                nwFILE.mkdirSync(nwPATH.join(eAPP.getPath("userData"),'data'));
-            } catch (e) {}
-
-            // save ide settings file
-            nwFILE.writeFileSync(
-                b_ide.data_path,
-                JSON.stringify(b_ide.getData()),
-                {
-                    flag: 'w+'
-                }
-            );
-
-            // save project settings file
-            b_project.saveData();
+            // b_project.setSetting('history', b_history.save());
+            nwFILE.mkdir(nwPATH.join(eAPP.getPath("userData"),'data'), function() {
+                // save ide settings file
+                nwFILE.writeFile(b_ide.data_path, JSON.stringify(b_ide.getData()), {flag: 'w+'}, function(err) {
+                    // save project settings file
+                    if (b_ide.isProjectSet()) {
+                        b_project.saveData();
+                    }
+                });
+            });
         },
 
         /*

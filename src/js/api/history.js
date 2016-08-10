@@ -11,6 +11,7 @@ $(function(){
                 for (var h = 0; h < data['history'].length; h++) {
                     this.addFile(data['history'][h]);
                 }
+                b_history.refreshList();
             }
         },
 
@@ -49,12 +50,16 @@ $(function(){
                 $(".file-history").append("<button class='clear-history' onclick='b_history.clear();' title='Clear history'><i class='mdi mdi-close'></i></button>");
             }
 
-            $(".file-history > .file.is-open")[0].scrollIntoView({
-                behavior: "smooth"
-            });
+            var file_open = $(".file-history > .file.is-open")[0];
+            if (file_open !== undefined) {
+                file_open.scrollIntoView({
+                    behavior: "smooth"
+                });
+            }
         },
 
         addFile: function(path) {
+            console.log('history add: ' + path);
             if (this.history.includes(path)) {
                 this.history.splice(this.history.indexOf(path), 1);
             }
@@ -81,15 +86,17 @@ $(function(){
                 this.goToPosition(this.history_index - 1);
             }
         },
-        
+
         clear: function() {
             this.history = [];
             this.history_index = 0;
-            
+
             // add currently opened file as first value in history
             if (b_project.getSetting("curr_file") != '') {
                 this.addFile(b_project.getSetting("curr_file"));
             }
+            console.log('cleared history');
+            console.log(this.history);
         }
     }
 });

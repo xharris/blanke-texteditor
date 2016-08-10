@@ -11,7 +11,7 @@ $(function(){
 
         // clear in-search input value
         clear: function() {
-            $("#in-search").val();
+            $("#in-search").val('');
         },
 
         setOptions: function(new_options) {

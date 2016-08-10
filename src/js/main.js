@@ -266,3 +266,7 @@ String.prototype.hashCode = function(){
 	}
 	return Math.abs(hash).toString();
 }
+
+function copyObj(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}

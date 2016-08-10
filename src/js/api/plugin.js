@@ -23,28 +23,36 @@ $(function(){
 
                 // look at plugin.json (contains info about plugin)
                 var p_json = '';
-                try {
-                    //var stat = nwFILE.lstatSync(p_info);
-
-                    if (stat.isFile()) {
+                
+                nwFILE.lstat(p_info, function(err, stats) {
+                    if (!err && stats.isFile()) {
                         p_json = nwFILE.readFileSync(p_info).toString();
                         p_json = JSON.parse(p_json);
                         plugin_info[p_name] = p_json;
                         plugin_info[p_name].folder_name = p_name;
+                        b_plugin.importPluginResources(p_json);
+                    } else {
+                       console.log('ERR: unable to load plugin: ' + p_name);
+                       b_plugin.removePlugin(p_name);
+                       return;
                     }
-                } catch (e) {
-                   console.log('ERR: unable to load plugin: ' + p_name);
-                   b_plugin.removePlugin(p_name);
-                   return;
-                }
+                });
 
-                var json_keys = Object.keys(p_json);
-                // load css file
-                if (json_keys.includes("css")) {
-                    for (var c = 0; c < p_json["css"].length; c++) {
-                        // check if css file exists
-                        var stat = nwFILE.lstatSync(nwPATH.join(p_path, p_json['css'][c]));
-                        if (stat.isFile()) {
+            }
+
+            b_plugin.refreshPluginViewerList();
+        },
+        
+        importPluginResources: function(p_json) {
+            var json_keys = Object.keys(p_json);
+            
+            // load css files
+            
+            if (json_keys.includes("css")) {
+                for (var c = 0; c < p_json["css"].length; c++) {
+                    // check if css file exists
+                    nwFILE.lstat(nwPATH.join(p_path, p_json['css'][c]), function(err, stats) {
+                        if (!err && stats.isFile()) {
                             // import css file
                             var fileref=document.createElement("link")
                             fileref.classList.add("css-" + p_name);
@@ -54,54 +62,54 @@ $(function(){
                             if (typeof fileref!="undefined") {
                                 document.getElementsByTagName("head")[0].appendChild(fileref);
                             }
+                        } else {
+                            console.log("ERR: could not load " + p_json['css'][c] + " for " + p_json.name)
                         }
+                    });
+                }
+            }
+
+            // load main js file
+            if (json_keys.includes("main_js")) {
+                // check if it exists
+                var stat = nwFILE.lstatSync(nwPATH.join(p_path, p_json['main_js']));
+                if (stat.isFile()) {
+                    // import js file
+                    var fileref=document.createElement('script')
+                    fileref.classList.add("js-" + p_name);
+                    fileref.setAttribute("type","text/javascript")
+                    fileref.setAttribute("src", nwPATH.join(p_path, p_json['main_js']));
+                    if (typeof fileref!="undefined") {
+                        document.getElementsByTagName("head")[0].appendChild(fileref);
                     }
                 }
+            }
 
-                // load main js file
-                if (json_keys.includes("main_js")) {
+            // other js files
+            if (json_keys.includes("js")) {
+                for (var j = 0; j < p_json["js"].length; j++) {
                     // check if it exists
-                    var stat = nwFILE.lstatSync(nwPATH.join(p_path, p_json['main_js']));
+                    var stat = nwFILE.lstatSync(nwPATH.join(p_path, p_json['js'][j]));
                     if (stat.isFile()) {
                         // import js file
                         var fileref=document.createElement('script')
                         fileref.classList.add("js-" + p_name);
                         fileref.setAttribute("type","text/javascript")
-                        fileref.setAttribute("src", nwPATH.join(p_path, p_json['main_js']));
+                        fileref.setAttribute("src", nwPATH.join(p_path, p_json['js'][j]));
+                        fileref.onload = function() {
+                            dispatchEvent("plugin_js_loaded", {
+                                'detail': {
+                                    'plugin': p_json,
+                                    'path': p_path
+                                }
+                            });
+                        }
                         if (typeof fileref!="undefined") {
                             document.getElementsByTagName("head")[0].appendChild(fileref);
                         }
                     }
                 }
-
-                // other js files
-                if (json_keys.includes("js")) {
-                    for (var j = 0; j < p_json["js"].length; j++) {
-                        // check if it exists
-                        var stat = nwFILE.lstatSync(nwPATH.join(p_path, p_json['js'][j]));
-                        if (stat.isFile()) {
-                            // import js file
-                            var fileref=document.createElement('script')
-                            fileref.classList.add("js-" + p_name);
-                            fileref.setAttribute("type","text/javascript")
-                            fileref.setAttribute("src", nwPATH.join(p_path, p_json['js'][j]));
-                            fileref.onload = function() {
-                                dispatchEvent("plugin_js_loaded", {
-                                    'detail': {
-                                        'plugin': p_json,
-                                        'path': p_path
-                                    }
-                                });
-                            }
-                            if (typeof fileref!="undefined") {
-                                document.getElementsByTagName("head")[0].appendChild(fileref);
-                            }
-                        }
-                    }
-                }
             }
-
-            b_plugin.refreshPluginViewerList();
         },
 
         update: function(name) {

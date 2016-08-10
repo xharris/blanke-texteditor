@@ -25,9 +25,15 @@ $(function(){
 
     b_ide.loadData();
 
+    ace.require("ace/ext/language_tools");
     editor = ace.edit("editor");
     editor.$blockScrolling = Infinity;
     aceModeList = ace.require("ace/ext/modelist");
+    editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: false
+    });
 
     b_editor.setMode('Text');
     editor.setTheme("ace/theme/chrome");
@@ -134,7 +140,7 @@ $(function(){
         $(".status-bar .keycode").html('<span class="char">' + key + '</span>' + keyCode);
 
         // text changes autosave
-        if (b_ide.isProjectSet() && /^[a-z0-9]+$/i.test(key)) {
+        if (b_ide.isProjectSet() && /^[a-z0-9]$/i.test(key)) {
             b_project.getSetting('unsaved_text')[b_project.getSetting('curr_file')] = editor.getValue();
             b_history.refreshList();
         }

@@ -21,6 +21,7 @@
 @history-clear-background-color: #bdbdbd;
 @history-hover-background-color: #424242;
 @history-hover-text-color: #bdbdbd;
+@history-file-open-color: #e0e0e0;
 
 @suggestion-background-color: #616161;
 @suggestion-text-color: #bdbdbd;
@@ -134,6 +135,10 @@
             border-color: @history-border-color;
             background-color: @history-background-color;
             color: @history-text-color;
+            
+            &.is-open {
+                color: @history-file-open-color;
+            }
             
             &:hover {
                 background-color: @history-hover-background-color;

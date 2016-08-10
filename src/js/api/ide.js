@@ -207,9 +207,7 @@ $(function(){
                 // save ide settings file
                 nwFILE.writeFile(b_ide.data_path, JSON.stringify(b_ide.getData()), {flag: 'w+'}, function(err) {
                     // save project settings file
-                    if (b_ide.isProjectSet()) {
-                        b_project.saveData();
-                    }
+                    b_project.saveData();
                 });
             });
         },

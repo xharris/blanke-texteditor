@@ -11,7 +11,7 @@ var project_settings_template = {
 
 $(function(){
     b_project = {
-        settings: project_settings_template,
+        settings: copyObj(project_settings_template),
         curr_project: '',
         curr_file: '',      // currently opened file
         data_path: '',
@@ -48,7 +48,7 @@ $(function(){
             var folder_name = nwPATH.basename(path);
 
             b_ide.getData()['project_paths'].push(path);
-            b_project.settings = project_settings_template;
+            b_project.settings = copyObj(project_settings_template);
 
             b_ide.addToast({
                 message: 'added ' + labels['project'] + ' ' + folder_name,
@@ -64,54 +64,66 @@ $(function(){
             b_ide.saveData();
         },
 
+        // reset attributes and things to default values
+        reset: function() {
+            b_project.curr_file = '';
+            b_project.settings = copyObj(project_settings_template);
+            b_project.curr_project = '';
+            b_project.curr_file = '';      // currently opened file
+            b_project.data_path = '';
+            b_project.tree = [];
+        },
+
         setFolder: function(new_path) {
             if (new_path === undefined || new_path === "") return;
 
-            if (b_ide.isProjectSet()) {
-                b_project.saveData();
+            b_project.saveData(function(){
+
+                // reset things
                 b_history.clear();
-            }
+                b_project.reset();
 
-            // set current project in settings
-            b_ide.getData()['current_project'] = normalizePath(new_path);
+                // set current project in settings
+                b_ide.getData()['current_project'] = normalizePath(new_path);
 
-            // set current project in ide
-            b_project.curr_project = b_ide.getData()['current_project'];
-            b_project.data_path = nwPATH.join(b_ide.data_folder, new_path.hashCode() + '.json');
+                // set current project in ide
+                b_project.curr_project = b_ide.getData()['current_project'];
+                var proj_hashCode = new_path.hashCode();
+                b_project.data_path = nwPATH.join(b_ide.data_folder, proj_hashCode + '.json');
 
-            b_project.loadData(function(){
                 b_search.clear();
                 b_editor.clear();
+                b_project.loadData(function(){
 
-                $(".suggestions").removeClass("active");
+                    $(".suggestions").removeClass("active");
 
-                b_history.loadHistory(b_project.settings.history);
-                b_project.refreshTree(b_project.curr_project);
+                    b_history.loadHistory(b_project.settings.history);
+                    b_project.refreshTree(b_project.curr_project);
 
-                // TODO: will be a problem once alerts is implemented and USED (huh?)
-                b_editor.setFile(b_project.getSetting("curr_file"));
+                    // TODO: will be a problem once alerts is implemented and USED (huh?)
+                    b_editor.setFile(b_project.getSetting("curr_file"));
 
-                /* TODO: needs a closer look at. will this continue to watch previous projects?
-                nwFILE.watch(b_project.curr_project, (eventType, filename) => {
-                    if (filename) {
-                        b_project.refreshTree(b_project.curr_project);
-                    }
-                })*/
+                    /* TODO: needs a closer look at. will this continue to watch previous projects?
+                    nwFILE.watch(b_project.curr_project, (eventType, filename) => {
+                        if (filename) {
+                            b_project.refreshTree(b_project.curr_project);
+                        }
+                    })*/
 
-                b_ide.addToast({
-                    message: 'set ' + labels['project'] + ' ' + b_project.curr_project,
-                    can_dismiss: true,
-                    timeout: 1000
-                });
-                b_project._refreshList();
+                    b_ide.addToast({
+                        message: 'set ' + labels['project'] + ' ' + b_project.curr_project,
+                        can_dismiss: true,
+                        timeout: 1000
+                    });
+                    b_project._refreshList();
 
-                dispatchEvent("post_set_project", {
-                    'detail': {
-                        'project': b_project.curr_project
-                    }
+                    dispatchEvent("post_set_project", {
+                        'detail': {
+                            'project': b_project.curr_project
+                        }
+                    });
                 });
             });
-
         },
 
         _refreshList: function() {
@@ -157,25 +169,39 @@ $(function(){
                             } catch (e) {
                                 console.log('ERR: could\'t load project for whatever reason. probably unexpected end of json.')
                             }
-                                done_callback();
+                                if (done_callback) {
+                                    done_callback();
+                                }
                         }
                     });
                 } else {
-                    console.log('ERR: cannot project file. creating new one.');
-                    b_project.settings = project_settings_template;
-                    b_project.saveData();
-                    b_project.loadData(done_callback);
+                    console.log('ERR: cannot find project file. creating new one.');
+                    b_project.settings = copyObj(project_settings_template);
+                    b_project.saveData(function(){
+                        b_project.loadData(done_callback);
+                    });
                 }
             });
         },
 
         // save current project's .blanke file
-        saveData: function() {
-            b_project.settings.history = b_history.save();
-            nwFILE.mkdir(nwPATH.join(eAPP.getPath("userData"),'data'), function() {
-                // save ide settings file
-                nwFILE.writeFile(b_project.data_path, JSON.stringify(b_project.settings), {flag: 'w+'});
-            });
+        saveData: function(done_callback) {
+            if (b_ide.isProjectSet()) {
+                b_project.settings.history = b_history.save();
+                nwFILE.mkdir(nwPATH.join(eAPP.getPath("userData"),'data'), function() {
+                    // save ide settings file
+                    console.log("saving: " + b_project.curr_project + ' -- ' + b_project.data_path);
+                    nwFILE.writeFile(b_project.data_path, JSON.stringify(b_project.settings), {flag: 'w+'}, function() {
+                        if (done_callback) {
+                            done_callback();
+                        }
+                    });
+                });
+            } else {
+                if (done_callback) {
+                    done_callback();
+                }
+            }
         }
     }
 

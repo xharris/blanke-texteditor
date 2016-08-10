@@ -21,7 +21,7 @@ $(function(){
                     // has file been edited earlier without saving?
                     if (Object.keys(b_project.getSetting("unsaved_text")).includes(file_path)) {
                         editor.setValue(b_project.getSetting("unsaved_text")[file_path]);
-                        this.post_setFile(file_path);
+                        b_editor.post_setFile(file_path);
                     }
                     // file has not been previously edited and will be loaded 'classically'
                     else {

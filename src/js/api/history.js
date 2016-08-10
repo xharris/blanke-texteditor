@@ -7,10 +7,8 @@ $(function(){
 
         loadHistory: function(data) {
             if (data !== undefined) {
-                this.history_index = data['history_index'];
-                for (var h = 0; h < data['history'].length; h++) {
-                    this.addFile(data['history'][h]);
-                }
+                this.history_index = data.history_index;
+                this.history = data.history;
                 b_history.refreshList();
             }
         },
@@ -47,7 +45,7 @@ $(function(){
             }
             // clear history button
             if (this.history.length > 0) {
-                $(".file-history").append("<button class='clear-history' onclick='b_history.clear();' title='Clear history'><i class='mdi mdi-close'></i></button>");
+                $(".file-history").append("<button class='clear-history' onclick='b_history.clear(true);' title='Clear history'><i class='mdi mdi-close'></i></button>");
             }
 
             var file_open = $(".file-history > .file.is-open")[0];
@@ -87,12 +85,12 @@ $(function(){
             }
         },
 
-        clear: function() {
+        clear: function(keep_curr_file=false) {
             this.history = [];
             this.history_index = 0;
 
             // add currently opened file as first value in history
-            if (b_project.getSetting("curr_file") != '') {
+            if (keep_curr_file) {
                 this.addFile(b_project.getSetting("curr_file"));
             }
             console.log('cleared history');

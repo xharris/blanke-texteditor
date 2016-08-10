@@ -11,7 +11,7 @@
   "scripts": {
     "start:mac": "grunt && /Users/xharris1/Documents/texteditor/electron/Electron.app/Contents/MacOS/Electron .",
     "start:win": "\"..\\electron\\electron.exe\" .",
-    "release" : "npm run clean_modules && epi",
+    "release": "npm run clean_modules && epi",
     "clean_modules": "npm prune --production"
   },
   "webkit": {

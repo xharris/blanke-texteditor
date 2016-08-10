@@ -1,13 +1,13 @@
 $(function(){
-    //document.addEventListener("on_set_project", function(e) {
-        b_search.addCommands(default_commands);
-    //});
+    b_search.addCommands(default_commands);
 });
 
 var findFile = {
     suggest: function(input) {
         if (!b_ide.isProjectSet()) return '';
 
+        // TODO: add option for case-sensitive searching
+        input = input.toLowerCase();
         var input_parts = input.split('/');
         var html = [];
 
@@ -33,7 +33,7 @@ var findFile = {
             var file_path = full_path.replace(b_project.curr_project,'');
             var prev_path = nwPATH.basename(file_path);
 
-            if (prev_path.startsWith(input)) {
+            if (prev_path.toLowerCase().startsWith(input)) {
                 var result_txt = prev_path.replace(input, "<b>" + input + "</b>");
                 html.push("<div class='suggestion high-priority' tabIndex='$1' data-value='" + file_path + "'>" + result_txt +  "<span class='full-path'>" + full_path + "</span>" + "<button class='remove-sugg' onclick='b_search.removeSuggestion(\"" + full_path + "\");$(this).parent().remove();'><i class='mdi mdi-close'></i></button></div>");
             }
@@ -44,7 +44,7 @@ var findFile = {
             var full_path = normalizePath(files[f].path)
             var file_path = full_path.replace(b_project.curr_project,'');
 
-            if (file_path.includes(input)) {
+            if (file_path.toLowerCase().includes(input)) {
                 var result_txt = file_path.replace(input, "<b>" + input + "</b>");
 
                 // normal priority suggestion

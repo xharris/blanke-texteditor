@@ -274,6 +274,7 @@
   transition: all 0.2s ease-in-out;
 }
 .file-history .file.is-open {
+  color: #e0e0e0;
   font-weight: 900;
   text-decoration: underline;
 }

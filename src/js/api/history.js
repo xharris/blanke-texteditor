@@ -133,8 +133,6 @@ $(function(){
                         second_max = this.file_activity[path];
                     }
                 }
-                console.log('second max is ' + second_max + '!');
-                console.log('max is ' + max_num + '!')
                 
                 // mark the old files as... old
                 for (var o = 0; o < activity_paths.length; o++) {
@@ -160,7 +158,6 @@ $(function(){
                 for (var w = 0; w < activity_paths.length; w++) {
                     var path = activity_paths[w];
                     if (this.file_activity[path] == max_num) {
-                        console.log('remove ' + path + '(' + this.file_activity[path] + ')');
                         this.removeFile(path);   
                     }
                 }
@@ -212,8 +209,6 @@ $(function(){
             if (keep_curr_file) {
                 this.addFile(b_project.getSetting("curr_file"));
             }
-            console.log('cleared history');
-            console.log(this.history);
         }
     }
 });

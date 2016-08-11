@@ -1,6 +1,6 @@
 var IDE_NAME = "BlankE";
 var ZOOM_AMT = 1;
-var DEV_MODE = true;
+var DEV_MODE = false;
 
 var nwFILE = require('fs');
 var nwPATH = require('path');

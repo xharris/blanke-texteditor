@@ -186,7 +186,7 @@ $(function(){
                         if (!err) {
                             b_ide.data = JSON.parse(data);
 
-                            b_ide.loadOptions();
+            		    b_ide.loadOptions();
                             b_plugin.loadPlugins(b_ide.getData().plugins);
                             b_project.setFolder(b_ide.getData().current_project);
                             b_editor.setZoom(b_ide.getOption('editor').zoom);
@@ -197,12 +197,13 @@ $(function(){
                 } else {
                     console.log('ERR: cannot ide file ide_data.json. creating new one.');
                     b_ide.saveData();
+            	    b_ide.loadOptions();
                 }
             });
         },
 
         saveData: function() {
-            // b_project.setSetting('history', b_history.save());
+            // b_project.setSetting('history', b_history.save());			
             nwFILE.mkdir(b_ide.data_folder, function() {
                 // save ide settings file
                 nwFILE.writeFile(b_ide.data_path, JSON.stringify(b_ide.getData()), {flag: 'w+'}, function(err) {

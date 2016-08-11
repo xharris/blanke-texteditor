@@ -1,1 +1,0 @@
-{ "name": "Markdown Preview", "version": "1", "main_js": "markdown.js", "js": ["includes/showdown.min.js"], "css": ["markdown.css"]}

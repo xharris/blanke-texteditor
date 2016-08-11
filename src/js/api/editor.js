@@ -59,6 +59,7 @@ $(function(){
                         message: "\"" + file_path + "\" does not exist. <br><br><b>Would you like to create this file?<b>",
                         // YES
                         onYes: function(ans) {
+                            // make the file!
                             nwFILE.writeFileSync(
                                 file_path,
                                 "",
@@ -70,7 +71,8 @@ $(function(){
                         },
                         // NO
                         onNo: function (ans) {
-                            // show file not found toast
+                            // remove the file from existence
+                            b_history.removeFile(file_path);
                         }
                     });
 

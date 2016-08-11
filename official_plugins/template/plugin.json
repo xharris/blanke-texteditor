@@ -1,0 +1,1 @@
+{ "name": "The Plugin Name", "version": "1", "main_js": "main_js_file.js", "js": ["includes/a_js_file.js"], "css": ["a_css_file.css"]}

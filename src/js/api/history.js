@@ -65,12 +65,37 @@ $(function(){
             this.refreshList();
             b_ide.saveData();
         },
+        
+        removeFile: function(path) {
+            // save currently selected file
+            var curr = this.history[this.history_index];
+            
+            // remove file
+            var del_index = this.history.indexOf(path);
+            if (this.history.includes(path)) {
+                this.history.splice(this.history.indexOf(path), 1);
+            }
+            
+            // set index to currently selected file if it wasnt the removed one
+            if (del_index != this.history_index) {
+                this.history_index = this.history.indexOf(curr);
+            } else {
+                this.goToPosition(this.history_index);
+            }
+            
+            this.refreshList();
+            b_ide.saveData();
+        },
 
         goToPosition: function(position) {
-            this.history_index = position
-            var new_path = this.history[position];
-            b_editor.setFile(new_path);
-            this.refreshList();
+            if (this.history == 0) {
+                b_editor.clear();
+            } else {
+                this.history_index = position
+                var new_path = this.history[position];
+                b_editor.setFile(new_path);
+                this.refreshList();
+            }
         },
 
         back: function() {

@@ -8,25 +8,6 @@
 #editor.side-content-open {
   right: 50%;
 }
-.side-content {
-  position: absolute;
-  top: 72px;
-  left: 100%;
-  right: -100%;
-  bottom: 28px;
-  pointer-events: none;
-  opacity: 0;
-}
-.side-content.active {
-  position: absolute;
-  top: 72px;
-  left: 50%;
-  right: 0;
-  bottom: 28px;
-  pointer-events: all;
-  opacity: 1;
-  border: 1px solid #e0e0e0;
-}
 .ace-chrome .ace-gutter {
   background: white !important;
 }
@@ -222,29 +203,19 @@
   -ms-user-select: none;
   user-select: none;
   position: absolute;
-  top: 38px;
+  top: 37px;
   right: 0px;
   left: 0px;
-  height: 34px;
+  height: 37px;
   padding: 0px;
+  padding-right: 50px;
   white-space: nowrap;
-  overflow-x: auto;
+  overflow-x: scroll;
   overflow-y: hidden;
 }
-.file-history::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: #F5F5F5;
-}
-.file-history::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-  background-color: #F5F5F5;
-}
-.file-history::-webkit-scrollbar-thumb {
-  background-color: #616161;
-}
 .file-history .clear-history {
-  position: absolute;
+  position: fixed;
+  top: 40px;
   right: 6px;
   width: 20px;
   height: 20px;
@@ -253,7 +224,7 @@
   border: none;
   font-size: 16px;
   cursor: pointer;
-  bottom: 8px;
+  bottom: 10px;
   background-color: white;
   border-radius: 100%;
   z-index: 79;
@@ -270,7 +241,7 @@
   font-size: 13px;
   background-color: white;
   cursor: pointer;
-  bottom: 1px;
+  bottom: -2px;
   transition: all 0.2s ease-in-out;
 }
 .file-history .file.is-open {
@@ -897,6 +868,28 @@ html {
   right: 0px;
   bottom: 0px;
   left: 0px;
+}
+#main_window .side-content {
+  position: absolute;
+  top: 72px;
+  left: 100%;
+  right: -100%;
+  bottom: 28px;
+  pointer-events: none;
+  opacity: 0;
+  margin: 0px 6px;
+  border-radius: 2px;
+  transition: all 0.2s ease-in-out;
+}
+#main_window .side-content.active {
+  position: absolute;
+  top: 72px;
+  left: 50%;
+  right: 0;
+  bottom: 28px;
+  pointer-events: all;
+  opacity: 1;
+  border: 1px solid #e0e0e0;
 }
 *::-webkit-scrollbar-track {
   opacity: none;

@@ -1,4 +1,4 @@
-var DEV_MODE = true;
+const DEV_MODE = true;
 
 /* electron start */
 const electron = require('electron');
@@ -28,12 +28,14 @@ function createWindow () {
       //height: 900
   });
 
-  if (DEV_MODE) {
-      mainWindow.webContents.openDevTools();
-  }
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
+  if (DEV_MODE) {
+      mainWindow.webContents.openDevTools();
+      mainWindow.webContents.send("set-devmode-true");
+  }
+  
   mainWindow.setMenu(null);
 
   globalShortcut.register('Control+R', () => {

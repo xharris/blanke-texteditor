@@ -51,10 +51,10 @@ $(function(){
             project_paths: [],      // folders dropped in the ide
             current_project: '',
             options: default_options,
-            plugins: []
+            plugins: {}
         },
-        data_folder: nwPATH.join(eAPP.getPath("userData"),'data'),
-        data_path: nwPATH.join(eAPP.getPath("userData"),'data','ide_data.json'),
+        data_folder: (DEV_MODE ? nwPATH.join(eAPP.getPath("userData"),'dev_data') : nwPATH.join(eAPP.getPath("userData"),'data')),
+        data_path: (DEV_MODE ? nwPATH.join(eAPP.getPath("userData"),'dev_data','ide_data.json') : nwPATH.join(eAPP.getPath("userData"),'data','ide_data.json')),
 
         showDevTools: function() {
             eIPC.send("show-dev-tools");
@@ -187,8 +187,8 @@ $(function(){
                             b_ide.data = JSON.parse(data);
 
                             b_ide.loadOptions();
-                            b_plugin.loadPlugins(b_ide.getData()['plugins']);
-                            b_project.setFolder(b_ide.getData()['current_project']);
+                            b_plugin.loadPlugins(b_ide.getData().plugins);
+                            b_project.setFolder(b_ide.getData().current_project);
                             b_editor.setZoom(b_ide.getOption('editor').zoom);
 
 
@@ -203,13 +203,17 @@ $(function(){
 
         saveData: function() {
             // b_project.setSetting('history', b_history.save());
-            nwFILE.mkdir(nwPATH.join(eAPP.getPath("userData"),'data'), function() {
+            nwFILE.mkdir(b_ide.data_folder, function() {
                 // save ide settings file
                 nwFILE.writeFile(b_ide.data_path, JSON.stringify(b_ide.getData()), {flag: 'w+'}, function(err) {
                     // save project settings file
                     b_project.saveData();
                 });
             });
+        },
+        
+        hasPlugin: function(plugin_name) {
+            return (Object.keys(b_ide.data.plugins).includes(plugin_name));
         },
 
         /*

@@ -1,5 +1,6 @@
 var IDE_NAME = "BlankE";
 var ZOOM_AMT = 1;
+var DEV_MODE = true;
 
 var nwFILE = require('fs');
 var nwPATH = require('path');
@@ -34,6 +35,26 @@ $(function(){
         enableSnippets: true,
         enableLiveAutocompletion: false
     });
+    /* Tern extension
+    editor.getSession().setUseWorker(true);
+    ace.config.loadModule('ace/ext/tern', function () {
+        editor.setOptions({
+            enableTern: {
+                defs: ['browser', 'ecma5'],
+                plugins: {
+                    doc_comment: {
+                        fullDocs: true
+                    }
+                },                    
+                useWorker: true,                    
+                startedCb: function () {
+                    console.log('editor.ternServer:', editor.ternServer);
+                },
+            },
+            enableSnippets: true,
+            enableBasicAutocompletion: true,
+        });
+    });*/
 
     b_editor.setMode('Text');
     editor.setTheme("ace/theme/chrome");
@@ -120,7 +141,7 @@ $(function(){
             17: 'Ctrl', // ctrl
             27: 'Esc', // escape
         };
-
+        
         // zoom in
         if (evt.ctrlKey && keyCode == 187) {
             b_editor.zoom(ZOOM_AMT);
@@ -143,7 +164,10 @@ $(function(){
         if (b_ide.isProjectSet() && /^[a-z0-9]$/i.test(key)) {
             b_project.getSetting('unsaved_text')[b_project.getSetting('curr_file')] = editor.getValue();
             b_history.refreshList();
-        }
+            
+            
+            
+        }$("#editor").on("cl")
 
         saveCursor();
     });

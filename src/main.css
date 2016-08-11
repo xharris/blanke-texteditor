@@ -248,6 +248,9 @@
   font-weight: 900;
   text-decoration: underline;
 }
+.file-history .file.is-old {
+  color: #ef5350;
+}
 .file-history .file:hover {
   background-color: #e0e0e0;
 }

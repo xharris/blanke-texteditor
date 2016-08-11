@@ -190,7 +190,6 @@ $(function(){
                 b_project.settings.history = b_history.save();
                 nwFILE.mkdir(nwPATH.join(eAPP.getPath("userData"),'data'), function() {
                     // save ide settings file
-                    console.log("saving: " + b_project.curr_project + ' -- ' + b_project.data_path);
                     nwFILE.writeFile(b_project.data_path, JSON.stringify(b_project.settings), {flag: 'w+'}, function() {
                         if (done_callback) {
                             done_callback();

@@ -8,6 +8,9 @@ var ideCommands = [
     ['cmd','<command-name> -global -delete'],
     ['plugins','(opens plugin dialog)'],
     ['options ide','(Change IDE Appearance, Editor settings, etc.)'],
+    ['project refresh',''],
+    ['project explore','(Open the project in explorer/finder)'],
+    ['system beep','']
 ];
 
 var ideActions = function(input) {
@@ -28,6 +31,19 @@ var ideActions = function(input) {
     if (input_parts[0] === "options") {
         if (input_parts[1] === "ide") {
             b_ide.showIdeOptions();
+        }
+    }
+    if (input_parts[0] === "project") {
+        if (input_parts[1] === "refresh") {
+            b_project.refreshTree(b_ide.getData()['current_project']);
+        }
+        if (input_parts[1] === "explore") {
+            eSHELL.showItemInFolder(b_project.getSetting("curr_file"));
+        }
+    }
+    if (input_parts[0] === "system") {
+        if (input_parts[1] === "beep") {
+            eSHELL.beep();
         }
     }
 }

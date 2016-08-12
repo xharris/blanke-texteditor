@@ -13,6 +13,7 @@ var eIPC = require('electron').ipcRenderer;
 
 var eREMOTE = require('electron').remote;
 var eAPP = eREMOTE.require('electron').app;
+var eSHELL = eREMOTE.require('electron').shell;
 
 var editor, aceModeList;
 var re_file_ext = /(?:\.([^.]+))?$/;
@@ -158,7 +159,6 @@ $(function(){
 
         // text changes autosave
         if (b_ide.isProjectSet() && /^[a-z0-9]+$/i.test(key)) {
-            console.log('save it')
             b_project.getSetting('unsaved_text')[b_project.getSetting('curr_file')] = editor.getValue();
             b_history.refreshList();
         }

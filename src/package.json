@@ -9,8 +9,7 @@
   "author": "Xavier Harris <xhh950@gmail.com> (http://xhhstuff.me)",
   "license": "CC-BY-NC-SA-4.0",
   "scripts": {
-    "start:mac": "grunt && /Users/xharris1/Documents/texteditor/electron/Electron.app/Contents/MacOS/Electron .",
-    "start:win": "\"..\\electron\\electron.exe\" .",
+    "start": "grunt && electron .",
     "release": "npm run clean_modules && epi",
     "clean_modules": "npm prune --production"
   },
@@ -26,6 +25,7 @@
     "unzip": "^0.1.11"
   },
   "devDependencies": {
+    "electron": "0.4.1",
     "grunt": "^1.0.1",
     "grunt-contrib-less": "^1.3.0"
   },

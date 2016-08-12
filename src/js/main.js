@@ -25,7 +25,7 @@ $(function(){
     */
 
     b_ide.loadData();
-
+    
     ace.require("ace/ext/language_tools");
     editor = ace.edit("editor");
     editor.$blockScrolling = Infinity;
@@ -66,11 +66,7 @@ $(function(){
     });
 
     eIPC.on('focus-search', function(event) {
-        if (b_search.isFocus()) {
-            $(".search-type").trigger("nextOption");
-        } else {
-            b_search.focus();
-        }
+        b_search.focus();
     })
 
     var drop_mainwin = document.getElementById("main_window");
@@ -161,13 +157,11 @@ $(function(){
         $(".status-bar .keycode").html('<span class="char">' + key + '</span>' + keyCode);
 
         // text changes autosave
-        if (b_ide.isProjectSet() && /^[a-z0-9]$/i.test(key)) {
+        if (b_ide.isProjectSet() && /^[a-z0-9]+$/i.test(key)) {
+            console.log('save it')
             b_project.getSetting('unsaved_text')[b_project.getSetting('curr_file')] = editor.getValue();
             b_history.refreshList();
-            
-            
-            
-        }$("#editor").on("cl")
+        }
 
         saveCursor();
     });

@@ -8,17 +8,23 @@
     top: 0px;
     right: 0px;
     left: 0px;
-    padding: 5px;
+    padding: 4px;
     z-index: 80;
 
-    .search-type {
-        width: 75px;
+    .search-icon {
+        .no-select();
+        
+        width: 30px;
         height: 30px;
         border: none;
         outline: none;
-        cursor: pointer;
-        padding-left: 5px;
+        cursor: default;
+        padding-right: 5px;
         border-radius: 5px;
+        text-align: center;
+        line-height: 30px;
+        background-color: #2196f3;
+        color: white;
 
         -webkit-appearance: none;
         -moz-appearance: none;
@@ -34,9 +40,9 @@
 
     .input-wrapper {
         position: absolute;
-        height: 30px;
+        height: 28px;
         top: 5px;
-        left: 76px;
+        left: 35px;
         right: 5px;
         bottom: 0px;
 

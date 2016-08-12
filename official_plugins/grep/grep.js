@@ -3,13 +3,12 @@ var nwGREP;
 $(function() {
     document.addEventListener("plugin_js_loaded", function(e) {
         if (e.detail.plugin.name === "Grep") {
-            addCommands(grepCommands);
-            var plugin_path = e.detail.plugin.path;
+            b_search.addCommands(grep);
+            console.log(e.detail)
+            var plugin_path = e.detail.path;
             console.log('its grep! bring in ' + plugin_path);
 
-            nwGREP = require(nwPATH.join(plugin_path, 'node_modules'));
-            console.log('grep include');
-            console.log(nwGREP);
+            nwGREP = require(nwPATH.join(plugin_path, 'node_modules', 'simple-grep'));
         }
     });
 
@@ -17,53 +16,27 @@ $(function() {
 
 // [command, arg hints]
 var grep_command = [
-    ['grep','"<search-text>"']
+    ['grep','[search-text]']
 ];
 
-var grep_action = {
-    suggest: function(input) {
-        var input_parts = input.split(' ');
-        var html = [];
+var grep_action = function(input) {
+    var input_parts = input.split(/[ ]+/);
 
-        // create html suggestion array
-        for (var c = 0; c < grepCommands.length; c++) {
-            var command_start = grepCommands[c][0];
-
-            if (command_start.includes(input)) {
-
-                var result_txt = command_start.replace(input, "<b>" + input + "</b>") + " <span class='options'>" + ideCommands[c][1] + "</span>";
-
-                // normal priority suggestion
-                if (!b_project.getOption('recent_ide_commands').includes(command_start)) {
-                    html.push("<div class='suggestion' tabIndex='$1' data-value='" + command_start + "'>" + result_txt + "</div>");
-                }
-            }
-        }
-        // turn it into a string
-        var html_str = '';
-        for (var h = 0; h < html.length; h++) {
-            html_str += html[h].replace('$1', h+1);
-        }
-        return html_str;
-    },
-
-    submit: function(input) {
-        var input_parts = input.split(/[ ]+/);
-
-        if (input_parts[0] === "grep") {
-            // remove --options
-            // ...
-            var search_str = input_parts.slice(1,input_parts.length).join(' ');
-            console.log('searching for <' + search_str + '>');
-            // do the grep
-            // ...
-            // add results to result panel (implement later)
-            // ...
-            // show result panel
-            // ...
-        }
+    if (input_parts[0] === "grep") {
+        // remove --options
+        // ...
+        var search_str = input_parts.slice(1,input_parts.length).join(' ');
+        console.log('searching for <' + search_str + '>');
+        // do the grep
+        nwGREP(search_str, b_project.curr_project, function(list){
+          console.log(list);
+        });
+        // add results to result panel (implement later)
+        // ...
+        // show result panel
+        // ...
     }
-};
+}
 
 var grep = {
     commands: grep_command,

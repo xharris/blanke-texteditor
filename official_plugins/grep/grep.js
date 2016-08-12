@@ -16,11 +16,11 @@ $(function() {
 })
 
 // [command, arg hints]
-var grepCommands = [
+var grep_command = [
     ['grep','"<search-text>"']
 ];
 
-var ideActions = {
+var grep_action = {
     suggest: function(input) {
         var input_parts = input.split(' ');
         var html = [];
@@ -65,7 +65,7 @@ var ideActions = {
     }
 };
 
-var default_commands = {
-    file: findFile,
-    ide: ideActions
+var grep = {
+    commands: grep_command,
+    action: grep_action
 };

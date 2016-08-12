@@ -1,13 +1,12 @@
 var IDE_NAME = "BlankE";
 var ZOOM_AMT = 1;
-var DEV_MODE = false; // use dev_data instead of data for saving
+var DEV_MODE = true; // use dev_data instead of data for saving
 
 var nwFILE = require('fs');
 var nwPATH = require('path');
 var nwPROC = require('process');
 var nwZIP = require("unzip");
 var nwRAF = require("rimraf");
-var nwGREP = require('simple-grep');
 
 var eIPC = require('electron').ipcRenderer;
 
@@ -158,7 +157,7 @@ $(function(){
         $(".status-bar .keycode").html('<span class="char">' + key + '</span>' + keyCode);
 
         // text changes autosave
-        if (b_ide.isProjectSet() && /^[a-z0-9]+$/i.test(key)) {
+        if (b_ide.isProjectSet() && /^[.]+$/i.test(key)) {
             b_project.getSetting('unsaved_text')[b_project.getSetting('curr_file')] = editor.getValue();
             b_history.refreshList();
         }

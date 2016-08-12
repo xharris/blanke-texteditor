@@ -122,7 +122,7 @@ $(function(){
                     dispatchEvent("plugin_js_loaded", {
                         'detail': {
                             'plugin': p_json,
-                            'path': p_json.main_js
+                            'path': p_path
                         }
                     });
                 });

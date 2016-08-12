@@ -401,7 +401,6 @@
   height: 30px;
   text-align: center;
   opacity: 0;
-  border-radius: 5px;
   overflow: hidden;
   pointer-events: none;
   transition: opacity 0.2s ease-in-out;
@@ -609,7 +608,7 @@
   height: 100%;
   padding: 0px 5px;
   box-sizing: border-box;
-  border-radius: 2px;
+  border-radius: 5px;
   border: none;
 }
 .search-bar-container .input-wrapper > input:focus {
@@ -811,6 +810,9 @@
 }
 #main_window[theme=dark] .file-history .file.is-open {
   color: #e0e0e0;
+}
+#main_window[theme=dark] .file-history .file.is-old {
+  color: #ef5350;
 }
 #main_window[theme=dark] .file-history .file:hover {
   background-color: #424242;

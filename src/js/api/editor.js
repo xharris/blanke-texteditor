@@ -85,6 +85,8 @@ $(function(){
             if (Object.keys(b_project.getSetting('cursor_pos')).includes(file_path)) {
                 editor.gotoLine(b_project.getSetting('cursor_pos')[file_path].row, b_project.getSetting('cursor_pos')[file_path].column);
             }
+            // reset undos
+            editor.getSession().setUndoManager(new ace.UndoManager());
             b_editor.focus();
         },
 

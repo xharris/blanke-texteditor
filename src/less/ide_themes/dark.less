@@ -20,6 +20,7 @@
 @history-hover-background-color: #424242;
 @history-hover-text-color: #bdbdbd;
 @history-file-open-color: #e0e0e0;
+@history-file-old-color: #ef5350;
 
 @suggestion-background-color: #616161;
 @suggestion-text-color: #bdbdbd;
@@ -129,6 +130,10 @@
             
             &.is-open {
                 color: @history-file-open-color;
+            }
+            
+            &.is-old {
+                color: @history-file-old-color;
             }
             
             &:hover {

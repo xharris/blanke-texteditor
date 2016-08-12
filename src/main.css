@@ -395,13 +395,15 @@
 }
 .loading-bar {
   position: fixed;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  height: 5px;
-  z-index: 95;
+  top: 4px;
+  left: 5px;
+  right: 4px;
+  height: 30px;
   text-align: center;
   opacity: 0;
+  border-radius: 5px;
+  overflow: hidden;
+  pointer-events: none;
   transition: opacity 0.2s ease-in-out;
 }
 .loading-bar.active {
@@ -412,7 +414,7 @@
   position: absolute;
   top: 0px;
   bottom: 0px;
-  background-color: #b3e5fc;
+  background-color: white;
   animation-duration: 1s;
   animation-iteration-count: infinite;
 }
@@ -568,14 +570,16 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  width: 30px;
+  position: absolute;
+  right: 4px;
+  left: 5px;
   height: 30px;
   border: none;
   outline: none;
   cursor: default;
-  padding-right: 5px;
+  padding-left: 6px;
   border-radius: 5px;
-  text-align: center;
+  text-align: left;
   line-height: 30px;
   background-color: #2196f3;
   color: white;
@@ -587,6 +591,10 @@
 }
 .search-bar-container .search-icon > option {
   font-family: 'FontAwesome', Arial;
+}
+.search-bar-container .search-icon > .mdi {
+  position: absolute;
+  top: 7px;
 }
 .search-bar-container .input-wrapper {
   position: absolute;
@@ -603,12 +611,10 @@
   box-sizing: border-box;
   border-radius: 2px;
   border: none;
-  box-shadow: none;
-  transition: box-shadow 0.2s ease-in-out;
 }
 .search-bar-container .input-wrapper > input:focus {
   outline: none;
-  box-shadow: 0px 1px 0px 0px #dcdcdc;
+  border: none;
 }
 .status-bar {
   font-family: 'Roboto', sans-serif;
@@ -753,15 +759,12 @@
   background-color: #212121;
   color: #f5f5f5;
 }
-#main_window[theme=dark] input[type=text]:focus {
-  outline: none;
-  box-shadow: 0px 1px 0px 0px #dcdcdc;
+#main_window[theme=dark] .loading-bar > .bar1,
+#main_window[theme=dark] .loading-bar .bar2 {
+  background-color: #424242;
 }
 #main_window[theme=dark] .side-content {
   background-color: white;
-}
-#main_window[theme=dark] .search-bar-container #in-search:focus {
-  box-shadow: 0px 1px 0px 0px #9e9e9e;
 }
 #main_window[theme=dark] .suggestions .suggestion {
   background-color: #616161;

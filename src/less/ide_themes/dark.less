@@ -8,8 +8,6 @@
 @input-background-color: #212121;
 @input-text-color: #f5f5f5;
 
-@input-search-shadow-color: #9e9e9e;
-
 @select-background-color: #616161;
 
 @keycode-char-color: #424242;
@@ -60,23 +58,16 @@
     input[type=text] {
         background-color: @input-background-color;
         color: @input-text-color;
-
-        &:focus {
-            outline: none;
-            box-shadow: 0px 1px 0px 0px #dcdcdc;
+    }
+    
+    .loading-bar {
+        >.bar1, .bar2 {
+            background-color: @background-color;
         }
     }
 
     .side-content {
         background-color: white;
-    }
-
-    .search-bar-container {
-        #in-search {
-            &:focus {
-                box-shadow: 0px 1px 0px 0px @input-search-shadow-color;
-            }
-        }
     }
 
     .suggestions {

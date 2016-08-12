@@ -1,13 +1,14 @@
 .loading-bar {
     position: fixed;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    height: 5px;
-    z-index: 95;
+    top: 4px;
+    left: 5px;
+    right: 4px;
+    height: 30px;
     text-align: center;
-
     opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    overflow: hidden;
+    pointer-events: none;
 
     transition: opacity 0.2s ease-in-out;
 
@@ -19,7 +20,7 @@
         position: absolute;
         top: 0px;
         bottom: 0px;
-        background-color: #b3e5fc;
+        background-color: white;
 
         animation-duration: 1s;
         animation-iteration-count: infinite;

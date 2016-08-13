@@ -9,12 +9,17 @@ $(function(){
             editor.setValue('');
         },
 
-        setFile: function(file_path) {
+        setFile: function(file_path,loading=false) {
             if (file_path === undefined || file_path.length <= 1) return;
 
             b_ide.hideSideContent();
 
             file_path = nwPATH.normalize(file_path);
+            
+            if (b_project.getSetting('curr_file') !== '' && !loading) {
+                b_project.getSetting('unsaved_text')[b_project.getSetting('curr_file')] = editor.getValue();
+                b_history.refreshList();
+            }
             
             nwFILE.lstat(file_path, function(err, stats) {
                 if (!err && stats.isFile()) {
@@ -92,7 +97,6 @@ $(function(){
 
         saveFile: function() {
             if (b_project.getSetting('curr_file') !== '') {
-                //try {
                     nwFILE.writeFileSync(
                         b_project.getSetting('curr_file'),
                         editor.getValue(),

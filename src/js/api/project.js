@@ -101,7 +101,7 @@ $(function(){
                     b_project.refreshTree(b_project.curr_project);
 
                     // TODO: will be a problem once alerts is implemented and USED (huh?)
-                    b_editor.setFile(b_project.getSetting("curr_file"));
+                    b_editor.setFile(b_project.getSetting("curr_file"),true);
 
                     /* TODO: needs a closer look at. will this continue to watch previous projects?
                     nwFILE.watch(b_project.curr_project, (eventType, filename) => {

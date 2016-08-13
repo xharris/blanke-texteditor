@@ -1,0 +1,4 @@
+b_editor.setZoom
+b_ide.setOption
+b_editor.setFile
+b_editor.post_setFile

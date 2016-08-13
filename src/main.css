@@ -748,6 +748,13 @@
   padding: 3px;
   font-size: 15px;
 }
+.dragBox {
+  width: 90px;
+  height: 90px;
+  padding: 0.5em;
+  float: left;
+  margin: 0 10px 10px 0;
+}
 #main_window[theme=dark] {
   background-color: #424242;
 }

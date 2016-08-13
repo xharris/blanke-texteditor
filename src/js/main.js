@@ -33,7 +33,8 @@ $(function(){
     editor.setOptions({
         enableBasicAutocompletion: true,
         enableSnippets: true,
-        enableLiveAutocompletion: false
+        enableLiveAutocompletion: false,
+        fontFamily: "Courier New"
     });
     /* Tern extension
     editor.getSession().setUseWorker(true);

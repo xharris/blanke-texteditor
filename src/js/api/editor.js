@@ -110,12 +110,14 @@ $(function(){
         },
 
         setMode: function(new_mode) {
-            editor.getSession().setMode(new_mode);
+            //if (b_project.getOption("syntax_highlighting")) {
+                editor.getSession().setMode(new_mode);
+            //}
         },
 
         setModeFromFile: function(file) {
             var mode = aceModeList.getModeForPath(file).mode;
-            editor.getSession().setMode(mode);
+            b_editor.setMode(mode);
         },
 
         focus: function(file) {

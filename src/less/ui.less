@@ -1,5 +1,21 @@
 .dragBox {
+    .box-shadow();
+    
     width: 90px; 
     height: 90px;
     padding: 0.5em;
+    z-index: 80;
+    border-radius: 2px;
+    
+    >.btn-close {
+        border: none;
+        outline: none;
+        font-size: 20px;
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        margin: 4px;
+        background-color: transparent;
+        cursor: pointer;
+    }
 }

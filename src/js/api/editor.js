@@ -9,7 +9,7 @@ $(function(){
             editor.setValue('');
         },
 
-        setFile: function(file_path,loading=false) {
+        setFile: function(file_path,loading=false,load_cursor_pos=true, callback) {
             if (file_path === undefined || file_path.length <= 1) return;
 
             b_ide.hideSideContent();
@@ -26,7 +26,10 @@ $(function(){
                     // has file been edited earlier without saving?
                     if (Object.keys(b_project.getSetting("unsaved_text")).includes(file_path)) {
                         editor.setValue(b_project.getSetting("unsaved_text")[file_path]);
-                        b_editor.post_setFile(file_path);
+                        b_editor.post_setFile(file_path, load_cursor_pos);
+                        if (callback) {
+                            callback();
+                        }
                     }
                     // file has not been previously edited and will be loaded 'classically'
                     else {
@@ -34,8 +37,10 @@ $(function(){
                             if (!err) {
                                 $("#suggestions").removeClass("active");
                                 editor.setValue(data);
-                                editor.clearSelection();
-                                b_editor.post_setFile(file_path);
+                                b_editor.post_setFile(file_path, load_cursor_pos);
+                                if (callback) {
+                                    callback();
+                                }
                             }
                         });
                     }
@@ -86,8 +91,9 @@ $(function(){
             });
         },
 
-        post_setFile: function(file_path) {
-            if (Object.keys(b_project.getSetting('cursor_pos')).includes(file_path)) {
+        post_setFile: function(file_path, load_cursor_pos=false) {
+            editor.clearSelection();
+            if (Object.keys(b_project.getSetting('cursor_pos')).includes(file_path) && load_cursor_pos) {
                 editor.gotoLine(b_project.getSetting('cursor_pos')[file_path].row, b_project.getSetting('cursor_pos')[file_path].column);
             }
             // reset undos

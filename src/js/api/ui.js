@@ -2,14 +2,17 @@ var b_ui;
 
 $(function(){
     b_ui = {
-        dragBox: function() {
+        dragBox: function(x, y, width, height) {
             var dragID = "dragBox" + guid();
-            var thebox = $("#main_window").append("<div id='" + dragID + "' class='ui-widget-content dragBox'><div class='handle'></div></div>");
-            $("#main_window > #" + dragID).draggable({
+            $("#main_window").append("<div id='" + dragID + "' class='ui-widget-content dragBox'></div>");
+            dragID = "#" + dragID;
+            
+            $(dragID).draggable({
                 cancel:'.no-drag',
                 containment: "#main_window"
             });
-            return thebox;
+            $(dragID).css({position: 'absolute', top: x, left: y, width: width, height: height})
+            return dragID;
         }
     };
 });

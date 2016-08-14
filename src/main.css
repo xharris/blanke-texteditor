@@ -610,6 +610,7 @@
   box-sizing: border-box;
   border-radius: 5px;
   border: none;
+  font-size: 16px;
 }
 .search-bar-container .input-wrapper > input:focus {
   outline: none;
@@ -749,9 +750,23 @@
   font-size: 15px;
 }
 .dragBox {
+  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.23);
   width: 90px;
   height: 90px;
   padding: 0.5em;
+  z-index: 80;
+  border-radius: 2px;
+}
+.dragBox > .btn-close {
+  border: none;
+  outline: none;
+  font-size: 20px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  margin: 4px;
+  background-color: transparent;
+  cursor: pointer;
 }
 #main_window[theme=dark] {
   background-color: #424242;

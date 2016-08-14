@@ -1,1 +1,0 @@
-{ "name": "Grep", "version": "1", "main_js": "grep.js", "js": [], "css": ["grep.css"]}

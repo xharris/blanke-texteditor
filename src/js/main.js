@@ -264,6 +264,16 @@ function normalizePath(path) {
     return path.replace(/(\/|\\)/g, '/');
 }
 
+function escapeHtml(text) {
+  return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+}
+
+
 function chooseFile(path, callback) {
     eIPC.send('open-file-dialog');
     eIPC.on('selected-directory', function (event, path) {

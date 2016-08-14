@@ -103,12 +103,14 @@ $(function(){
                     // TODO: will be a problem once alerts is implemented and USED (huh?)
                     b_editor.setFile(b_project.getSetting("curr_file"),true);
 
-                    /* TODO: needs a closer look at. will this continue to watch previous projects?
+                    // TODO: needs a closer look at. will this continue to watch previous projects?
                     nwFILE.watch(b_project.curr_project, (eventType, filename) => {
+                        console.log(eventType);
+                        console.log(filename);
                         if (filename) {
-                            b_project.refreshTree(b_project.curr_project);
+                            //b_project.refreshTree(b_project.curr_project);
                         }
-                    })*/
+                    })
 
                     b_ide.addToast({
                         message: 'set ' + labels['project'] + ' ' + b_project.curr_project,

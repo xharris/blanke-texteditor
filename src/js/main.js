@@ -25,6 +25,7 @@ $(function(){
     */
 
     b_ide.loadData();
+    b_plugin.loadOfficialPlugins();
     
     ace.require("ace/ext/language_tools");
     editor = ace.edit("editor");
@@ -36,26 +37,6 @@ $(function(){
         enableLiveAutocompletion: false,
         fontFamily: "Courier New"
     });
-    /* Tern extension
-    editor.getSession().setUseWorker(true);
-    ace.config.loadModule('ace/ext/tern', function () {
-        editor.setOptions({
-            enableTern: {
-                defs: ['browser', 'ecma5'],
-                plugins: {
-                    doc_comment: {
-                        fullDocs: true
-                    }
-                },                    
-                useWorker: true,                    
-                startedCb: function () {
-                    console.log('editor.ternServer:', editor.ternServer);
-                },
-            },
-            enableSnippets: true,
-            enableBasicAutocompletion: true,
-        });
-    });*/
 
     b_editor.setMode('Text');
     editor.setTheme("ace/theme/chrome");

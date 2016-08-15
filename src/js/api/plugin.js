@@ -61,8 +61,13 @@ $(function(){
                 p_name = plugin_names[p];
                 p_path = is_official ? nwPATH.join(b_plugin.official_plugin_path, p_name) : nwPATH.join(b_plugin.plugin_path, p_name);
                 p_info = nwPATH.join(p_path,'plugin.json');
-
-                b_plugin._loadPlugin(p_name, p_path, p_info, is_official);
+    
+                console.log(p_info);
+                nwFILE.lstat(p_info, function(err, stats) {
+                    if (!err) {
+                        b_plugin._loadPlugin(p_name, p_path, p_info, is_official);
+                    }
+                });
             }
 
         },

@@ -8,8 +8,12 @@ var ideCommands = [
     ['cmd','<command-name> -global -delete'],
     ['plugins','(opens plugin dialog)'],
     ['options ide','(Change IDE Appearance, Editor settings, etc.)'],
+    
     ['project refresh',''],
     ['project explore','(Open the project in explorer/finder)'],
+    
+    ['file explore','(Show the file in explorer/finder)'],
+    
     ['system beep',''],
     ['stop loading','(Stop the loading bar animation if it won\'t stop)']
 ];
@@ -38,6 +42,11 @@ var ideActions = function(input) {
         if (input_parts[1] === "refresh") {
             b_project.refreshTree(b_ide.getData()['current_project']);
         }
+        if (input_parts[1] === "explore") {
+            eSHELL.showItemInFolder(b_ide.getData()["current_project"]);
+        }
+    }
+    if (input_parts[0] === "file") {
         if (input_parts[1] === "explore") {
             eSHELL.showItemInFolder(b_project.getSetting("curr_file"));
         }

@@ -1,4 +1,4 @@
-const DEV_MODE = false; // show dev tools
+const DEV_MODE = true; // show dev tools
 
 /* electron start */
 const electron = require('electron');

@@ -63,6 +63,25 @@ $(function(){
             }
             b_ide.saveData();
         },
+        
+        removeFolder: function(path) {
+            var path_list = b_ide.getData()['project_paths'].includes(path);
+            
+            if (path_list.includes(path)) {
+                path_list.splice(path_list.indexOf(path), 1);
+                b_project._refreshList();
+                
+                // did the user have this project open?
+                if (b_ide.getData()['current_project'] === path) {
+                    // are there any other projects?
+                    // ...
+                    // YES: open the first project on the list
+                    // ...
+                    // NO: reset editor and everything
+                    b_editor.clear();
+                }
+            }  
+        },
 
         // reset attributes and things to default values
         reset: function() {
@@ -128,6 +147,7 @@ $(function(){
             });
         },
 
+        // refreshes the SELECT element containing a list of folders
         _refreshList: function() {
             // remake project list
             $(".projects").empty();

@@ -19,11 +19,11 @@ var grep_command = [
 ];
 
 var grep_action = function(input) {
-    b_ide.showProgressBar();
 
     var input_parts = input.split(/[ ]+/);
 
     if (input_parts[0] === "grep") {
+        b_ide.showProgressBar();
         // remove --options
         // ...
         var search_str = input_parts.slice(1,input_parts.length).join(' ');

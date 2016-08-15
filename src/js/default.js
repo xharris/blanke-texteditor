@@ -53,8 +53,7 @@ var ideActions = function(input) {
         }
     }
     if (input_parts[0] === "mv") {
-        
-        // addToast({message: "ERR: cannot rename",});
+
     }
 }
 

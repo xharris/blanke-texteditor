@@ -1,4 +1,4 @@
-const DEV_MODE = true; // show dev tools
+const DEV_MODE = false; // show dev tools
 
 /* electron start */
 const electron = require('electron');
@@ -35,7 +35,7 @@ function createWindow () {
       mainWindow.webContents.openDevTools();
       mainWindow.webContents.send("set-devmode-true");
   }
-  
+
   mainWindow.setMenu(null);
 
   globalShortcut.register('Control+R', () => {

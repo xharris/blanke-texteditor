@@ -13,7 +13,7 @@ plugin json
 $(function(){
     b_plugin = {
         plugin_path: nwPATH.join(b_ide.data_folder, 'plugins'),
-        official_plugin_path: nwPATH.join('official_plugins'),
+        official_plugin_path: nwPATH.join(eAPP.getAppPath(), 'official_plugins'),
 
         loadOfficialPlugins: function() {
             nwFILE.readdir(b_plugin.official_plugin_path, function(err, files){

@@ -46,7 +46,7 @@ document.addEventListener("plugin_js_loaded", function(e) {
             var checkHash = new range(sel_range.start.row, sel_range.start.column - 1, sel_range.end.row, sel_range.end.column);
 
             var selection = editor.getSession().doc.getTextRange(checkHash);
-            var sel_color = selection.match(/#[a-zA-z0-1]{3,6}/);
+            var sel_color = selection.match(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/);
             $(".material-colors").removeClass("active");
             if (sel_color && sel_color[0].length === sel_color.input.length && sel_color !== selected_color) {
                 sel_range2 = sel_range;
@@ -60,7 +60,7 @@ document.addEventListener("plugin_js_loaded", function(e) {
 function selectColor(color_val) {
     editor.getSession().doc.replace(sel_range, color_val);
     if (sel_range2.end.column - sel_range2.end.column < 6) {
-        sel_range2.end.column += (6 - (sel_range2.end.column - sel_range2.end.column));
+        sel_range2.setEnd(sel_range2.start.row, sel_range2.start.column + 6);
     }
     editor.selection.setSelectionRange(sel_range2);
     $(".material-colors").addClass("active");

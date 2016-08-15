@@ -1,0 +1,62 @@
+.grep-input { 
+    font-family: 'Roboto', sans-serif;
+    margin: 0px;
+    margin-right: 30px;
+    white-space: nowrap;
+    cursor: default;
+    overflow: hidden;
+}
+
+.grep-results {
+    font-family: 'Roboto', sans-serif;
+    margin-top: 4px;
+    max-height: 270px;
+    padding: 4px;
+    overflow: auto;
+}
+
+.grep-results .result-list {
+    position: relative;
+    overflow: hidden;
+}
+
+.grep-results .result {
+    position: relative;
+    border-radius: 2px;
+    border: 1px solid #424242;
+    margin-bottom: 5px;
+    padding: 4px;
+    height: 14px;
+    overflow: hidden;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    
+    transition: all 0.2s ease-in-out;
+}
+
+.grep-results .result.open {
+    height: auto;
+}
+
+.grep-results .result > .file-path {
+    white-space: nowrap;
+    position: absolute;
+    right: 0px;
+    margin: 0px;
+    margin-right: 4px;
+    cursor: pointer;
+}
+
+.grep-results .result > .line {
+    margin: 0px;
+    border: 1px solid #bdbdbd;
+    padding: 4px;
+    border-radius: 2px;
+    display: inline-block;
+    margin: 2px;
+    cursor: pointer;
+}

@@ -35,7 +35,7 @@ function createWindow () {
       mainWindow.webContents.openDevTools();
       mainWindow.webContents.send("set-devmode-true");
   }
-  
+
   mainWindow.setMenu(null);
 
   globalShortcut.register('Control+R', () => {

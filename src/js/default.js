@@ -10,7 +10,8 @@ var ideCommands = [
     ['options ide','(Change IDE Appearance, Editor settings, etc.)'],
     ['project refresh',''],
     ['project explore','(Open the project in explorer/finder)'],
-    ['system beep','']
+    ['system beep',''],
+    ['stop loading','(Stop the loading bar animation if it won\'t stop)']
 ];
 
 var ideActions = function(input) {
@@ -45,6 +46,14 @@ var ideActions = function(input) {
         if (input_parts[1] === "beep") {
             eSHELL.beep();
         }
+    }
+    if (input_parts[0] === "stop") {
+        if (input_parts[1] === "loading") {
+            b_ide.hideProgressBar();
+        }
+    }
+    if (input_parts[0] === "mv") {
+
     }
 }
 

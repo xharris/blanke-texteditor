@@ -12,47 +12,63 @@ plugin json
 
 $(function(){
     b_plugin = {
-        loadPlugins: function(plugins) {
+        plugin_path: nwPATH.join(b_ide.data_folder, 'plugins'),
+        official_plugin_path: nwPATH.join(eAPP.getAppPath(), 'official_plugins'),
+
+        loadOfficialPlugins: function() {
+            nwFILE.readdir(b_plugin.official_plugin_path, function(err, files){
+                var names = {};
+                for (var p = 0; p < files.length; p++) {
+                    names[files[p]] = '';
+                }
+                b_plugin.loadPlugins(names, true);
+            })
+        },
+
+        _loadPlugin: function(p_name, p_path, p_info, is_official) {
+            // look at plugin.json (contains info about plugin)
+            p_json = '';
+
+            nwFILE.lstat(p_info, function(err, stats) {
+                if (!err && stats.isFile()) {
+                    nwFILE.readFile(p_info, 'utf-8', function(err, data) {
+                        if (!err) {
+                            p_json = data.toString();
+                            p_json = JSON.parse(p_json);
+                            p_json.folder_name = p_name;
+                            if (!is_official) {
+                                b_ide.getData().plugins[p_name] = p_json;
+
+                                b_plugin.refreshPluginViewerList();
+                            }
+                            // start adding resources to header
+                            b_plugin.importPluginResources(p_name, p_json, is_official);
+                        }
+                    });
+                } else {
+                   console.log('ERR: unable to load plugin: ' + p_name);
+                   b_plugin.removePlugin(p_name);
+                   return;
+                }
+            });
+        },
+
+        loadPlugins: function(plugins, is_official=false) {
             var plugin_names = Object.keys(plugins);
             var p_path, p_info, p_name, p_json;
 
             for (var p = 0; p < plugin_names.length; p++) {
                 p_name = plugin_names[p];
-                p_path = nwPATH.join(b_ide.data_folder, 'plugins', p_name);
+                p_path = is_official ? nwPATH.join(b_plugin.official_plugin_path, p_name) : nwPATH.join(b_plugin.plugin_path, p_name);
                 p_info = nwPATH.join(p_path,'plugin.json');
 
-                // look at plugin.json (contains info about plugin)
-                p_json = '';
-                
-                nwFILE.lstat(p_info, function(err, stats) {
-                    if (!err && stats.isFile()) {
-                        nwFILE.readFile(p_info, 'utf-8', function(err, data) {
-                            if (!err) {
-                                console.log("loading plugin: " + p_name);
-                                p_json = data.toString();
-                                p_json = JSON.parse(p_json);
-                                b_ide.getData().plugins[p_name] = p_json;
-                                b_ide.getData().plugins[p_name].folder_name = p_name;
-                                
-                                b_plugin.refreshPluginViewerList();
-                                // start adding resources to header
-                                b_plugin.importPluginResources(p_name);
-                            }
-                        });
-                    } else {
-                       console.log('ERR: unable to load plugin: ' + p_name);
-                       b_plugin.removePlugin(p_name);
-                       return;
-                    }
-                });
-
+                b_plugin._loadPlugin(p_name, p_path, p_info, is_official);
             }
 
         },
-        
-        importCSS: function(plugin_name, p_css, load_callback) {
-            var p_path = nwPATH.join(b_ide.data_folder, 'plugins', plugin_name);
-            
+
+        importCSS: function(plugin_name, p_css, p_path, load_callback) {
+
             // check if css file exists
             nwFILE.lstat(nwPATH.join(p_path, p_css), function(err, stats){
                 if (!err && stats.isFile()) {
@@ -73,10 +89,9 @@ $(function(){
                 }
             });
         },
-        
-        importJS: function(plugin_name, p_js, load_callback) {
-            var p_path = nwPATH.join(b_ide.data_folder, 'plugins', plugin_name);
-            
+
+        importJS: function(plugin_name, p_js, p_path, load_callback) {
+
             // check if it exists
             nwFILE.lstat(nwPATH.join(p_path, p_js), function(err, stats){
                 if (!err && stats.isFile()) {
@@ -91,43 +106,59 @@ $(function(){
                     if (typeof fileref!="undefined") {
                         document.getElementsByTagName("head")[0].appendChild(fileref);
                     }
-                }                        
+                }
             });
         },
-        
-        importPluginResources: function(plugin_name) {
-            var p_path = nwPATH.join(b_ide.data_folder, 'plugins', plugin_name);
-            var p_json = b_ide.getData().plugins[plugin_name];
+
+        importPluginResources: function(plugin_name, p_json, is_official=false) {
+            var p_path = is_official ? nwPATH.join(b_plugin.official_plugin_path, plugin_name) : nwPATH.join(b_plugin.plugin_path, plugin_name);
             var json_keys = Object.keys(p_json);
-            
+
             // load css files
             if (json_keys.includes("css")) {
                 p_json.css.forEach(function(p_css){
-                    b_plugin.importCSS(plugin_name, p_css);
-                });
-            }
-            
-            // other js files
-            if (json_keys.includes("js")) {
-                p_json.js.forEach(function(p_js){
-                    b_plugin.importJS(plugin_name, p_js, function(){
-                        console.log('loaded ' + p_js);
-                    });
+                    b_plugin.importCSS(plugin_name, p_css, p_path);
                 });
             }
 
-            // load main js file
-            if (json_keys.includes("main_js")) {
-                b_plugin.importJS(plugin_name, p_json.main_js, function(){
-                    dispatchEvent("plugin_js_loaded", {
-                        'detail': {
-                            'plugin': p_json,
-                            'path': p_path
-                        }
-                    });
+            // other js files
+            if (json_keys.includes("js")) {
+
+                if (p_json.js.length === 0) {
+                    // load main js file
+                    if (json_keys.includes("main_js")) {
+                        b_plugin.importJS(plugin_name, p_json.main_js, p_path, function(){
+                            dispatchEvent("plugin_js_loaded", {
+                                'detail': {
+                                    'plugin': p_json,
+                                    'path': p_path
+                                }
+                            });
+                        });
+                    }
+                }
+                p_json.js.forEach(function(p_js, i, array){
+                    if (i === array.length - 1) {
+                        b_plugin.importJS(plugin_name, p_js, p_path, function(){
+                            // load main js file
+                            if (json_keys.includes("main_js")) {
+                                b_plugin.importJS(plugin_name, p_json.main_js, p_path, function(){
+                                    dispatchEvent("plugin_js_loaded", {
+                                        'detail': {
+                                            'plugin': p_json,
+                                            'path': p_path
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    } else {
+                        b_plugin.importJS(plugin_name, p_js, p_path, function(){
+                        });
+                    }
                 });
             }
-            
+
         },
 
         update: function(name) {
@@ -149,17 +180,17 @@ $(function(){
         _install: function(path) {
             path = path[0];
             // create ide plugin directory
-            nwFILE.mkdir(nwPATH.join(b_ide.data_folder, 'plugins'), function(){
-                
+            nwFILE.mkdir(nwPATH.join(b_plugin.plugin_path), function(){
+
                 // create plugin directory using (zip name + random uuid)
                 var zipname = nwPATH.basename(path, nwPATH.extname(path));
                 var folder_name = zipname + "_" + zipname.hashCode();
-                var folder_path = nwPATH.join(b_ide.data_folder,'plugins',folder_name);
-                    
+                var folder_path = nwPATH.join(b_plugin.plugin_path,folder_name);
+
                 if (!b_ide.hasPlugin(folder_name)) {
                     // add to ide_data as that dir_name
                     b_ide.getData().plugins[folder_name] = {};
-                
+
                     nwFILE.mkdir(folder_path, function(){
                         // unzip into plugin directory
                         nwFILE.createReadStream(path).pipe(nwZIP.Extract({ path: folder_path }).on("close", function(){
@@ -183,12 +214,12 @@ $(function(){
 
         uninstallPlugin: function(plugin_name) {
             var p_name = b_ide.getData().plugins[plugin_name].name;
-            
+
             // remove from list
             delete b_ide.getData().plugins[plugin_name];
-            
+
             // remove plugin folder
-            nwRAF(nwPATH.join(b_ide.data_folder,'plugins',plugin_name), function() {
+            nwRAF(nwPATH.join(b_plugin.plugin_path,plugin_name), function() {
                 $(".js-" + plugin_name).remove();
                 $(".css-" + plugin_name).remove();
 
@@ -197,8 +228,8 @@ $(function(){
                     can_dismiss: true,
                     timeout: 1000
                 });
-                
-                
+
+
                 b_plugin.refreshPluginViewerList();
             });
         },
@@ -216,7 +247,7 @@ $(function(){
             for (var p = 0; p < Object.keys(b_ide.getData().plugins).length; p++) {
                 var p_name = Object.keys(b_ide.getData().plugins)[p];
                 var p_json = b_ide.getData().plugins[p_name];
-                
+
                 list_html += ""+
                 "<div class='plugin " + p_name + "'>"+
                     "<span class='name'>" + p_json.name + "</span>"+
@@ -231,15 +262,16 @@ $(function(){
 
         // incomplete
         removePlugin: function(plugin_name) {
-            var p_path = nwPATH.join(b_ide.data_folder,'plugins',plugin_name);
-            
+            var p_path = nwPATH.join(b_plugin.plugin_path,plugin_name);
+
             $(".plugin ." + plugin_name).addClass("removed");
             b_ide.getData()['plugins'].splice(b_ide.getData()['plugins'].indexOf(plugin_name), 1);
-            
+
         },
 
         hideViewer: function() {
             $(".plugin-viewer").removeClass("active");
         }
     };
+
 });

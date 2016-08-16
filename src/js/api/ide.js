@@ -2,11 +2,20 @@ var b_ide;
 
 var default_options = {
     "appearance": {
-        "ide": "light",
-        "editor": "chrome"
+        "theme": {
+            "ide": "light",
+            "editor": "chrome",
+        },
+        "font": {
+            "family" : "Courier New",
+            "size" : 14
+        },
     },
     "editor": {
-        "zoom": 14
+        "autocomplete" : {
+            "enabled": true,
+            "live": true
+        }
     }
 }
 
@@ -39,10 +48,10 @@ $(function(){
     $(".opt-theme").on("change", function() {
         var selected_val = this.options[this.selectedIndex].value;
         if ($(this).hasClass("ide")) {
-            b_ide.setOption("appearance", "ide", selected_val);
+            b_ide.getOption("appearance").theme.ide = selected_val;
         }
         if ($(this).hasClass("editor")) {
-            b_ide.setOption("appearance", "editor", selected_val);
+            b_ide.getOption("appearance").theme.editor = selected_val;
         }
     });
 
@@ -138,7 +147,7 @@ $(function(){
             }
             return b_ide.getData().options[name];
         },
-
+        
         // fill input boxes for option panel
         loadOptions: function() {
             // APPEARANCE
@@ -146,29 +155,18 @@ $(function(){
             // ide theme
             var curr_ide_theme = set_appear["ide"];
             b_ide.setOption("appearance", "ide", curr_ide_theme);
-            var ide_theme_html = '';
-            for (var i = 0; i < ide_themes.length; i++) {
-                var selected = '';
-                if (ide_themes[i] === curr_ide_theme) {
-                    selected = ' selected ';
-                }
-                var cap_theme_name = ide_themes[i].charAt(0).toUpperCase() + ide_themes[i].slice(1);
-                ide_theme_html += "<option value='" + ide_themes[i] + "'" + selected + ">" + cap_theme_name + "</option>";
-            }
-            $(".opt-theme.ide").html(ide_theme_html);
+            fillSelect(".opt-theme.ide", ide_themes, curr_ide_theme);
+
             // editor theme
             var curr_editor_theme = set_appear["editor"];
             b_ide.setOption("appearance", "editor", curr_editor_theme);
-            var editor_theme_html = '';
-            for (var i = 0; i < editor_themes.length; i++) {
-                var selected = '';
-                if (editor_themes[i] === curr_editor_theme) {
-                    selected = ' selected ';
-                }
-                var cap_theme_name = editor_themes[i].charAt(0).toUpperCase() + editor_themes[i].slice(1);
-                editor_theme_html += "<option value='" + editor_themes[i] + "'" + selected + ">" + cap_theme_name + "</option>";
-            }
-            $(".opt-theme.editor").html(editor_theme_html);
+            fillSelect(".opt-theme.editor", editor_themes, curr_editor_theme);
+            
+            // font size
+            $(".opt-font.size").val(set_appear.font.size);
+            
+            // font family
+            $(".opt-font.family").val(set_appear.font.family)
         },
 
         setWinTitle: function(new_title) {
@@ -189,7 +187,7 @@ $(function(){
             		    b_ide.loadOptions();
                             b_plugin.loadPlugins(b_ide.getData().plugins);
                             b_project.setFolder(b_ide.getData().current_project);
-                            b_editor.setZoom(b_ide.getOption('editor').zoom);
+                            b_editor.setZoom(b_ide.getOption('editor').font.size);
 
 
                         }

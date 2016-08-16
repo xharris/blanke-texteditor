@@ -79,6 +79,7 @@
         bottom: 0px;
         padding: 10px;
         box-sizing: border-box;
+        overflow-y: auto;
 
         >.panel {
             display: none;
@@ -90,6 +91,10 @@
             h3 {
                 margin: 0px;
                 margin-bottom: 10px;
+                
+                &:not(:first-of-type) {
+                    margin-top: 30px;
+                }
             }
 
             .input-group {
@@ -100,6 +105,13 @@
                         margin-right: 10px;
                     }
                 }
+            }
+            
+            .descr {
+                margin-top: 0px;
+                margin-left: 22px;
+                font-size: 13px;
+                color: #757575;
             }
         }
     }

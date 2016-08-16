@@ -356,6 +356,7 @@
   bottom: 0px;
   padding: 10px;
   box-sizing: border-box;
+  overflow-y: auto;
 }
 .ide-options > .option-viewer > .panel {
   display: none;
@@ -367,11 +368,20 @@
   margin: 0px;
   margin-bottom: 10px;
 }
+.ide-options > .option-viewer > .panel h3:not(:first-of-type) {
+  margin-top: 30px;
+}
 .ide-options > .option-viewer > .panel .input-group {
   margin-bottom: 8px;
 }
 .ide-options > .option-viewer > .panel .input-group.select > span {
   margin-right: 10px;
+}
+.ide-options > .option-viewer > .panel .descr {
+  margin-top: 0px;
+  margin-left: 22px;
+  font-size: 13px;
+  color: #757575;
 }
 .label {
   text-transform: uppercase;

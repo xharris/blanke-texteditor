@@ -300,3 +300,19 @@ function shortenPath(path, length) {
         return nwPATH.normalize(path_parts.splice(path_parts.length - length, length).join(nwPATH.sep));
     }
 }
+
+function fillSelect(selector, values, selected_value, capitalize=true) {
+    var html = '';
+    for (var i = 0; i < values.length; i++) {
+        var selected = '';
+        if (values[i] === selected_value) {
+            selected = ' selected ';
+        }
+        var new_val = values[i];
+        if (capitalize) {
+            var new_val = values[i].charAt(0).toUpperCase() + values[i].slice(1);
+        }
+        html += "<option value='" + values[i] + "'" + selected + ">" + new_val + "</option>";
+    }
+    $(selector).html(html);
+}

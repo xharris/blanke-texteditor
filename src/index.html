@@ -114,9 +114,26 @@
                         <span>Editor</span>
                         <select class="opt-theme editor"></select>
                     </div>
+                    <h3>Text</h3>
+                    <div class="input-group select">
+                        <span>Font Family</span>
+                        <select class="opt-font family"></select>
+                    </div>
+                    <div class="input-group select">
+                        <span>Font Size</span>
+                        <input class="opt-font size" type="number" min="1" max="60">
+                    </div>
                 </div>
+                
                 <div class="panel editor">
-                    no settings yet
+                    <h3>Autocomplete</h3>
+                    <label>
+                        <input type="checkbox" class="opt-ac enable">Enabled<p class="descr">activate autocomplete with Ctrl-Space</p>
+                    </label>
+                    
+                    <label>
+                        <input type="checkbox" class="opt-ac live">Live<p class="descr">show suggestions as you type</p>
+                    </label>
                 </div>
             </div>
         </div>

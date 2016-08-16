@@ -13,4 +13,5 @@ ctrl-r : search
 
 ## API
 - b_ui
-    - dragBox(int top, int left, int width, int height); 
+    - ``elementID  dragBox(int top, int left, int width, int height);``
+        - content with class ``.no-drag`` will not be draggable 

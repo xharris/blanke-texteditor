@@ -96,11 +96,12 @@ function prevFileSuggest(input) {
         var full_path = normalizePath(b_project.getSetting('recent_files')[r]);
         var file_path = full_path.replace(b_project.curr_project,'');
         var prev_path = nwPATH.basename(file_path);
+        var full_path_preview = nwPATH.dirname(shortenPath(full_path, 4));
 
         if (prev_path.toLowerCase().startsWith(input)) {
             var result_txt = prev_path.replace(input, "<b>" + input + "</b>");
             html += "<div class='suggestion high-priority' tabIndex='$1' data-value='" + file_path + "'>"
-            + result_txt +  "<span class='full-path'>" + full_path + "</span>" +
+            + result_txt +  "<span class='full-path'>" + full_path_preview + "</span>" +
             "<button class='remove-sugg' onclick='b_search.removeSuggestion(\"" + full_path + "\");$(this).parent().remove();'><i class='mdi mdi-close'></i></button></div>";
         }
     }

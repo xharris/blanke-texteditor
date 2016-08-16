@@ -160,34 +160,22 @@ $(function(){
                 });
             }
 
-            // other js files
-            if (json_keys.includes("js")) {
-
-                if (p_json.js.length === 0) {
-                    // load main js file
-                    if (json_keys.includes("main_js")) {
-                        b_plugin.importJS(plugin_name, p_json.main_js, p_path, function(){
-                            dispatchEvent("plugin_js_loaded", {
-                                'detail': {
-                                    'plugin': p_json,
-                                    'path': p_path
-                                }
-                            });
-                        });
-                    }
+            if (!json_keys.includes("js") || p_json.js.length === 0) {
+                // load main js file
+                if (json_keys.includes("main_js")) {
+                    b_plugin.importJS(plugin_name, p_json.main_js, p_path, function(){
+                        b_plugin._importPluginDone(p_json, p_path);
+                    });
                 }
+            } else {
+                // load other js files
                 p_json.js.forEach(function(p_js, i, array){
                     if (i === array.length - 1) {
                         b_plugin.importJS(plugin_name, p_js, p_path, function(){
                             // load main js file
                             if (json_keys.includes("main_js")) {
                                 b_plugin.importJS(plugin_name, p_json.main_js, p_path, function(){
-                                    dispatchEvent("plugin_js_loaded", {
-                                        'detail': {
-                                            'plugin': p_json,
-                                            'path': p_path
-                                        }
-                                    });
+                                    b_plugin._importPluginDone(p_json, p_path);
                                 });
                             }
                         });
@@ -197,7 +185,15 @@ $(function(){
                     }
                 });
             }
-
+        },
+        
+        _importPluginDone: function(p_json, p_path) {
+            dispatchEvent("plugin_js_loaded", {
+                'detail': {
+                    'plugin': p_json,
+                    'path': p_path
+                }
+            });
         },
 
         update: function(name) {

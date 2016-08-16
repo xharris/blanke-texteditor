@@ -293,3 +293,10 @@ String.prototype.hashCode = function(){
 function copyObj(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
+
+function shortenPath(path, length) {
+    var path_parts = path.split(nwPATH.sep);
+    if (path_parts.length > length) {
+        return nwPATH.normalize(path_parts.splice(path_parts.length - length, length).join(nwPATH.sep));
+    }
+}

@@ -36,7 +36,20 @@ $(function(){
                 var is_old = '';
 
                 full_path = this.history[h];
-                file_name = nwPATH.basename(this.history[h]);
+                file_name = nwPATH.basename(full_path);
+                
+                // is there another file with the same basename
+                var dupe_count = 0;
+                for (var s = 0; s < this.history.length; s++) {
+                    if (nwPATH.basename(this.history[s]) === file_name) {
+                        dupe_count++;
+                    }
+                }
+                //console.log(file_name ' dupes ' + dupe_count)
+                if (dupe_count > 1) {
+                    var path_parts = full_path.split(nwPATH.sep);
+                    file_name = nwPATH.join(path_parts[path_parts.length - 2], path_parts[path_parts.length - 1]);
+                }
 
                 // is this the file that is currenty opened/being edited
                 if (h == this.history_index) {

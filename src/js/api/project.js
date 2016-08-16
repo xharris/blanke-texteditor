@@ -1,4 +1,5 @@
 var b_project;
+var MAX_PATH_LIST_LENGTH = 3;
 
 var project_settings_template = {
     unsaved_text: {},   // save text from unsaved files from each project
@@ -6,7 +7,8 @@ var project_settings_template = {
     history: {},
     cursor_pos: {},
     recent_ide_commands: [], // recently used ide commands
-    curr_file: ''
+    curr_file: '',
+    can_refresh: []
 }
 
 $(function(){
@@ -124,15 +126,21 @@ $(function(){
 
                     // TODO: needs a closer look at. will this continue to watch previous projects?
                     nwFILE.watch(b_project.curr_project, (eventType, filename) => {
-                        console.log(eventType);
-                        console.log(filename);
+                        console.log(eventType + ': ' + filename);
                         if (filename) {
                             //b_project.refreshTree(b_project.curr_project);
                         }
                     })
 
+                     // limit path to 3 levels 
+                     var short_path = b_project.curr_project;
+                    var path_parts = b_project.curr_project.split(nwPATH.sep);
+                    if (path_parts.length > MAX_PATH_LIST_LENGTH) {
+                        short_path = '...' + path_parts.splice(path_parts.length - 3, 3).join(nwPATH.sep);
+                    }
+                    
                     b_ide.addToast({
-                        message: 'set ' + labels['project'] + ' ' + b_project.curr_project,
+                        message: 'set ' + labels.project + ' ' + short_path,
                         can_dismiss: true,
                         timeout: 1000
                     });
@@ -154,12 +162,20 @@ $(function(){
             var proj_html = '';
             var project_paths = b_ide.getData()['project_paths'];
             for (var p = 0; p < project_paths.length; p++) {
-                var path = project_paths[p];
-                var selected = '';
-                if (path === b_project.curr_project) {
-                    selected = "selected='selected'";
+                var full_path = project_paths[p];
+                var path = full_path;
+                
+                // limit path to 3 levels 
+                var path_parts = path.split(nwPATH.sep);
+                if (path_parts.length > MAX_PATH_LIST_LENGTH) {
+                    path = '...' + path_parts.splice(path_parts.length - 3, 3).join(nwPATH.sep);
                 }
-                proj_html += "<option value='" + path + "' " + selected + " >" + path + "</option>";
+                
+                var selected = '';
+                if (full_path === b_project.curr_project) {
+                    selected = "selected";
+                }
+                proj_html += "<option value='" + path + "' " + selected + " title='" + full_path + "' value='" + full_path + "'>" + path + "</option>";
             }
             $(".projects").html(proj_html);
         },

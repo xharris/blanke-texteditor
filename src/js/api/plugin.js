@@ -83,7 +83,7 @@ $(function(){
                         document.getElementsByTagName("head")[0].appendChild(fileref);
                     }
                 } else {
-                    console.log("ERR: could not load " + path + " for " + p_json.name);
+                    console.log("ERR: could not load " + p_path + " for " + plugin_name);
                 }
             });
         },
@@ -261,8 +261,12 @@ $(function(){
         removePlugin: function(plugin_name) {
             var p_path = nwPATH.join(b_plugin.plugin_path,plugin_name);
 
-            $(".plugin ." + plugin_name).addClass("removed");
-            b_ide.getData()['plugins'].splice(b_ide.getData()['plugins'].indexOf(plugin_name), 1);
+            try {
+                $(".plugin ." + plugin_name).addClass("removed");
+                b_ide.getData()['plugins'].splice(b_ide.getData()['plugins'].indexOf(plugin_name), 1);
+            } catch (e) {
+                // ...
+            }
 
         },
 

@@ -1,6 +1,6 @@
 var IDE_NAME = "BlankE";
 var ZOOM_AMT = 1;
-var DEV_MODE = false; // use dev_data instead of data for saving
+var DEV_MODE = true; // use dev_data instead of data for saving
 
 var nwFILE = require('fs');
 var nwPATH = require('path');
@@ -185,8 +185,10 @@ $(function(){
 
     // project selection box
     $(".projects")[0].addEventListener("change", function() {
-        var choice = this.options[this.selectedIndex].text;
-        b_project.setFolder(choice);
+        var choice_el = this.options[this.selectedIndex];
+        var choice_path = choice_el.title;
+        
+        b_project.setFolder(choice_path);
     });
 
     editor.resize();

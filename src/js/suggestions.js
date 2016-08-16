@@ -124,7 +124,7 @@ function suggest(input) {
             // find next directory to go down
             for (var f = 0; f < files.length; f++) {
                 // TODO: if there is for example, '/.git' and '/.gitattributes', the first one gets priority (make this better)
-                if (files[f].name === part) {
+                if (files[f].name.toLowerCase() === part && files[f].type === 'folder') {
                     files = files[f].children;
                 }
             }
@@ -136,9 +136,14 @@ function suggest(input) {
         var full_path = normalizePath(files[f].path)
         var file_path = full_path.replace(b_project.curr_project,'');
 
-        if (file_path.toLowerCase().includes(input)) {
-            var result_txt = file_path.replace(input, "<b>" + input + "</b>");
 
+        if (file_path.toLowerCase().includes(input)) {
+            var result_txt = file_path.replace(input, "<b>" + input + "</b>"); 
+            
+            if (files[f].type === "folder") {
+                result_txt += '/';
+            }
+            
             // normal priority suggestion
             if (!b_project.getSetting('recent_files').includes(file_path)) {
                 html.push("<div class='suggestion' tabIndex='$1' data-value='" + file_path + "'>" + result_txt + "</div>");

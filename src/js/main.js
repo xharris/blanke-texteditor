@@ -16,6 +16,7 @@ var eSHELL = eREMOTE.require('electron').shell;
 var editor, aceModeList;
 var re_file_ext = /(?:\.([^.]+))?$/;
 
+
 $(function(){
     /* prevent page reload
     window.onbeforeunload = function() {
@@ -33,7 +34,7 @@ $(function(){
     editor.setOptions({
         enableBasicAutocompletion: true,
         enableSnippets: true,
-        enableLiveAutocompletion: false,
+        enableLiveAutocompletion: true,
         fontFamily: "Courier New"
     });
 
@@ -187,6 +188,8 @@ $(function(){
         var choice = this.options[this.selectedIndex].text;
         b_project.setFolder(choice);
     });
+
+    editor.resize();
 });
 
 function saveCursor() {

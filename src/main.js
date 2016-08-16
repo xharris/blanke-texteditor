@@ -24,6 +24,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({
       title: "BlankE",
       center: true,
+      autoHideMenuBar: true,
       //width: 1200,
       //height: 900
   });

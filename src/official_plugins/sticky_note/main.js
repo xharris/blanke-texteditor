@@ -5,6 +5,10 @@ document.addEventListener("plugin_js_loaded", function(e) {
             commands: note_commands,
             action: noteAction
         };
+        
+        // load previous notes
+        // // if save.json exists read it
+        // // for each key, call loadNote(key_value)
     }
 });
 
@@ -17,16 +21,29 @@ function noteAction(input) {
     
     if (input_parts[0] === 'note') {
         if (input_parts[1] === 'add') {
-            
+            createNote();
         }
     }
 }
 
 function createNote() {
-    $("#main_window").append(
-        "<div class='sticky-note'>"+
-            "<button><i class='mdi mdi-close'></i></button>"+
-            "<textarea></textarea>"+
-        "</div>"
+    console.log($(window).width())
+    var box = b_ui.dragBox(70,70,250,0);
+    
+    $(box).addClass("sticky-note");
+    $(box).html(
+        "<button><i class='mdi mdi-close'></i></button>"+
+        "<textarea></textarea>"
     );
+}
+
+// note_info = {text, left, top}
+function loadNote(note_info) {
+    
+}
+
+function saveNotes() {
+    // iterate through .sticky-note
+    // ...
+    // get its value and position (top, left);
 }

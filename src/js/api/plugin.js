@@ -74,19 +74,23 @@ $(function(){
                     // convert to less
                     nwFILE.readFile(full_path, 'utf-8', function(err, data) {
                         if (!err) {
-                            console.log(data.toString())
                             nwLESS.render(data.toString(), {paths: [nwPATH.join(eAPP.getAppPath(),'less')]}, function(e, output){
-                                // import compiled less file
-                                var fileref=document.createElement("link");
-                                fileref.classList.add("less-" + plugin_name);
-                                fileref.setAttribute("rel", "stylesheet");
-                                fileref.setAttribute("type", "text/css");
-                                fileref.innerHTML = output.css;
-                                if (load_callback) {
-                                    fileref.onload = load_callback;
-                                }
-                                if (fileref !== undefined) {
-                                    document.getElementsByTagName("head")[0].appendChild(fileref);
+                                if (e) {
+                                    console.log('ERR: ' + plugin_name + ':' + p_less + ' compile error');
+                                    console.log(e);
+                                } else {
+                                    // import compiled less file
+                                    var fileref=document.createElement("link");
+                                    fileref.classList.add("less-" + plugin_name);
+                                    fileref.setAttribute("rel", "stylesheet");
+                                    fileref.setAttribute("type", "text/css");
+                                    fileref.innerHTML = output.css;
+                                    if (load_callback) {
+                                        fileref.onload = load_callback;
+                                    }
+                                    if (fileref !== undefined) {
+                                        document.getElementsByTagName("head")[0].appendChild(fileref);
+                                    }
                                 }
                             });
                         }

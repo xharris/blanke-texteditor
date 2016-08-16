@@ -70,7 +70,7 @@ var grep_action = function(input) {
             results_html += '</div>';
 
             // show result panel
-            var box = b_ui.dragBox(70,$(window).width - 270,250,300);
+            var box = b_ui.dragBox(70,$(window).width() - 270,250,300);
             $(box).html(
                 '<button class="btn-close" onclick="$(\'' + box + '\').remove();"><i class="mdi mdi-close"></i></button>'+
                 '<p class="grep-input"><b>grep</b> ' + search_str + '</p>'+

@@ -135,9 +135,8 @@ function suggest(input) {
     for (var f = 0; f < files.length; f++) {
         var full_path = normalizePath(files[f].path)
         var file_path = full_path.replace(b_project.curr_project,'');
-
-
-        if (file_path.toLowerCase().includes(input)) {
+        
+        if (file_path.toLowerCase().includes(input_parts[input_parts.length - 1])) {
             var result_txt = file_path.replace(input, "<b>" + input + "</b>"); 
             
             if (files[f].type === "folder") {

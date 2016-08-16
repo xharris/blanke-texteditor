@@ -65,6 +65,37 @@ $(function(){
 
             }
         },
+        
+        importLESS: function(plugin_name, p_less, p_path, load_callback) {
+            var full_path = nwPATH.join(p_path, p_less);
+            // check if less file exists
+            nwFILE.lstat(full_path, function(err, stats){
+                if (!err && stats.isFile()) {
+                    // convert to less
+                    nwFILE.readFile(full_path, 'utf-8', function(err, data) {
+                        if (!err) {
+                            console.log(data.toString())
+                            nwLESS.render(data.toString(), {paths: [nwPATH.join(eAPP.getAppPath(),'less')]}, function(e, output){
+                                // import compiled less file
+                                var fileref=document.createElement("link");
+                                fileref.classList.add("less-" + plugin_name);
+                                fileref.setAttribute("rel", "stylesheet");
+                                fileref.setAttribute("type", "text/css");
+                                fileref.innerHTML = output.css;
+                                if (load_callback) {
+                                    fileref.onload = load_callback;
+                                }
+                                if (fileref !== undefined) {
+                                    document.getElementsByTagName("head")[0].appendChild(fileref);
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    console.log("ERR: could not load " + p_path + " for " + plugin_name);
+                }
+            });            
+        },
 
         importCSS: function(plugin_name, p_css, p_path, load_callback) {
             // check if css file exists
@@ -110,6 +141,13 @@ $(function(){
         importPluginResources: function(plugin_name, p_json, is_official=false) {
             var p_path = is_official ? nwPATH.join(b_plugin.official_plugin_path, plugin_name) : nwPATH.join(b_plugin.plugin_path, plugin_name);
             var json_keys = Object.keys(p_json);
+
+            // load css files
+            if (json_keys.includes("less")) {
+                p_json.less.forEach(function(p_less){
+                    b_plugin.importLESS(plugin_name, p_less, p_path);
+                });
+            }
 
             // load css files
             if (json_keys.includes("css")) {
@@ -219,6 +257,7 @@ $(function(){
             nwRAF(nwPATH.join(b_plugin.plugin_path,plugin_name), function() {
                 $(".js-" + plugin_name).remove();
                 $(".css-" + plugin_name).remove();
+                $(".less-" + plugin_name).remove();
 
                 b_ide.addToast({
                     message: 'removed ' + labels.plugin + ' ' + p_name,

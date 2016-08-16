@@ -1,1 +1,1 @@
-{ "name": "Sticky Note", "version": "1", "main_js": "main.js", "js": [], "css": ["main.css"]}
+{ "name": "Sticky Note", "version": "1", "main_js": "main.js", "less": ["main.less"]}

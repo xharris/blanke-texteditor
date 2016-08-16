@@ -10,3 +10,6 @@ ctrl-r : search
     - grep
     - markdown preview
     - material design hex color picker
+
+- plugin notes
+    - do not have css and less files with the same name

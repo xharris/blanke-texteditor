@@ -1,6 +1,6 @@
 var IDE_NAME = "BlankE";
 var ZOOM_AMT = 1;
-var DEV_MODE = true; // use dev_data instead of data for saving
+var DEV_MODE = false; // use dev_data instead of data for saving
 
 var nwFILE = require('fs');
 var nwPATH = require('path');
@@ -9,7 +9,6 @@ var nwZIP = require("unzip");
 var nwRAF = require("rimraf");
 
 var eIPC = require('electron').ipcRenderer;
-
 var eREMOTE = require('electron').remote;
 var eAPP = eREMOTE.require('electron').app;
 var eSHELL = eREMOTE.require('electron').shell;
@@ -26,7 +25,7 @@ $(function(){
 
     b_ide.loadData();
     b_plugin.loadOfficialPlugins();
-    
+
     ace.require("ace/ext/language_tools");
     editor = ace.edit("editor");
     editor.$blockScrolling = Infinity;
@@ -119,7 +118,7 @@ $(function(){
             17: 'Ctrl', // ctrl
             27: 'Esc', // escape
         };
-        
+
         // zoom in
         if (evt.ctrlKey && keyCode == 187) {
             b_editor.zoom(ZOOM_AMT);

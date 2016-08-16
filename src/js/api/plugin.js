@@ -28,7 +28,6 @@ $(function(){
         _loadPlugin: function(p_name, p_path, p_info, is_official) {
             // look at plugin.json (contains info about plugin)
             p_json = '';
-
             nwFILE.lstat(p_info, function(err, stats) {
                 if (!err && stats.isFile()) {
                     nwFILE.readFile(p_info, 'utf-8', function(err, data) {
@@ -61,19 +60,13 @@ $(function(){
                 p_name = plugin_names[p];
                 p_path = is_official ? nwPATH.join(b_plugin.official_plugin_path, p_name) : nwPATH.join(b_plugin.plugin_path, p_name);
                 p_info = nwPATH.join(p_path,'plugin.json');
-    
-                console.log(p_info);
-                nwFILE.lstat(p_info, function(err, stats) {
-                    if (!err) {
-                        b_plugin._loadPlugin(p_name, p_path, p_info, is_official);
-                    }
-                });
-            }
 
+                b_plugin._loadPlugin(p_name, p_path, p_info, is_official);
+
+            }
         },
 
         importCSS: function(plugin_name, p_css, p_path, load_callback) {
-
             // check if css file exists
             nwFILE.lstat(nwPATH.join(p_path, p_css), function(err, stats){
                 if (!err && stats.isFile()) {
@@ -96,7 +89,6 @@ $(function(){
         },
 
         importJS: function(plugin_name, p_js, p_path, load_callback) {
-
             // check if it exists
             nwFILE.lstat(nwPATH.join(p_path, p_js), function(err, stats){
                 if (!err && stats.isFile()) {

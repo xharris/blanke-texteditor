@@ -316,3 +316,27 @@ function fillSelect(selector, values, selected_value, capitalize=true) {
     }
     $(selector).html(html);
 }
+
+Array.prototype.includesMulti = function(arr){
+    var is_there = false;
+    this.map(function(val) {
+        is_there = (arr.includes(val));
+    });
+    return is_there;
+}
+
+function obj_assign(obj, prop, value) {
+    if (typeof prop === "string")
+        prop = prop.split(".");
+
+    if (prop.length > 1) {
+        var e = prop.shift();
+        obj_assign(obj[e] =
+                 Object.prototype.toString.call(obj[e]) === "[object Object]"
+                 ? obj[e]
+                 : {},
+               prop,
+               value);
+    } else
+        obj[prop[0]] = value;
+}

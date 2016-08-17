@@ -139,9 +139,11 @@ $(function(){
         },
 
         setZoom: function(amt) {
+            amt = parseInt(amt);
+            
             b_editor.font_size = amt;
             editor.setFontSize(b_editor.font_size);
-            b_ide.setOption('editor', 'zoom', b_editor.font_size);
+            b_ide.getOptions().appearance.font.size = b_editor.font_size;
             b_ide.saveData();
         }
     }

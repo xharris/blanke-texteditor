@@ -196,7 +196,7 @@ $(function(){
             })
         },
 
-        // load current project's .blanke file or make a new one if it doesn't exist
+        // load ide .json file or make a new one if it doesn't exist
         loadData: function(done_callback) {
             nwFILE.lstat(b_project.data_path, function(err, stats) {
                 if (!err && stats.isFile()) {

@@ -34,7 +34,7 @@ var grep_action = function(input) {
         var results_html = '';
 
         nwGREP = require(simplegrep_path);
-        nwGREP(search_str, b_project.curr_project, function(list){
+        nwGREP(search_str, '*', function(list){
             for (var g = 0; g < list.length; g++) {
                 if (list[g].file === "C") {
                     // iterate through results

@@ -1,6 +1,6 @@
 var IDE_NAME = "BlankE";
 var ZOOM_AMT = 1;
-var DEV_MODE = true; // use dev_data instead of data for saving
+var DEV_MODE = false; // use dev_data instead of data for saving
 
 var nwFILE = require('fs');
 var nwPATH = require('path');
@@ -38,6 +38,7 @@ $(function(){
         enableLiveAutocompletion: true,
         fontFamily: "Courier New"
     });
+
 
     b_editor.setMode('Text');
     editor.setTheme("ace/theme/chrome");

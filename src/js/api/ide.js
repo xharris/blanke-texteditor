@@ -56,6 +56,9 @@ $(function(){
         if ($(this).hasClass("number")) {
             value = $(this).val();
         }
+        if ($(this).hasClass("checkbox")) {
+            value = this.checked;
+        }
         
         b_ide.saveOption($(this).data("option"), value);
     });
@@ -153,10 +156,15 @@ $(function(){
             if (opt_string === 'appearance.font.size') {
                 b_editor.setZoom(opt_value);
             }
+            // autocomplete
+            if (opt_string === "editor.autocomplete.enabled") {
+                editor.setOption('enableBasicAutocompletion', opt_value);
+            }
+            if (opt_string === "editor.autocomplete.live") {
+                editor.setOption('enableLiveAutocompletion', opt_value);
+            }
             
             if (save_data) {
-                console.log(opt_value);
-                console.log(b_ide.getData().options);
                 b_ide.saveData();
             }
         },
@@ -188,6 +196,14 @@ $(function(){
             var curr_font_family = set_appear.font.family;
             fillSelect(".opt-input[data-option='appearance.font.family']", font_families, curr_font_family);
             b_ide.saveOption('appearance.font.family', curr_font_family, false);
+            
+            // autocomplete enabled
+            var auto_enabled = set_editor.autocomplete.enabled;
+            $(".opt-input[data-option='editor.autocomplete.enabled']")[0].checked = auto_enabled;
+            
+            // live autocompletion
+            var live_enabled = set_editor.autocomplete.live;
+            $(".opt-input[data-option='editor.autocomplete.live']")[0].checked = live_enabled;
         },
 
         setWinTitle: function(new_title) {

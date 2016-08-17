@@ -26,14 +26,38 @@ var note_plugin = {
 }
 
 function createNote() {
-    console.log($(window).width())
-    var box = b_ui.dragBox(70,70,250,0);
+    var new_guid = guid();
     
-    $(box).addClass("sticky-note");
-    $(box).html(
-        "<button><i class='mdi mdi-close'></i></button>"+
-        "<textarea class='no-drag'></textarea>"
-    );
+    var new_offset = {top:230, left:50};
+    
+    var note_html = 
+        "<div class='sticky-note' data-guid='"+ new_guid +"'><textarea id='textarea'></textarea>"+
+            //"<button class='btn-close no-drag' onclick='$(this).parent().remove();'><i class='mdi mdi-close'></i></button>"+
+        "</div>";
+    
+    $(note_html)
+    .width(200)
+   	.height(150)
+    .draggable({
+        cancel: "text",
+        start: function (){
+            $('.sticky-note[data-guid="'+ new_guid +'"] > textarea').focus();
+         },
+        stop: function (){
+            $('.sticky-note[data-guid="'+ new_guid +'"] > textarea').focus();
+         } 
+     })
+    .css({
+		'position'	        : 'absolute',
+		'background-color'  : 'transparent',
+		'border-color'      : 'black',
+		'border-width'      : '1px',
+		'border-style'	    : 'solid'
+     })
+    .resizable()
+   	.offset(new_offset)
+    .appendTo('#main_window');
+            
 }
 
 // note_info = {text, left, top}

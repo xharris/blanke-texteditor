@@ -1,6 +1,6 @@
 var IDE_NAME = "BlankE";
 var ZOOM_AMT = 1;
-var DEV_MODE = true; // use dev_data instead of data for saving
+var DEV_MODE = false; // use dev_data instead of data for saving
 
 var nwFILE = require('fs');
 var nwPATH = require('path');
@@ -189,7 +189,7 @@ $(function(){
     $(".projects")[0].addEventListener("change", function() {
         var choice_el = this.options[this.selectedIndex];
         var choice_path = choice_el.title;
-        
+
         b_project.setFolder(choice_path);
     });
 
@@ -296,7 +296,7 @@ function copyObj(obj) {
 }
 
 function shortenPath(path, length) {
-    var path_parts = path.split(nwPATH.sep);
+    var path_parts = path.split(/[/]|[\\]/g);
     if (path_parts.length > length) {
         return nwPATH.normalize(path_parts.splice(path_parts.length - length, length).join(nwPATH.sep));
     }

@@ -84,7 +84,7 @@ $(function(){
 
 function prevFileSuggest(input) {
     if (!b_ide.isProjectSet()) return '';
-    
+
     // TODO: add option for case-sensitive searching
     input = input.toLowerCase();
     var input_parts = input.split('/');
@@ -96,6 +96,7 @@ function prevFileSuggest(input) {
         var full_path = normalizePath(b_project.getSetting('recent_files')[r]);
         var file_path = full_path.replace(b_project.curr_project,'');
         var prev_path = nwPATH.basename(file_path);
+        console.log('its ' + full_path);
         var full_path_preview = nwPATH.dirname(shortenPath(full_path, 4));
 
         if (prev_path.toLowerCase().startsWith(input)) {
@@ -136,14 +137,14 @@ function suggest(input) {
     for (var f = 0; f < files.length; f++) {
         var full_path = normalizePath(files[f].path)
         var file_path = full_path.replace(b_project.curr_project,'');
-        
+
         if (file_path.toLowerCase().includes(input_parts[input_parts.length - 1])) {
-            var result_txt = file_path.replace(input, "<b>" + input + "</b>"); 
-            
+            var result_txt = file_path.replace(input, "<b>" + input + "</b>");
+
             if (files[f].type === "folder") {
                 result_txt += '/';
             }
-            
+
             // normal priority suggestion
             if (!b_project.getSetting('recent_files').includes(file_path)) {
                 html.push("<div class='suggestion' tabIndex='$1' data-value='" + file_path + "'>" + result_txt + "</div>");
@@ -162,7 +163,7 @@ function newInput() {
     var input_text = this.value;
     var is_file_search = false;
     var commands = b_search.getCommands();
-    
+
     // determine type of input
     if (input_text.startsWith('/')) {
         is_file_search = true;
@@ -175,9 +176,9 @@ function newInput() {
     } else {
         for (var c = 0; c < commands.length; c++) {
             var final_html = "";
-            
+
             final_html += prevFileSuggest(input_text);
-            
+
             if (is_file_search) {
                 final_html += suggest(input_text);
 
@@ -234,7 +235,7 @@ function newInput() {
 function submitSearch() {
     var is_file_search = false;
     var input_text = $(el_searchbox).val();
-    
+
     // determine type of input
     if (input_text.startsWith('/')) {
         is_file_search = true;

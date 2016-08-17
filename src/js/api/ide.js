@@ -200,10 +200,12 @@ $(function(){
             // autocomplete enabled
             var auto_enabled = set_editor.autocomplete.enabled;
             $(".opt-input[data-option='editor.autocomplete.enabled']")[0].checked = auto_enabled;
+            b_ide.saveOption('editor.autocomplete.enabled', auto_enabled, false);
             
             // live autocompletion
             var live_enabled = set_editor.autocomplete.live;
             $(".opt-input[data-option='editor.autocomplete.live']")[0].checked = live_enabled;
+            b_ide.saveOption('editor.autocomplete.live', live_enabled, false);
         },
 
         setWinTitle: function(new_title) {

@@ -1,5 +1,7 @@
 document.addEventListener("plugin_js_loaded", function(e) {
     if (e.detail.plugin.name === "Sticky Note") {
+        $("#main_window").append("<div id='sticky-note-container'></div>");
+        
         // Plugin has loaded
         b_search.addCommands(note_plugin);
         
@@ -25,6 +27,8 @@ var note_plugin = {
     }
 }
 
+var sticky_txt = {};
+
 function createNote() {
     var new_guid = guid();
     
@@ -32,32 +36,33 @@ function createNote() {
     
     var note_html = 
         "<div class='sticky-note' data-guid='"+ new_guid +"'><textarea id='textarea'></textarea>"+
-            //"<button class='btn-close no-drag' onclick='$(this).parent().remove();'><i class='mdi mdi-close'></i></button>"+
+            "<button class='btn-close no-drag' onclick='$(this).parent().remove();'><i class='mdi mdi-close'></i></button>"+
         "</div>";
     
     $(note_html)
     .width(200)
    	.height(150)
     .draggable({
-        cancel: "text",
+        cancel: "textarea",
         start: function (){
-            $('.sticky-note[data-guid="'+ new_guid +'"] > textarea').focus();
+            $('.sticky-note[data-guid="'+ $(this).data('guid') +'"] > textarea').focus();
          },
         stop: function (){
-            $('.sticky-note[data-guid="'+ new_guid +'"] > textarea').focus();
+            $('.sticky-note[data-guid="'+ $(this).data('guid') +'"] > textarea').focus();
          } 
      })
     .css({
-		'position'	        : 'absolute',
-		'background-color'  : 'transparent',
-		'border-color'      : 'black',
-		'border-width'      : '1px',
-		'border-style'	    : 'solid'
      })
     .resizable()
    	.offset(new_offset)
-    .appendTo('#main_window');
-            
+    .appendTo('#main_window > #sticky-note-container');
+    
+    
+    $('.sticky-note[data-guid="'+ new_guid +'"] > textarea').change(function(){
+        sticky_txt[new_guid] = this.value;
+    });
+    
+    
 }
 
 // note_info = {text, left, top}

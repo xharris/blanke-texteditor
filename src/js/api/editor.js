@@ -100,6 +100,14 @@ $(function(){
             editor.getSession().setUndoManager(new ace.UndoManager());
             b_editor.focus();
         },
+        
+        refreshFile: function(file_path) {
+            // remove from unsaved text
+            delete b_project.getSetting("unsaved_text")[file_path];
+            
+            // reopen file
+            b_editor.setFile(file_path);
+        },
 
         saveFile: function() {
             if (b_project.getSetting('curr_file') !== '') {

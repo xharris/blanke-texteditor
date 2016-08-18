@@ -216,10 +216,10 @@
   overflow-x: scroll;
   overflow-y: hidden;
 }
-.file-history .clear-history {
+.file-history .clear-history,
+.file-history .refresh-file {
   position: fixed;
   top: 40px;
-  right: 6px;
   width: 20px;
   height: 20px;
   background: none;
@@ -232,6 +232,12 @@
   border-radius: 100%;
   z-index: 79;
   padding: 0px;
+}
+.file-history .refresh-file {
+  right: 32px;
+}
+.file-history .clear-history {
+  right: 6px;
 }
 .file-history .file {
   line-height: 30px;

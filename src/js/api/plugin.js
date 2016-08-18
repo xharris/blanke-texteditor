@@ -76,11 +76,16 @@ $(function(){
                         if (!err) {
                             nwLESS.render(data.toString(), {paths: [nwPATH.join(eAPP.getAppPath(),'less')]}, function(e, output){
                                 if (e) {
+                                    b_ide.addToast({
+                                        message: labels.plugin + ' LESS compile error: ' + plugin_name + '/' + p_less,
+                                        can_dismiss: true,
+                                        timeout: 5000
+                                    });
                                     console.log('ERR: ' + plugin_name + ':' + p_less + ' compile error');
                                     console.log(e);
                                 } else {
                                     // import compiled less file
-                                    var fileref=document.createElement("link");
+                                    var fileref=document.createElement("style");
                                     fileref.classList.add("less-" + plugin_name);
                                     fileref.setAttribute("rel", "stylesheet");
                                     fileref.setAttribute("type", "text/css");

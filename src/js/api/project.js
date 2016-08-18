@@ -11,13 +11,16 @@ var project_settings_template = {
     can_refresh: []
 }
 
+
+   
+
 $(function(){
     b_project = {
         settings: copyObj(project_settings_template),
         curr_project: '',
         curr_file: '',      // currently opened file
         data_path: '',
-        tree: [],
+        tree: '',
 
         setSetting: function(setting_name, new_value) {
             if (b_ide.isProjectSet()) {
@@ -28,7 +31,6 @@ $(function(){
 
         getSetting: function(setting_name) {
             if (b_ide.isProjectSet()) {
-                //console.log('get ' + b_project.curr_project + ' > ' + setting_name);
                 return b_project.settings[setting_name];
             } else {
                 return project_settings_template[setting_name];
@@ -183,15 +185,17 @@ $(function(){
         refreshTree: function(path, callback) {
             b_ide.showProgressBar();
             $("#in-search").prop('disabled', true);
-            dirTree(path, function(err, res) {
-                if (!err) {
-                    b_project.tree = res;
-                    b_ide.hideProgressBar();
-                    $("#in-search").prop('disabled', false);
-
-                    if (callback) {
-                        callback(res);
-                    }
+            
+            var the_path = nwPATH.normalize(b_project.curr_project)
+            emitter = nwWALK(the_path);
+            emitter.on('file', function(filename, stat) {
+                b_project.tree += '\"' + normalizePath(filename) + '\" ';   
+            })
+            .on('end', function(){ 
+                b_ide.hideProgressBar();
+                $("#in-search").prop('disabled', false);
+                if (callback) {
+                    callback(b_project.tree);
                 }
             })
         },

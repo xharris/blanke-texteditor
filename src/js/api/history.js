@@ -66,9 +66,11 @@ $(function(){
                 $(".file-history").append("<span class='file" + is_current + is_old + "' data-path='" + full_path + "' title='" + full_path + "' onclick='b_history.goToPosition(" + h + ");'>" + file_name + is_not_saved + "</span>");
 
             }
-            // clear history button
+            // clear history button and refresh file button
             if (this.history.length > 0) {
                 $(".file-history").append("<button class='clear-history' onclick='b_history.clear(true);' title='Clear history'><i class='mdi mdi-close'></i></button>");
+                // TODO: work on this later
+                // $(".file-history").append("<button class='refresh-file' onclick='b_editor.refreshFile(b_project.getSetting(\"curr_file\"));' title='Revert and refresh file'><i class='mdi mdi-refresh'></i></button>")
             }
 
             var file_open = $(".file-history > .file.is-open")[0];

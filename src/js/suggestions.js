@@ -2,6 +2,7 @@ var sugg_index = -1;
 var el_searchbox;
 
 $(function(){
+   
     el_searchbox = document.getElementById("in-search");
     el_searchbox.oninput = newInput;
     el_searchbox.onpropertychange = el_searchbox.oninput;
@@ -96,7 +97,7 @@ function prevFileSuggest(input) {
         var full_path = normalizePath(b_project.getSetting('recent_files')[r]);
         var file_path = full_path.replace(b_project.curr_project,'');
         var prev_path = nwPATH.basename(file_path);
-        console.log('its ' + full_path);
+        
         var full_path_preview = nwPATH.dirname(shortenPath(full_path, 4));
 
         if (prev_path.toLowerCase().startsWith(input)) {
@@ -109,6 +110,19 @@ function prevFileSuggest(input) {
     return html;
 }
 
+function searchArray(array_str, search) {
+  var rx = new RegExp('"([^"]*'+search+'[^"]*)"','gi');
+  var i = 0, results = [];
+  while (result = rx.exec(array_str)) {
+    results.push(result[1]);
+    i += 1;
+    if (i >=100)
+      break;
+  }
+  return results;
+}
+
+
 function suggest(input) {
     if (!b_ide.isProjectSet()) return '';
 
@@ -117,28 +131,14 @@ function suggest(input) {
     var input_parts = input.split('/');
     var html = [];
 
-    var files = b_project.tree;
-    // iterate through already typed path dirs
-    if (files && files.length) {
-        for (var p = 0; p < input_parts.length; p++) {
-            var part = input_parts[p];
-
-            // find next directory to go down
-            for (var f = 0; f < files.length; f++) {
-                // TODO: if there is for example, '/.git' and '/.gitattributes', the first one gets priority (make this better)
-                if (files[f].name.toLowerCase() === part && files[f].type === 'folder') {
-                    files = files[f].children;
-                }
-            }
-        }
-    }
+    var files = searchArray(b_project.tree, input);
 
     // create html suggestion array
     for (var f = 0; f < files.length; f++) {
-        var full_path = normalizePath(files[f].path)
+        var full_path = files[f];
         var file_path = full_path.replace(b_project.curr_project,'');
 
-        if (file_path.toLowerCase().includes(input_parts[input_parts.length - 1])) {
+        if (file_path.includes(input_parts[input_parts.length - 1])) {
             var result_txt = file_path.replace(input, "<b>" + input + "</b>");
 
             if (files[f].type === "folder") {
@@ -179,6 +179,7 @@ function newInput() {
 
             final_html += prevFileSuggest(input_text);
 
+            
             if (is_file_search) {
                 final_html += suggest(input_text);
 

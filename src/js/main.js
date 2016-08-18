@@ -8,6 +8,9 @@ var nwPROC = require('process');
 var nwZIP = require("unzip");
 var nwRAF = require("rimraf");
 var nwLESS = require('less');
+var nwWALK = require('walkdir');
+
+
 
 var eIPC = require('electron').ipcRenderer;
 var eREMOTE = require('electron').remote;

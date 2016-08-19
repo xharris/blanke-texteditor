@@ -37,7 +37,7 @@ var grep_action = function(input) {
         nwGREP.findAsPromise(search_str, null ,{cwd: b_ide.getData().current_project})
         .then(function(list){
             for (var g = 0; g < list.length; g++) {
-                if (nwPATH.extname(list[g].file) !== "exe") {
+                if (nwPATH.extname(list[g].file) !== ".exe") {
                 console.log(list[g])
                     // iterate through results
                     var result = list[g];

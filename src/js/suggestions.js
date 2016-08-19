@@ -2,7 +2,7 @@ var sugg_index = -1;
 var el_searchbox;
 
 $(function(){
-   
+   newInput
     el_searchbox = document.getElementById("in-search");
     el_searchbox.oninput = newInput;
     el_searchbox.onpropertychange = el_searchbox.oninput;
@@ -110,13 +110,15 @@ function prevFileSuggest(input) {
     return html;
 }
 
+var search_limit = 10;
 function searchArray(array_str, search) {
   var rx = new RegExp('"([^"]*'+search+'[^"]*)"','gi');
+  
   var i = 0, results = [];
   while (result = rx.exec(array_str)) {
     results.push(result[1]);
     i += 1;
-    if (i >=100)
+    if (i >= search_limit)
       break;
   }
   return results;
@@ -245,6 +247,10 @@ function submitSearch() {
     if (is_file_search && b_ide.isProjectSet()) {
         // open file
         b_editor.setFile(nwPATH.join(b_project.curr_project, input_text));
+        
+        // move path to top of search_tree
+        b_project.tree.replace(input_text, '');
+        b_project.tree = "\"" + input_text + "\" ";
     } else {
         var commands = b_search.getCmdSubmits();
 

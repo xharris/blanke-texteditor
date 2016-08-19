@@ -299,7 +299,7 @@
   bottom: 0px;
   right: -110%;
   width: 450px;
-  z-index: 85;
+  z-index: 88;
   opacity: 0;
   pointer-events: none;
   background-color: white;
@@ -966,6 +966,7 @@ html {
   border: 1px solid #e0e0e0;
 }
 *::-webkit-scrollbar-track {
+  background-color: transparent;
   opacity: none;
 }
 *::-webkit-scrollbar {

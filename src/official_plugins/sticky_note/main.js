@@ -27,8 +27,6 @@ var note_plugin = {
     }
 }
 
-var sticky_txt = {};
-
 function createNote() {
     var new_guid = guid();
     
@@ -43,6 +41,7 @@ function createNote() {
     .width(200)
    	.height(150)
     .draggable({
+        scroll: false,
         cancel: "textarea",
         start: function (){
             $('.sticky-note[data-guid="'+ $(this).data('guid') +'"] > textarea').focus();
@@ -58,11 +57,10 @@ function createNote() {
     .appendTo('#main_window > #sticky-note-container');
     
     
-    $('.sticky-note[data-guid="'+ new_guid +'"] > textarea').change(function(){
-        sticky_txt[new_guid] = this.value;
+    $('.sticky-note[data-guid="'+ new_guid +'"] > textarea')      
+    .css({
+
     });
-    
-    
 }
 
 // note_info = {text, left, top}

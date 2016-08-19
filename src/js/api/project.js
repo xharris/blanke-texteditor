@@ -127,11 +127,9 @@ $(function(){
                     b_editor.setFile(b_project.getSetting("curr_file"),true);
 
                     // TODO: needs a closer look at. will this continue to watch previous projects?
-                    nwFILE.watch(b_project.curr_project, (eventType, filename) => {
+                    nwFILE.watch(b_project.curr_project, {'recursive':true}, (eventType, filename) => {
                         console.log(eventType + ': ' + filename);
-                        if (filename) {
-                            //b_project.refreshTree(b_project.curr_project);
-                        }
+                        b_project.refreshTree();
                     })
 
                      // limit path to 3 levels 
@@ -188,16 +186,25 @@ $(function(){
             
             var the_path = nwPATH.normalize(b_project.curr_project)
             emitter = nwWALK(the_path);
+            
+            // add file path
             emitter.on('file', function(filename, stat) {
                 b_project.tree += '\"' + normalizePath(filename) + '\" ';   
-            })
-            .on('end', function(){ 
+            });
+            
+            // add empty folder paths only
+            emitter.on('empty', function(dirname, stat) {
+                b_project.tree += '\"' + normalizePath(dirname) + '/\" '; 
+            });
+            
+            // done walking the directories
+            emitter.on('end', function(){ 
                 b_ide.hideProgressBar();
                 $("#in-search").prop('disabled', false);
                 if (callback) {
                     callback(b_project.tree);
                 }
-            })
+            });
         },
 
         // load ide .json file or make a new one if it doesn't exist

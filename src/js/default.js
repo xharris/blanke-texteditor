@@ -5,11 +5,10 @@ $(function(){
 // [command, arg hints]
 var ideCommands = [
     ['dev-tools','(Show developer tool for this IDE)'],
-    ['cmd','<command-name> -global -delete'],
     ['plugins','(opens plugin dialog)'],
     ['options ide','(Change IDE Appearance, Editor settings, etc.)'],
     
-    ['project refresh',''],
+    ['project refresh','(Rescan the project directory)'],
     ['project explore','(Open the project in explorer/finder)'],
     
     ['file explore','(Show the file in explorer/finder)'],
@@ -23,12 +22,7 @@ var ideActions = function(input) {
 
     if (input_parts[0] === "dev-tools") {
         b_ide.showDevTools();
-        b_editor.focus();
-    }
-    if (input_parts[0] === "cmd") {
-        if (input_parts.length >= 2) {
-            var extra_options = input_parts.slice(2, input_parts.length);
-        }
+        b_editor.focus()
     }
     if (input_parts[0] === "plugins") {
         b_plugin.showViewer();

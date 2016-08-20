@@ -1,16 +1,16 @@
 var IDE_NAME = "BlankE";
 var ZOOM_AMT = 1;
-var DEV_MODE = true; // use dev_data instead of data for saving
+var DEV_MODE = false; // use dev_data instead of data for saving
 
 var nwFILE = require('fs');
 var nwPATH = require('path');
 var nwPROC = require('process');
+var nwCHILD = require('child_process');
+
 var nwZIP = require("unzip");
 var nwRAF = require("rimraf");
 var nwLESS = require('less');
 var nwWALK = require('walkdir');
-
-
 
 var eIPC = require('electron').ipcRenderer;
 var eREMOTE = require('electron').remote;

@@ -6,6 +6,7 @@ var nwFILE = require('fs');
 var nwPATH = require('path');
 var nwPROC = require('process');
 var nwCHILD = require('child_process');
+var nwOS = require('os');
 
 var nwZIP = require("unzip");
 var nwRAF = require("rimraf");

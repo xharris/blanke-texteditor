@@ -128,8 +128,12 @@ $(function(){
 
                     // TODO: needs a closer look at. will this continue to watch previous projects?
                     nwFILE.watch(b_project.curr_project, {'recursive':true}, (eventType, filename) => {
-                        console.log(eventType + ': ' + filename);
-                        b_project.refreshTree();
+                        full_path = normalizePath(nwPATH.join(b_project.curr_project, filename));
+                        
+                        if (normalizePath(b_project.getSetting("curr_file")) !== full_path) {
+                            console.log(eventType + ': ' + filename); 
+                            b_project.refreshTree();    
+                        }
                     })
 
                      // limit path to 3 levels 

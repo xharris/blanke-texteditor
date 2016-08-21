@@ -13,6 +13,8 @@ var ideCommands = [
     
     ['file explore','(Show the file in explorer/finder)'],
     
+    ['appdata explore','(Explore AppData folder)'],  
+    
     ['system beep',''],
     ['stop loading','(Stop the loading bar animation if it won\'t stop)']
 ];
@@ -43,6 +45,11 @@ var ideActions = function(input) {
     if (input_parts[0] === "file") {
         if (input_parts[1] === "explore") {
             eSHELL.showItemInFolder(b_project.getSetting("curr_file"));
+        }
+    }
+    if (input_parts[0] === "appdata") {
+        if (input_parts[1] === "explore") {
+            eSHELL.showItemInFolder(eAPP.getPath("appData"))
         }
     }
     if (input_parts[0] === "system") {

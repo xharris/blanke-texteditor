@@ -313,6 +313,26 @@ $(function(){
             }
 
         },
+        
+        saveData: function(plugin_name, file_name, data, options, callback) {
+            var folder_path = nwPATH.join(b_ide.data_folder, plugin_name);
+            var file_path = nwPATH.join(folder_path, file_name);
+            
+            nwFILE.mkdir(folder_path, function() {
+                nwFILE.writeFile(file_path, data, options, function(err) {
+                    if (callback) callback(err);
+                })   
+            });
+        },
+        
+        loadData: function(plugin_name, file_name, options, callback) {
+            var folder_path = nwPATH.join(b_ide.data_folder, plugin_name);
+            var file_path = nwPATH.join(folder_path, file_name);
+            
+            nwFILE.readFile(file_path, 'utf-8', function(err, data) {
+                if (callback) callback(err, data);
+            });
+        }, 
 
         hideViewer: function() {
             $(".plugin-viewer").removeClass("active");

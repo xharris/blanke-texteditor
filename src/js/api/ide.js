@@ -78,7 +78,7 @@ $(function(){
         },
 
         isProjectSet: function() {
-            return (typeof(b_project.curr_project) != "undefined" && b_project.curr_project !== "");
+            return (typeof(b_project.curr_project) !== "undefined" && b_project.curr_project !== "");
         },
 
         showProgressBar: function() {

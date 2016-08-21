@@ -5,8 +5,6 @@ var scripts = {};
 
 document.addEventListener("plugin_js_loaded", function(e) {
     if (e.detail.plugin.name === "Command Palette") {
-        cmd_path = e.detail.path;
-        
         // Plugin has loaded
         b_search.addCommands(cmd);
         
@@ -85,18 +83,6 @@ function cmd_action(input) {
     }
 }
 
-function cmd_loadScripts() {
-    // open file
-    nwFILE.readFile(nwPATH.join(cmd_path, 'data.json'), 'utf-8', function(err, data) {
-        if (!err) {
-            scripts = JSON.parse(data);
-            cmd_refreshList();
-        } else {
-            console.log('ERR: cmd_palette - no scripts saved.');
-        }
-    });
-}
-
 function cmd_clearList() {
     $(".cmd-palette .list").empty();
     $(".cmd-buttons").empty();
@@ -105,7 +91,16 @@ function cmd_clearList() {
 function cmd_refreshList() {
     cmd_clearList();
     
-    var keys = Object.keys(scripts[b_ide.getData().current_project]);
+    var keys = [];
+    
+    // add project if it doesn't exist
+    if (!Object.keys(scripts).includes(b_project.curr_project)) {
+        scripts[b_ide.getData().current_project] = {};
+    }
+    
+    if (b_ide.isProjectSet()){
+        keys = Object.keys(scripts[b_project.curr_project]);
+    }
     
     if (keys.length === 0) {
         $(".cmd-palette .list-container > .list").append(
@@ -114,7 +109,7 @@ function cmd_refreshList() {
     }
     
     for (var k = 0; k < keys.length; k++) {
-        cmd_addToList(keys[k], scripts[b_ide.getData().current_project][keys[k]]);
+        cmd_addToList(keys[k], scripts[b_project.curr_project][keys[k]]);
     }
     
     if (selected_script !== '') {
@@ -127,25 +122,34 @@ function cmd_refreshList() {
 // saves currently opened script
 function cmd_saveScript() {
     if (selected_script !== '') {
-        scripts[b_ide.getData().current_project][selected_script].name = $(".editor-container .cmd-title").val();
-        scripts[b_ide.getData().current_project][selected_script].text = $(".editor-container textarea").val();
+        scripts[b_project.curr_project][selected_script].name = $(".editor-container .cmd-title").val();
+        scripts[b_project.curr_project][selected_script].text = $(".editor-container textarea").val();
         
         cmd_refreshList();
         cmd_saveData();
     }
 }
 
-function cmd_saveData() {
-    nwFILE.writeFile(nwPATH.join(cmd_path, 'data.json'), JSON.stringify(scripts), {flag: 'w+'}, function() {
-        console.log('did it')
+function cmd_loadScripts() {
+    b_plugin.loadData("Command Palette", "data.json", 'utf-8', function(err, data) {
+        if (!err) {
+            scripts = JSON.parse(data);
+            cmd_refreshList();
+        } else {
+            console.log('ERR: cmd_palette - no scripts saved.');
+        }
     });
+}
+
+function cmd_saveData() {
+    b_plugin.saveData("Command Palette", "data.json", JSON.stringify(scripts), {flag: 'w+'});
 }
 
 function cmd_selectScript(guid) {
     $(".editor-container").addClass("active");
     
-    $(".editor-container .cmd-title").val(scripts[b_ide.getData().current_project][guid].name);
-    $(".editor-container textarea").val(scripts[b_ide.getData().current_project][guid].text);
+    $(".editor-container .cmd-title").val(scripts[b_project.curr_project][guid].name);
+    $(".editor-container textarea").val(scripts[b_project.curr_project][guid].text);
     
     $(".cmd-palette .list-container .command").removeClass('selected');
     $(".cmd-palette .list-container .command[data-guid='"+guid+"'").addClass('selected');
@@ -154,12 +158,12 @@ function cmd_selectScript(guid) {
 }
 
 function cmd_addToList(guid, info) {
-    if (Object.keys(scripts[b_ide.getData().current_project]).length === 0) {
+    if (Object.keys(scripts[b_project.curr_project]).length === 0) {
         cmd_clearList();
     }
     $(".editor-container").addClass("active");
     
-    scripts[b_ide.getData().current_project][guid] = info;
+    scripts[b_project.curr_project][guid] = info;
     
     var selected = '';
     if (guid === selected_script) {
@@ -171,17 +175,21 @@ function cmd_addToList(guid, info) {
     
     if (info.icon !== '') {
         $(".cmd-buttons").append(
-            "<button><i class='mdi mdi-"+info.icon+"' onclick='cmd_runScript(\""+guid+"\");'></i></button>"    
+            "<button><i class='mdi mdi-"+info.icon+"' title='"+info.name+"' onclick='cmd_runScript(\""+guid+"\");'></i></button>"    
         );
     }
 }
 
 function cmd_runScript(guid) {
-    var code = scripts[b_ide.getData().current_project][guid].text;
+    var code = scripts[b_project.curr_project][guid].text;
     
-    console.log('running "'+code+'"')
+    if (nwOS.type() === "Windows_NT") {
+        code = "start cmd /k \"" + code + "\"";
+    }
     
-    nwCHILD.exec(code, {cwd: b_ide.getData().current_project}, function(err, stdout, stderr){
+    console.log(code)
+    
+    nwCHILD.exec(code, {cwd: b_project.curr_project}, function(err, stdout, stderr){
         console.log(stdout)
     })
 }

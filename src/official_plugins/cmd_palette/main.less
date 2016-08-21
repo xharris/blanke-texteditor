@@ -117,11 +117,14 @@
 
 .cmd-buttons {
     position: absolute;
-    right: 5px;
+    right: 15px;
     top: 80px;
-    bottom: 0px;
+    bottom: 35px;
     z-index: 85;
-    width: 40px;
+    width: 46px;
+    pointer-events: none;
+    overflow-y: auto;
+    overflow-x: hidden;
     
     button {
         .btn-circle();
@@ -131,6 +134,7 @@
         padding:0px;
         text-align:center;
         margin-bottom: 10px !important;
+        pointer-events:all;
         
         &:hover {
             background-color: #546e7a;

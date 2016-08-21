@@ -2,7 +2,6 @@ var sugg_index = -1;
 var el_searchbox;
 
 $(function(){
-   newInput
     el_searchbox = document.getElementById("in-search");
     el_searchbox.oninput = newInput;
     el_searchbox.onpropertychange = el_searchbox.oninput;
@@ -134,6 +133,7 @@ function suggest(input) {
     var html = [];
 
     var files = searchArray(b_project.tree, input);
+    console.log(files)
 
     // create html suggestion array
     for (var f = 0; f < files.length; f++) {
@@ -250,7 +250,7 @@ function submitSearch() {
         
         // move path to top of search_tree
         b_project.tree.replace(input_text, '');
-        b_project.tree = "\"" + input_text + "\" " + b_project.tree;
+        b_project.tree = "\"" + input_text + "\" ";
     } else {
         var commands = b_search.getCmdSubmits();
 

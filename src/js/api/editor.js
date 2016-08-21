@@ -16,7 +16,10 @@ $(function(){
 
             file_path = nwPATH.normalize(file_path);
             
-            if (b_project.getSetting('curr_file') !== '' && !loading) {
+            if (b_project.getSetting('curr_file') !== ''
+                && !Object.keys(b_project.getSetting('unsaved_text')).includes(b_project.getSetting("curr_file")) 
+                && !loading) {
+                    
                 b_project.getSetting('unsaved_text')[b_project.getSetting('curr_file')] = editor.getValue();
                 b_history.refreshList();
             }

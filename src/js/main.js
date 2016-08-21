@@ -2,6 +2,8 @@ var IDE_NAME = "BlankE";
 var ZOOM_AMT = 1;
 var DEV_MODE = false; // use dev_data instead of data for saving
 
+require('electron-cookies');
+
 var nwFILE = require('fs');
 var nwPATH = require('path');
 var nwPROC = require('process');
@@ -28,7 +30,8 @@ $(function(){
         return false;
     }
     */
-
+    analytics.event('UI', 'initialize', 'main_window', '');
+    
     b_ide.loadData();
     b_plugin.loadOfficialPlugins();
 

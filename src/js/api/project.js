@@ -1,6 +1,9 @@
 var b_project;
 var MAX_PATH_LIST_LENGTH = 3;
 
+var refreshTimer;
+var refreshTimoutLength = 1500;
+
 var project_settings_template = {
     unsaved_text: {},   // save text from unsaved files from each project
     recent_files: [],   // recently searched files from each project
@@ -10,8 +13,6 @@ var project_settings_template = {
     curr_file: '',
     can_refresh: []
 }
-
-
    
 
 $(function(){
@@ -185,30 +186,38 @@ $(function(){
         },
 
         refreshTree: function(path, callback) {
-            b_ide.showProgressBar();
-            $("#in-search").prop('disabled', true);
+            // limit how many timouts can be called within a period of time
+            clearTimeout(refreshTimer);
+            refreshTimer = setTimeout(function(){
+                b_ide.showProgressBar();
+                $("#in-search").prop('disabled', true);
+                
+                var the_path = nwPATH.normalize(b_project.curr_project)
+                emitter = nwWALK(the_path);
             
-            var the_path = nwPATH.normalize(b_project.curr_project)
-            emitter = nwWALK(the_path);
-            
-            // add file path
-            emitter.on('file', function(filename, stat) {
-                b_project.tree += '\"' + normalizePath(filename) + '\" ';   
-            });
-            
-            // add empty folder paths only
-            emitter.on('empty', function(dirname, stat) {
-                b_project.tree += '\"' + normalizePath(dirname) + '/\" '; 
-            });
-            
-            // done walking the directories
-            emitter.on('end', function(){ 
-                b_ide.hideProgressBar();
-                $("#in-search").prop('disabled', false);
-                if (callback) {
-                    callback(b_project.tree);
-                }
-            });
+                // reset tree
+                b_project.tree = "";
+                
+                // add file path
+                emitter.on('file', function(filename, stat) {
+                    b_project.tree += '\"' + normalizePath(filename) + '\" ';   
+                });
+                
+                // add empty folder paths only
+                emitter.on('empty', function(dirname, stat) {
+                    b_project.tree += '\"' + normalizePath(dirname) + '/\" '; 
+                });
+                
+                // done walking the directories
+                emitter.on('end', function(){ 
+                    b_ide.hideProgressBar();
+                    $("#in-search").prop('disabled', false);
+                    if (callback) {
+                        callback(b_project.tree);
+                    }
+                });
+            }, refreshTimoutLength);
+
         },
 
         // load ide .json file or make a new one if it doesn't exist

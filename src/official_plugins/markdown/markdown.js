@@ -12,6 +12,13 @@ function updateMarkdown() {
 
     // update live preview
     $(".side-content").html(converter.makeHtml(editor_txt));
+    
+    $(".side-content a").each(function(){
+        var old_href = this.href;
+        this.href = "#";
+        
+        $(this).attr("onclick","eSHELL.openExternal('"+old_href+"')");
+    });
 }
 
 $(function() {

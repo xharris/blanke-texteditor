@@ -250,7 +250,7 @@ function submitSearch() {
         
         // move path to top of search_tree
         b_project.tree.replace(input_text, '');
-        b_project.tree = "\"" + input_text + "\" ";
+        b_project.tree = "\"" + input_text + "\" " + b_project.tree;
     } else {
         var commands = b_search.getCmdSubmits();
 

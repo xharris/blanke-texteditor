@@ -44,6 +44,12 @@
         font-size: 18px;    
     }
     
+    .btn-test {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+    
     button:not(.btn-close) {
         .btn-circle();
         
@@ -61,6 +67,11 @@
             background-color: #4fc3f7;
             border-color: #4fc3f7;
         }
+        
+        &.btn-test:hover {
+            background-color: #546e7a;
+            border-color: #546e7a;
+        }
     }
     
     .list-container {
@@ -71,6 +82,10 @@
             font-style: italic;
             line-height: 60px;
             color: #9e9e9e;
+        }
+        
+        .list {
+            margin-bottom: 50px;
         }
         
         .command {
@@ -93,6 +108,8 @@
     
     .editor-container {
         width: 70%;
+        padding: 0px 20px;
+        box-sizing: border-box;
         
         opacity: 0;
         pointer-events: none;
@@ -120,7 +137,7 @@
     right: 15px;
     top: 80px;
     bottom: 35px;
-    z-index: 85;
+    z-index: 79;
     width: 46px;
     pointer-events: none;
     overflow-y: auto;

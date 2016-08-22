@@ -20,8 +20,12 @@ document.addEventListener("plugin_js_loaded", function(e) {
                     '<div class="input-group">'+
                         '<span>Name:</span>'+
                         '<input class="cmd-title" type="text">'+
-                        '<button class="btn-test" onclick="cmd_runScript(selected_script)"><i class="mdi mdi-play"></i></button>'+
                     '</div>'+
+                    '<div class="input-group">'+
+                        '<span>Label:</span>'+
+                        '<input class="cmd-icon" type="text">'+
+                    '</div>'+
+                    '<button class="btn-test" onclick="cmd_runScript(selected_script)"><i class="mdi mdi-play"></i></button>'+
                     '<textarea class="editor"></textarea>'+
                 '</div>'+
             '</div>'+
@@ -38,7 +42,7 @@ document.addEventListener("plugin_js_loaded", function(e) {
         $(".cmd-palette textarea").change(function(){
             cmd_saveScript(); 
         });
-        $(".cmd-palette .cmd-title").change(function(){
+        $(".cmd-palette .cmd-title, .cmd-palette .cmd-icon").change(function(){
             cmd_saveScript(); 
         });
         
@@ -48,8 +52,8 @@ document.addEventListener("plugin_js_loaded", function(e) {
 
 // [command, arg hints]
 var cmd_commands = [
-    ['cmd add','(create runnable script)'],
     ['cmd view','(view scripts)'],
+    ['cmd add','(create runnable script)'],
     ['cmd run', '[script name]']
 ];
 
@@ -114,6 +118,14 @@ function cmd_refreshList() {
     
     if (selected_script !== '') {
         $(".editor-container").addClass("active");
+        
+        // change test button to look like the real deal
+        $(".editor-container .btn-test > i").removeClass()
+        
+        var sel_icon = scripts[b_project.curr_project][selected_script].icon;
+        if (sel_icon !== "") {
+            $(".editor-container .btn-test > i").addClass("mdi mdi-" + sel_icon);
+        }
     } else {
         $(".editor-container").removeClass("active");
     }
@@ -124,6 +136,7 @@ function cmd_saveScript() {
     if (selected_script !== '') {
         scripts[b_project.curr_project][selected_script].name = $(".editor-container .cmd-title").val();
         scripts[b_project.curr_project][selected_script].text = $(".editor-container textarea").val();
+        scripts[b_project.curr_project][selected_script].icon = $(".editor-container .cmd-icon").val();
         
         cmd_refreshList();
         cmd_saveData();
@@ -149,6 +162,7 @@ function cmd_selectScript(guid) {
     $(".editor-container").addClass("active");
     
     $(".editor-container .cmd-title").val(scripts[b_project.curr_project][guid].name);
+    $(".editor-container .cmd-icon").val(scripts[b_project.curr_project][guid].icon)
     $(".editor-container textarea").val(scripts[b_project.curr_project][guid].text);
     
     $(".cmd-palette .list-container .command").removeClass('selected');
@@ -181,14 +195,18 @@ function cmd_addToList(guid, info) {
 }
 
 function cmd_runScript(guid) {
-    var code = scripts[b_project.curr_project][guid].text;
+    var script = scripts[b_project.curr_project][guid];
+    var code = script.text;
     
     if (nwOS.type() === "Windows_NT") {
         code = "start cmd /k \"" + code + "\"";
     }
     
-    console.log(code)
-    
+    b_ide.addToast({
+        message: 'running "'+script.name+'"',
+        can_dismiss: true,
+        timeout: 1000
+    });
     nwCHILD.exec(code, {cwd: b_project.curr_project}, function(err, stdout, stderr){
         console.log(stdout)
     })

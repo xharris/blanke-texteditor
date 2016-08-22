@@ -109,7 +109,7 @@ function prevFileSuggest(input) {
     return html;
 }
 
-var search_limit = 10;
+var search_limit = 100;
 function searchArray(array_str, search) {
   var rx = new RegExp('"([^"]*'+search+'[^"]*)"','gi');
   
@@ -133,14 +133,13 @@ function suggest(input) {
     var html = [];
 
     var files = searchArray(b_project.tree, input);
-    console.log(files)
 
     // create html suggestion array
     for (var f = 0; f < files.length; f++) {
         var full_path = files[f];
         var file_path = full_path.replace(b_project.curr_project,'');
 
-        if (file_path.includes(input_parts[input_parts.length - 1])) {
+        if (file_path.toLowerCase().includes(input_parts[input_parts.length - 1])) {
             var result_txt = file_path.replace(input, "<b>" + input + "</b>");
 
             if (files[f].type === "folder") {
@@ -250,7 +249,7 @@ function submitSearch() {
         
         // move path to top of search_tree
         b_project.tree.replace(input_text, '');
-        b_project.tree = "\"" + input_text + "\" ";
+        b_project.tree = "\"" + input_text + "\" " + b_project.tree;
     } else {
         var commands = b_search.getCmdSubmits();
 

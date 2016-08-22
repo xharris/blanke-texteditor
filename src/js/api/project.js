@@ -131,8 +131,7 @@ $(function(){
                     nwFILE.watch(b_project.curr_project, {'recursive':true}, (eventType, filename) => {
                         full_path = normalizePath(nwPATH.join(b_project.curr_project, filename));
                         
-                        if (normalizePath(b_project.getSetting("curr_file")) !== full_path) {
-                            console.log(eventType + ': ' + filename); 
+                        if (normalizePath(b_project.getSetting("curr_file")) !== full_path && eventType === "rename") {
                             b_project.refreshTree();    
                         }
                     })

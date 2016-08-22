@@ -99,6 +99,8 @@ $(function(){
                     can_dismiss: false,
                     timeout: 2000
                 });
+                
+                b_project.addFolder(nwPATH.dirname(in_path));
             }
 
 		}

@@ -58,7 +58,7 @@ $(function(){
 
     eIPC.on('focus-search', function(event) {
         b_search.focus();
-    })
+    });
 
     var drop_mainwin = document.getElementById("main_window");
 	drop_mainwin.ondragover = () => {
@@ -67,46 +67,31 @@ $(function(){
 			//$(".filedrop-overlay").removeClass("inactive");
 		}
 		return false;
-	}
+	};
 	drop_mainwin.ondragleave = drop_mainwin.ondragend = () => {
 		//$(".filedrop-overlay").addClass("inactive");
 		return false;
-	}
+	};
 	drop_mainwin.ondrop = (e) => {
 		e.preventDefault();
 
 		for (var f of e.dataTransfer.files) {
 			var in_path = f.path;
-			var ext = re_file_ext.exec(in_path)[1];
 
-            var file_type = nwFILE.lstatSync(in_path);
-
-            if (file_type.isDirectory()) {
-                var folder_name = nwPATH.basename(in_path);
-
-                b_project.addFolder(in_path)
-            }
-            else if (file_type.isSymbolicLink()) {
-                b_ide.addToast({
-                    message: " symoblic! " + in_path,
-                    can_dismiss: false,
-                    timeout: 2000
-                });
-            }
-            else if (file_type.isFile()) {
-                b_ide.addToast({
-                    message: labels['file'] + " " + in_path,
-                    can_dismiss: false,
-                    timeout: 2000
-                });
-                
-                b_project.addFolder(nwPATH.dirname(in_path));
-            }
+            handleDropFile(in_path);
 
 		}
 		$(".filedrop-overlay").addClass("inactive");
 		return false;
-	}
+	};
+	
+    var args = eREMOTE.getGlobal("shareVars").args;
+    
+    if (args.length >= 3) {
+        var in_file = args[2];
+        
+        handleDropFile(in_file);
+    }
 
 
     $("#editor").on("keydown", function(evt) {
@@ -116,12 +101,12 @@ $(function(){
 
         // uses mdi
         var special_chars = {
-            13: 'mdi-keyboard-return', // enter
-            16: 'mdi-chevron-up', // shift
-            20: 'mdi-chevron-double-up', // caps lock
-            32: 'mdi-dots-horizontal', // space
-            91: 'mdi-apple-keyboard-command', // apple META/command
-            93: 'mdi-apple-keyboard-command', // apple META/command
+            13: 'keyboard-return', // enter
+            16: 'chevron-up', // shift
+            20: 'chevron-double-up', // caps lock
+            32: 'dots-horizontal', // space
+            91: 'apple-keyboard-command', // apple META/command
+            93: 'apple-keyboard-command', // apple META/command
         };
 
         // doesn't use mdi
@@ -142,7 +127,7 @@ $(function(){
 
         var is_special = false;
         if (Object.keys(special_chars).includes(keyCode+"")) {
-            key = '<i class="mdi ' + special_chars[keyCode] + '"></i>';
+            key = '<i class="mdi mdi-' + special_chars[keyCode] + '"></i>';
             is_special = true;
         }
         else if (Object.keys(special_chars2).includes(keyCode+"")) {
@@ -204,6 +189,36 @@ $(function(){
 
     editor.resize();
 });
+
+function handleDropFile(in_path) {
+    nwFILE.lstat(in_path, function(err, stats) {
+        if (!err) {
+            if (stats.isDirectory()) {
+                var folder_name = nwPATH.basename(in_path);
+            
+                b_project.addFolder(in_path)
+            }
+            else if (stats.isSymbolicLink()) {
+                b_ide.addToast({
+                    message: " symoblic! " + in_path,
+                    can_dismiss: false,
+                    timeout: 2000
+                });
+            }
+            else if (stats.isFile()) {
+                b_ide.addToast({
+                    message: labels['file'] + " " + in_path,
+                    can_dismiss: false,
+                    timeout: 2000
+                });
+                
+                b_project.reset();
+                b_project.setFolder(nwPATH.dirname(in_path));
+                b_editor.setFile(normalizePath(in_path));
+            }
+        }
+    });
+}
 
 function saveCursor() {
     b_ide.addDataValue('cursor', {});

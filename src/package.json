@@ -33,7 +33,7 @@
     "grunt-contrib-less": "^1.3.0"
   },
   "build": {
-    "appID": "blanke",
+    "appID": "BlankE",
     "app-category-type": "public.app-category.developer-tools",
     "win": {
       "iconURL": "https://raw.githubusercontent.com/xharris/texteditor/master/src/build/icon.ico"

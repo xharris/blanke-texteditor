@@ -38,7 +38,7 @@ $(function(){
             }
         },
 
-        addFolder: function(path) {
+        addFolder: function(path, from_set=false) {
             path = normalizePath(path);
 
             // don't add project if it was previously added
@@ -61,7 +61,7 @@ $(function(){
                 timeout: 1000
             });
 
-            if (b_ide.getData()['project_paths'].length == 1) {
+            if (b_ide.getData()['project_paths'].length == 1 && !from_set) {
                 b_project.setFolder(path);
             } else {
                 b_project._refreshList();
@@ -100,6 +100,13 @@ $(function(){
 
         setFolder: function(new_path) {
             if (new_path === undefined || new_path === "") return;
+            
+            new_path = normalizePath(new_path);
+            
+            // does project exist?
+            if (!b_ide.getData()['project_paths'].includes(new_path)) {
+                b_project.addFolder(new_path, true);
+            }
 
             b_project.saveData(function(){
 
@@ -170,10 +177,7 @@ $(function(){
                 var path = full_path;
                 
                 // limit path to 3 levels 
-                var path_parts = path.split(nwPATH.sep);
-                if (path_parts.length > MAX_PATH_LIST_LENGTH) {
-                    path = '...' + path_parts.splice(path_parts.length - 3, 3).join(nwPATH.sep);
-                }
+                path = shortenPath(path, 4);
                 
                 var selected = '';
                 if (full_path === b_project.curr_project) {
@@ -245,7 +249,7 @@ $(function(){
             });
         },
 
-        // save current project's .blanke file
+        // save current project's json file
         saveData: function(done_callback) {
             if (b_ide.isProjectSet()) {
                 b_project.settings.history = b_history.save();

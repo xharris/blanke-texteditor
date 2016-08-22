@@ -28,6 +28,7 @@ function createWindow () {
       //width: 1200,
       //height: 900
   });
+  global.shareVars = {args: process.argv};
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);

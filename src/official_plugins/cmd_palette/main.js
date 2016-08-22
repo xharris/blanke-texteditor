@@ -189,7 +189,7 @@ function cmd_addToList(guid, info) {
     
     if (info.icon !== '') {
         $(".cmd-buttons").append(
-            "<button><i class='mdi mdi-"+info.icon+"' title='"+info.name+"' onclick='cmd_runScript(\""+guid+"\");'></i></button>"    
+            "<button title='"+info.name+"' onclick='cmd_runScript(\""+guid+"\");'><i class='mdi mdi-"+info.icon+"'></i></button>"    
         );
     }
 }

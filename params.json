@@ -1,0 +1,6 @@
+{
+  "name": "BlankE",
+  "tagline": "a simple text editor with some neat features on the side",
+  "body": "### What is this project?\r\nA text editor.\r\n\r\n### Why?\r\nSo programmers can edit text.\r\n\r\nI wanted to create a text editor with a \"clean, distraction-free interface\". There are several neat features that are included too:\r\n\r\n+ GitHub flavored Markdown Preview\r\n\r\n+ Material Design Hex Color Palette\r\n\r\n+ Save Commands and Easily Run Them\r\n\r\n+ And More (check out the [wiki](https://github.com/xharris/blanke/wiki))\r\n\r\n### Is this project done?\r\nI would say it's in a beta stage. It is usable and if a bug pops (which is very rare), it will not affect your work. Unless you forget to save... then that's your problem.\r\n\r\n### I want to download and run this. How?\r\nAt the moment, there are working builds for the following systems:\r\n\r\n> Windows 7+ (32-bit, 64-bit)\r\n\r\nAvailable but not officially built:\r\n> Mac OS 10.9+\r\n\r\n> Ubuntu 12.04+\r\n\r\n> Fedora 21\r\n\r\n> Debian 8\r\n\r\n### Will this stay open source?\r\nProbably.",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}

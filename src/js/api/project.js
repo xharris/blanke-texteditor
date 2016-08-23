@@ -11,7 +11,7 @@ var project_settings_template = {
     cursor_pos: {},
     recent_ide_commands: [], // recently used ide commands
     curr_file: '',
-    can_refresh: []
+    completer: ''
 }
    
 

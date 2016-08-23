@@ -25,6 +25,10 @@ document.addEventListener("plugin_js_loaded", function(e) {
                         '<span>Label:</span>'+
                         '<input class="cmd-icon" type="text">'+
                     '</div>'+
+                    '<div class="input-group">'+
+                        '<span>Show console:</span>'+
+                        '<input class="cmd-show" type="checkbox" checked>'+
+                    '</div>'+
                     '<button class="btn-test" onclick="cmd_runScript(selected_script)"><i class="mdi mdi-play"></i></button>'+
                     '<textarea class="editor"></textarea>'+
                 '</div>'+
@@ -42,7 +46,7 @@ document.addEventListener("plugin_js_loaded", function(e) {
         $(".cmd-palette textarea").change(function(){
             cmd_saveScript(); 
         });
-        $(".cmd-palette .cmd-title, .cmd-palette .cmd-icon").change(function(){
+        $(".cmd-palette .cmd-title, .cmd-palette .cmd-icon, .cmd-palette .cmd-show").change(function(){
             cmd_saveScript(); 
         });
         
@@ -137,6 +141,7 @@ function cmd_saveScript() {
         scripts[b_project.curr_project][selected_script].name = $(".editor-container .cmd-title").val();
         scripts[b_project.curr_project][selected_script].text = $(".editor-container textarea").val();
         scripts[b_project.curr_project][selected_script].icon = $(".editor-container .cmd-icon").val();
+        scripts[b_project.curr_project][selected_script].show = $(".editor-container .cmd-show").is(':checked');
         
         cmd_refreshList();
         cmd_saveData();
@@ -164,6 +169,7 @@ function cmd_selectScript(guid) {
     $(".editor-container .cmd-title").val(scripts[b_project.curr_project][guid].name);
     $(".editor-container .cmd-icon").val(scripts[b_project.curr_project][guid].icon)
     $(".editor-container textarea").val(scripts[b_project.curr_project][guid].text);
+    $(".editor-container .cmd-show").prop('checked', scripts[b_project.curr_project][guid].show);
     
     $(".cmd-palette .list-container .command").removeClass('selected');
     $(".cmd-palette .list-container .command[data-guid='"+guid+"'").addClass('selected');
@@ -198,8 +204,10 @@ function cmd_runScript(guid) {
     var script = scripts[b_project.curr_project][guid];
     var code = script.text;
     
-    if (nwOS.type() === "Windows_NT") {
-        code = "start cmd /k \"" + code + "\"";
+    if (script.show) {
+        if (nwOS.type() === "Windows_NT") {
+            code = "start cmd /k \"" + code + "\"";
+        }
     }
     
     b_ide.addToast({
@@ -218,6 +226,7 @@ function cmd_addScript() {
         'path': '',
         'text': '',
         'icon': 'play',
+        'show': true
     }
     var new_guid = guid();
     

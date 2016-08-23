@@ -156,6 +156,32 @@ $(function(){
             editor.setFontSize(b_editor.font_size);
             b_ide.getOptions().appearance.font.size = b_editor.font_size;
             b_ide.saveData();
+        },
+        /*
+            b_editor.addCompleter(
+        [
+            {
+                caption: 'love.graphics.config(settings)',
+                value: 'love.graphics.config',
+                meta: 'function',
+            }   
+        ]    
+    )
+    */
+        addCompleter: function(completer) {
+            var newCompleter = {
+                getCompletions: function(editor, session, pos, prefix, callback) {
+                    
+                    var posit = editor.getCursorPosition();
+                    var curr_token = editor.session.getTokenAt(posit.row, posit.column);
+                    
+                    console.log(prev_token);
+                    callback(null, completer.map(function(term){
+                        return term;
+                    }));
+                }
+            }
+            editor.completers = [newCompleter];
         }
     }
 });

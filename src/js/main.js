@@ -9,11 +9,13 @@ var nwPATH = require('path');
 var nwPROC = require('process');
 var nwCHILD = require('child_process');
 var nwOS = require('os');
+var nwNET = require('net');
 
 var nwZIP = require("unzip");
 var nwRAF = require("rimraf");
 var nwLESS = require('less');
 var nwWALK = require('walkdir');
+var nwMAC = require("getmac");
 
 var eIPC = require('electron').ipcRenderer;
 var eREMOTE = require('electron').remote;
@@ -25,11 +27,21 @@ var re_file_ext = /(?:\.([^.]+))?$/;
 
 
 $(function(){
-    /* prevent page reload
-    window.onbeforeunload = function() {
-        return false;
-    }
+    /* disable eval
+    window.eval = global.eval = function() {
+      throw new Error("Sorry, BlankE does not support window.eval() for security reasons.");
+    };
     */
+    
+    // set user id
+    nwMAC.getMac(function(err, address) {
+       if (!err) {
+           var hash = address.hashCode();
+           analytics.userID = hash;
+           console.log("userID: " + hash);
+       } 
+    });
+    
     analytics.event('UI', 'initialize', 'main_window', '');
     
     b_ide.loadData();
@@ -45,7 +57,6 @@ $(function(){
         enableLiveAutocompletion: true,
         fontFamily: "Courier New"
     });
-
 
     b_editor.setMode('Text');
     editor.setTheme("ace/theme/chrome");
@@ -188,6 +199,8 @@ $(function(){
     });
 
     editor.resize();
+    
+
 });
 
 function handleDropFile(in_path) {
@@ -364,4 +377,10 @@ function obj_assign(obj, prop, value) {
                value);
     } else
         obj[prop[0]] = value;
+}
+
+function parseXML(str) {
+    parser = new DOMParser();
+    xmlDoc = parser.parseFromString(str, "text/xml");
+    return xmlDoc;
 }

@@ -13,6 +13,8 @@ var ideCommands = [
     
     ['file explore','(Show the file in explorer/finder)'],
     
+    ['editor wrap','(wrap text)'],
+    
     ['appdata explore','(Explore AppData folder)'],  
     
     ['system beep',''],
@@ -45,6 +47,11 @@ var ideActions = function(input) {
     if (input_parts[0] === "file") {
         if (input_parts[1] === "explore") {
             eSHELL.showItemInFolder(b_project.getSetting("curr_file"));
+        }
+    }
+    if (input_parts[0] === "editor") {
+        if (input_parts[1] === "wrap") {
+            editor.getSession().setUseWrapMode(!editor.getSession().getUseWrapMode());
         }
     }
     if (input_parts[0] === "appdata") {

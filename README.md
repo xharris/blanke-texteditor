@@ -1,9 +1,9 @@
 # BlankE 
 a text editor with helpful features
 
-Check out the main site: (main site)[]
+Check out the main site: [main site](https://xharris.github.io/blanke/)
 
-Or check out the wiki: (wiki)[]
+Or check out the wiki: [wiki](https://github.com/xharris/blanke/wiki)
 
 
 ### Other stuff that hasn't been added to wiki yet

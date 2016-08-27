@@ -238,6 +238,7 @@ $(function(){
         },
 
         saveData: function() {
+            console.log('saving ide');
             // b_project.setSetting('history', b_history.save());			
             nwFILE.mkdir(b_ide.data_folder, function() {
                 // save ide settings file

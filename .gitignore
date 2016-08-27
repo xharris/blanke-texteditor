@@ -56,3 +56,4 @@ dev_builds/
 electron-v1.3.2-win32-ia32/
 electron/
 npm-debug.log
+*.zedstate

@@ -123,7 +123,6 @@ function searchArray(array_str, search) {
   return results;
 }
 
-
 function suggest(input) {
     if (!b_ide.isProjectSet()) return '';
 
@@ -133,6 +132,7 @@ function suggest(input) {
     var html = [];
 
     var files = searchArray(b_project.tree, input);
+
 
     // create html suggestion array
     for (var f = 0; f < files.length; f++) {
@@ -247,9 +247,9 @@ function submitSearch() {
         // open file
         b_editor.setFile(nwPATH.join(b_project.curr_project, input_text));
         
-        // move path to top of search_tree
-        b_project.tree.replace(input_text, '');
-        b_project.tree = "\"" + input_text + "\" " + b_project.tree;
+        // move path to top of search_tree (TODO: needs work)
+        //b_project.tree.replace("\""+input_text+"\" ", '');
+        //b_project.tree = "\"" + input_text + "\" " + b_project.tree;
     } else {
         var commands = b_search.getCmdSubmits();
 

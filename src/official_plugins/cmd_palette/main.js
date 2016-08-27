@@ -69,8 +69,9 @@ var cmd = {
 function cmd_action(input) {
     var input_parts = input.split(/[ ]+/);
     
-    if (b_ide.isProjectSet()) {
-        if (input_parts[0] === 'cmd') {
+
+    if (input_parts[0] === 'cmd') {
+        if (b_ide.isProjectSet()) {
             if (input_parts[1] === 'add') {
                 cmd_loadScripts();
                 cmd_refreshList();
@@ -81,13 +82,13 @@ function cmd_action(input) {
                 cmd_refreshList();
                 $(".cmd-palette").addClass("active");
             }
+        } else {
+            b_ide.addToast({
+                message: labels.plugin + ' a project must be open',
+                can_dismiss: true,
+                timeout: 1000
+            });               
         }
-    } else {
-        b_ide.addToast({
-            message: labels.plugin + ' a project must be open',
-            can_dismiss: true,
-            timeout: 1000
-        });
     }
 }
 
@@ -119,7 +120,8 @@ function cmd_refreshList() {
     for (var k = 0; k < keys.length; k++) {
         cmd_addToList(keys[k], scripts[b_project.curr_project][keys[k]]);
     }
-    
+
+    console.log(selected_script)
     if (selected_script !== '') {
         $(".editor-container").addClass("active");
         

@@ -1,6 +1,6 @@
 var IDE_NAME = "BlankE";
 var ZOOM_AMT = 1;
-var DEV_MODE = false; // use dev_data instead of data for saving
+var DEV_MODE = true; // use dev_data instead of data for saving
 
 require('electron-cookies');
 
@@ -149,6 +149,7 @@ $(function(){
         $(".status-bar .keycode").html('<span class="char">' + key + '</span>' + keyCode);
 
         // text changes autosave
+        console.log('this is a special key!');
         if (b_ide.isProjectSet() && !is_special) {
             b_project.getSetting('unsaved_text')[b_project.getSetting('curr_file')] = editor.getValue();
             b_history.refreshList();

@@ -1,4 +1,4 @@
-const DEV_MODE = false; // show dev tools
+const DEV_MODE = true; // show dev tools
 
 /* electron start */
 const electron = require('electron');
@@ -20,14 +20,40 @@ let mainWindow;
 
 function createWindow () {
 
-  // Create the browser window.
-  mainWindow = new BrowserWindow({
-      title: "BlankE",
-      center: true,
-      autoHideMenuBar: true,
-      //width: 1200,
-      //height: 900
-  });
+    // get data from init.json
+    var path = require("path");
+    var fs = require("fs");
+    var initPath = path.join(app.getPath('appData'), "init.json");
+    var data;
+    try {
+        data = JSON.parse(fs.readFileSync(initPath, 'utf8'));
+    }
+    catch(e) {
+    }
+    // Create the browser window.
+    mainWindow = new BrowserWindow(data ? data : {
+        // default window settings
+        title: "BlankE",
+        center: true,
+        autoHideMenuBar: true,
+        width: 800,
+        height: 600
+    });
+    
+    mainWindow.on("close", function() {
+        var win_bounds = mainWindow.getBounds();
+        
+        var data = {
+            title: "BlankE",
+            autoHideMenuBar: true,
+            x: win_bounds.x,
+            y: win_bounds.y,
+            width: win_bounds.width,
+            height: win_bounds.height
+        };
+        fs.writeFileSync(initPath, JSON.stringify(data));
+    })
+        
   global.shareVars = {args: process.argv};
 
   // and load the index.html of the app.
@@ -64,6 +90,8 @@ function createWindow () {
     ];
 
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+    
+    
 }
 
 // Emitted when the window is closed.

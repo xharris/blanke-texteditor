@@ -1,6 +1,12 @@
-# blanke
+# BlankE 
 a text editor with helpful features
 
+Check out the main site: (main site)[]
+
+Or check out the wiki: (wiki)[]
+
+
+### Other stuff that hasn't been added to wiki yet
 ctrl-r : search
 
 - in search bar
@@ -10,8 +16,3 @@ ctrl-r : search
     - grep
     - markdown preview
     - material design hex color picker
-
-## API
-- b_ui
-    - ``elementID  dragBox(int top, int left, int width, int height);``
-        - content with class ``.no-drag`` will not be draggable 

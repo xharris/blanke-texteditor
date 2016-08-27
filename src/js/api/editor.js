@@ -9,17 +9,19 @@ $(function(){
             editor.setValue('');
         },
 
-        setFile: function(file_path,loading=false,load_cursor_pos=true, callback) {
+        setFile: function(file_path,loading=false,load_cursor_pos=true, callback=undefined) {
             if (file_path === undefined || file_path.length <= 1) return;
 
             b_ide.hideSideContent();
 
             file_path = nwPATH.normalize(file_path);
             
-            if (b_project.getSetting('curr_file') !== ''
-                && !Object.keys(b_project.getSetting('unsaved_text')).includes(b_project.getSetting("curr_file")) 
+            if (
+                // make sure this isn't the first file being edited
+                b_project.getSetting('curr_file') !== ''
+                // is there unsaved text saved for this file
+                && Object.keys(b_project.getSetting('unsaved_text')).includes(b_project.getSetting("curr_file")) 
                 && !loading) {
-                    
                 b_project.getSetting('unsaved_text')[b_project.getSetting('curr_file')] = editor.getValue();
                 b_history.refreshList();
             }

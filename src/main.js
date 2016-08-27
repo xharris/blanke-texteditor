@@ -1,4 +1,4 @@
-const DEV_MODE = true; // show dev tools
+const DEV_MODE = false; // show dev tools
 
 /* electron start */
 const electron = require('electron');
@@ -23,7 +23,7 @@ function createWindow () {
     // get data from init.json
     var path = require("path");
     var fs = require("fs");
-    var initPath = path.join(app.getPath('appData'), "init.json");
+    var initPath = path.join(app.getPath('userData'), "init.json");
     var data;
     try {
         data = JSON.parse(fs.readFileSync(initPath, 'utf8'));

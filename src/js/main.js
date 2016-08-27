@@ -1,6 +1,6 @@
 var IDE_NAME = "BlankE";
 var ZOOM_AMT = 1;
-var DEV_MODE = true; // use dev_data instead of data for saving
+var DEV_MODE = false; // use dev_data instead of data for saving
 
 require('electron-cookies');
 
@@ -124,6 +124,7 @@ $(function(){
         var special_chars2 = {
             12: 'Clr', // clear
             17: 'Ctrl', // ctrl
+            18: 'Alt',  // alt
             27: 'Esc', // escape
         };
 
@@ -137,7 +138,7 @@ $(function(){
         }
 
         var is_special = false;
-        if (Object.keys(special_chars).includes(keyCode+"")) {
+        if (Object.keys(special_chars).includes(keyCode)) {
             key = '<i class="mdi mdi-' + special_chars[keyCode] + '"></i>';
             is_special = true;
         }
@@ -149,7 +150,7 @@ $(function(){
         $(".status-bar .keycode").html('<span class="char">' + key + '</span>' + keyCode);
 
         // text changes autosave
-        console.log('this is a special key!');
+        if (is_special) console.log('this is a special key!');
         if (b_ide.isProjectSet() && !is_special) {
             b_project.getSetting('unsaved_text')[b_project.getSetting('curr_file')] = editor.getValue();
             b_history.refreshList();

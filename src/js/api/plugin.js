@@ -28,7 +28,6 @@ $(function(){
         _loadPlugin: function(p_name, p_path, p_info, is_official) {
             // look at plugin.json (contains info about plugin)
             p_json = '';
-
             nwFILE.lstat(p_info, function(err, stats) {
                 if (!err && stats.isFile()) {
                     nwFILE.readFile(p_info, 'utf-8', function(err, data) {
@@ -63,12 +62,51 @@ $(function(){
                 p_info = nwPATH.join(p_path,'plugin.json');
 
                 b_plugin._loadPlugin(p_name, p_path, p_info, is_official);
-            }
 
+            }
+        },
+        
+        importLESS: function(plugin_name, p_less, p_path, load_callback) {
+            var full_path = nwPATH.join(p_path, p_less);
+            // check if less file exists
+            nwFILE.lstat(full_path, function(err, stats){
+                if (!err && stats.isFile()) {
+                    // convert to less
+                    nwFILE.readFile(full_path, 'utf-8', function(err, data) {
+                        if (!err) {
+                            nwLESS.render(data.toString(), {paths: [nwPATH.join(eAPP.getAppPath(),'less')]}, function(e, output){
+                                if (e) {
+                                    b_ide.addToast({
+                                        message: labels.plugin + ' LESS compile error: ' + plugin_name + '/' + p_less,
+                                        can_dismiss: true,
+                                        timeout: 5000
+                                    });
+                                    console.log('ERR: ' + plugin_name + ':' + p_less + ' compile error');
+                                    console.log(e);
+                                } else {
+                                    // import compiled less file
+                                    var fileref=document.createElement("style");
+                                    fileref.classList.add("less-" + plugin_name);
+                                    fileref.setAttribute("rel", "stylesheet");
+                                    fileref.setAttribute("type", "text/css");
+                                    fileref.innerHTML = output.css;
+                                    if (load_callback) {
+                                        fileref.onload = load_callback;
+                                    }
+                                    if (fileref !== undefined) {
+                                        document.getElementsByTagName("head")[0].appendChild(fileref);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    console.log("ERR: could not load " + p_path + " for " + plugin_name);
+                }
+            });            
         },
 
         importCSS: function(plugin_name, p_css, p_path, load_callback) {
-
             // check if css file exists
             nwFILE.lstat(nwPATH.join(p_path, p_css), function(err, stats){
                 if (!err && stats.isFile()) {
@@ -85,13 +123,12 @@ $(function(){
                         document.getElementsByTagName("head")[0].appendChild(fileref);
                     }
                 } else {
-                    console.log("ERR: could not load " + path + " for " + p_json.name);
+                    console.log("ERR: could not load " + p_path + " for " + plugin_name);
                 }
             });
         },
 
         importJS: function(plugin_name, p_js, p_path, load_callback) {
-
             // check if it exists
             nwFILE.lstat(nwPATH.join(p_path, p_js), function(err, stats){
                 if (!err && stats.isFile()) {
@@ -115,40 +152,35 @@ $(function(){
             var json_keys = Object.keys(p_json);
 
             // load css files
+            if (json_keys.includes("less")) {
+                p_json.less.forEach(function(p_less){
+                    b_plugin.importLESS(plugin_name, p_less, p_path);
+                });
+            }
+
+            // load css files
             if (json_keys.includes("css")) {
                 p_json.css.forEach(function(p_css){
                     b_plugin.importCSS(plugin_name, p_css, p_path);
                 });
             }
 
-            // other js files
-            if (json_keys.includes("js")) {
-
-                if (p_json.js.length === 0) {
-                    // load main js file
-                    if (json_keys.includes("main_js")) {
-                        b_plugin.importJS(plugin_name, p_json.main_js, p_path, function(){
-                            dispatchEvent("plugin_js_loaded", {
-                                'detail': {
-                                    'plugin': p_json,
-                                    'path': p_path
-                                }
-                            });
-                        });
-                    }
+            if (!json_keys.includes("js") || p_json.js.length === 0) {
+                // load main js file
+                if (json_keys.includes("main_js")) {
+                    b_plugin.importJS(plugin_name, p_json.main_js, p_path, function(){
+                        b_plugin._importPluginDone(p_json, p_path);
+                    });
                 }
+            } else {
+                // load other js files
                 p_json.js.forEach(function(p_js, i, array){
                     if (i === array.length - 1) {
                         b_plugin.importJS(plugin_name, p_js, p_path, function(){
                             // load main js file
                             if (json_keys.includes("main_js")) {
                                 b_plugin.importJS(plugin_name, p_json.main_js, p_path, function(){
-                                    dispatchEvent("plugin_js_loaded", {
-                                        'detail': {
-                                            'plugin': p_json,
-                                            'path': p_path
-                                        }
-                                    });
+                                    b_plugin._importPluginDone(p_json, p_path);
                                 });
                             }
                         });
@@ -158,7 +190,15 @@ $(function(){
                     }
                 });
             }
-
+        },
+        
+        _importPluginDone: function(p_json, p_path) {
+            dispatchEvent("plugin_js_loaded", {
+                'detail': {
+                    'plugin': p_json,
+                    'path': p_path
+                }
+            });
         },
 
         update: function(name) {
@@ -222,6 +262,7 @@ $(function(){
             nwRAF(nwPATH.join(b_plugin.plugin_path,plugin_name), function() {
                 $(".js-" + plugin_name).remove();
                 $(".css-" + plugin_name).remove();
+                $(".less-" + plugin_name).remove();
 
                 b_ide.addToast({
                     message: 'removed ' + labels.plugin + ' ' + p_name,
@@ -264,10 +305,34 @@ $(function(){
         removePlugin: function(plugin_name) {
             var p_path = nwPATH.join(b_plugin.plugin_path,plugin_name);
 
-            $(".plugin ." + plugin_name).addClass("removed");
-            b_ide.getData()['plugins'].splice(b_ide.getData()['plugins'].indexOf(plugin_name), 1);
+            try {
+                $(".plugin ." + plugin_name).addClass("removed");
+                b_ide.getData()['plugins'].splice(b_ide.getData()['plugins'].indexOf(plugin_name), 1);
+            } catch (e) {
+                // ...
+            }
 
         },
+        
+        saveData: function(plugin_name, file_name, data, options, callback) {
+            var folder_path = nwPATH.join(b_ide.data_folder, plugin_name);
+            var file_path = nwPATH.join(folder_path, file_name);
+            
+            nwFILE.mkdir(folder_path, function() {
+                nwFILE.writeFile(file_path, data, options, function(err) {
+                    if (callback) callback(err);
+                })   
+            });
+        },
+        
+        loadData: function(plugin_name, file_name, options, callback) {
+            var folder_path = nwPATH.join(b_ide.data_folder, plugin_name);
+            var file_path = nwPATH.join(folder_path, file_name);
+            
+            nwFILE.readFile(file_path, 'utf-8', function(err, data) {
+                if (callback) callback(err, data);
+            });
+        }, 
 
         hideViewer: function() {
             $(".plugin-viewer").removeClass("active");

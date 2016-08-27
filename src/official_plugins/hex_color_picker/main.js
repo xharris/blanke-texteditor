@@ -28,16 +28,24 @@ document.addEventListener("plugin_js_loaded", function(e) {
         var dialog_html = '';
 
         // iterate through colors
-        dialog_html += "<div class='material-colors'>";
+        dialog_html += 
+        "<div class='color-picker'>"+
+            "<div class='curr-color'>"+
+                "<div class='color'></div>"+
+                "<span class='value'></span>"+
+            "</div>"+
+            "<div class='material-colors'>"
         for (var c = 0; c < material_colors.length; c++) {
             dialog_html += "<span class='color' onclick='selectColor(\"" + material_colors[c] + "\");' style='background-color:#" + material_colors[c] + ";'></span>";
         }
-        dialog_html += "</div>";
+        dialog_html += 
+            "</div>"+
+        "</div>";
 
         $("#main_window").append(dialog_html);
 
         var cursor_pos = $("#editor .ace_cursor").position();
-        $(".material-colors").position(cursor_pos);
+        $(".color-picker").position(cursor_pos);
 
         editor.on("changeSelection", function(){
             sel_range = editor.selection.getRange();
@@ -47,12 +55,18 @@ document.addEventListener("plugin_js_loaded", function(e) {
 
             var selection = editor.getSession().doc.getTextRange(checkHash);
             var sel_color = selection.match(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/);
-            $(".material-colors").removeClass("active");
+            $(".color-picker").removeClass("active");
+            
             if (sel_color && sel_color[0].length === sel_color.input.length && sel_color !== selected_color) {
                 sel_range2 = sel_range;
-                $(".material-colors").addClass("active");
+                $(".color-picker").addClass("active");
                 selected_color = sel_color;
-            }
+                
+                // show selected color 
+                $(".curr-color .color").css("background-color", selected_color[0]);
+                console.log(selected_color);
+                $(".curr-color .value").html(selected_color[0]);
+            } // #333
         });
     }
 });
@@ -63,5 +77,5 @@ function selectColor(color_val) {
         sel_range2.setEnd(sel_range2.start.row, sel_range2.start.column + 6);
     }
     editor.selection.setSelectionRange(sel_range2);
-    $(".material-colors").addClass("active");
+    $(".color-picker").addClass("active");
 }

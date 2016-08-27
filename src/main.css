@@ -14,6 +14,9 @@
 .hidden {
   display: none;
 }
+.roboto {
+  font-family: 'Roboto', sans-serif;
+}
 .no-select {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -213,10 +216,10 @@
   overflow-x: scroll;
   overflow-y: hidden;
 }
-.file-history .clear-history {
+.file-history .clear-history,
+.file-history .refresh-file {
   position: fixed;
   top: 40px;
-  right: 6px;
   width: 20px;
   height: 20px;
   background: none;
@@ -229,6 +232,12 @@
   border-radius: 100%;
   z-index: 79;
   padding: 0px;
+}
+.file-history .refresh-file {
+  right: 32px;
+}
+.file-history .clear-history {
+  right: 6px;
 }
 .file-history .file {
   line-height: 30px;
@@ -290,7 +299,7 @@
   bottom: 0px;
   right: -110%;
   width: 450px;
-  z-index: 85;
+  z-index: 88;
   opacity: 0;
   pointer-events: none;
   background-color: white;
@@ -353,6 +362,7 @@
   bottom: 0px;
   padding: 10px;
   box-sizing: border-box;
+  overflow-y: auto;
 }
 .ide-options > .option-viewer > .panel {
   display: none;
@@ -364,11 +374,20 @@
   margin: 0px;
   margin-bottom: 10px;
 }
+.ide-options > .option-viewer > .panel h3:not(:first-of-type) {
+  margin-top: 30px;
+}
 .ide-options > .option-viewer > .panel .input-group {
   margin-bottom: 8px;
 }
 .ide-options > .option-viewer > .panel .input-group.select > span {
   margin-right: 10px;
+}
+.ide-options > .option-viewer > .panel .descr {
+  margin-top: 0px;
+  margin-left: 22px;
+  font-size: 13px;
+  color: #757575;
 }
 .label {
   text-transform: uppercase;
@@ -379,8 +398,8 @@
   border-width: 1px;
 }
 .label-red {
-  background-color: red;
-  border-color: red;
+  background-color: #f44336;
+  border-color: #f44336;
   color: white;
 }
 .label-orange {
@@ -389,8 +408,8 @@
   color: white;
 }
 .label-gray {
-  background-color: #616161;
-  border-color: #616161;
+  background-color: #9e9e9e;
+  border-color: #9e9e9e;
   color: white;
 }
 .loading-bar {
@@ -881,10 +900,27 @@
 }
 @font-face {
   font-family: "Roboto";
-  src: url("includes/roboto/Roboto-Regular.ttf") format("truetype");
+  src: url("includes/fonts/roboto/Roboto-Regular.ttf") format("truetype");
 }
-.roboto {
-  font-family: 'Roboto', sans-serif;
+@font-face {
+  font-family: 'ProFont';
+  src: url('includes/fonts/profont/ProFontWindows.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Monofur';
+  src: url('includes/fonts/monofur/monof55.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Proggy Clean';
+  src: url('includes/fonts/proggy/ProggyClean.ttf/ProggyClean.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Proggy Square';
+  src: url('includes/fonts/proggy/ProggySquare.ttf/ProggySquare.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Inconsolata';
+  src: url('includes/fonts/Inconsolata/Inconsolata.otf') format('opentype');
 }
 html,
 body {
@@ -930,6 +966,7 @@ html {
   border: 1px solid #e0e0e0;
 }
 *::-webkit-scrollbar-track {
+  background-color: transparent;
   opacity: none;
 }
 *::-webkit-scrollbar {
@@ -939,4 +976,5 @@ html {
 }
 *::-webkit-scrollbar-thumb {
   background-color: #bdbdbd;
+  border-radius: 10px;
 }

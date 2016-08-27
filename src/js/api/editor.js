@@ -9,14 +9,19 @@ $(function(){
             editor.setValue('');
         },
 
-        setFile: function(file_path,loading=false,load_cursor_pos=true, callback) {
+        setFile: function(file_path,loading=false,load_cursor_pos=true, callback=undefined) {
             if (file_path === undefined || file_path.length <= 1) return;
 
             b_ide.hideSideContent();
 
             file_path = nwPATH.normalize(file_path);
             
-            if (b_project.getSetting('curr_file') !== '' && !loading) {
+            if (
+                // make sure this isn't the first file being edited
+                b_project.getSetting('curr_file') !== ''
+                // is there unsaved text saved for this file
+                && Object.keys(b_project.getSetting('unsaved_text')).includes(b_project.getSetting("curr_file")) 
+                && !loading) {
                 b_project.getSetting('unsaved_text')[b_project.getSetting('curr_file')] = editor.getValue();
                 b_history.refreshList();
             }
@@ -100,6 +105,14 @@ $(function(){
             editor.getSession().setUndoManager(new ace.UndoManager());
             b_editor.focus();
         },
+        
+        refreshFile: function(file_path) {
+            // remove from unsaved text
+            delete b_project.getSetting("unsaved_text")[file_path];
+            
+            // reopen file
+            b_editor.setFile(file_path);
+        },
 
         saveFile: function() {
             if (b_project.getSetting('curr_file') !== '') {
@@ -139,10 +152,38 @@ $(function(){
         },
 
         setZoom: function(amt) {
+            amt = parseInt(amt);
+            
             b_editor.font_size = amt;
             editor.setFontSize(b_editor.font_size);
-            b_ide.setOption('editor', 'zoom', b_editor.font_size);
+            b_ide.getOptions().appearance.font.size = b_editor.font_size;
             b_ide.saveData();
+        },
+        /*
+            b_editor.addCompleter(
+        [
+            {
+                caption: 'love.graphics.config(settings)',
+                value: 'love.graphics.config',
+                meta: 'function',
+            }   
+        ]    
+    )
+    */
+        addCompleter: function(completer) {
+            var newCompleter = {
+                getCompletions: function(editor, session, pos, prefix, callback) {
+                    
+                    var posit = editor.getCursorPosition();
+                    var curr_token = editor.session.getTokenAt(posit.row, posit.column);
+                    
+                    console.log(prev_token);
+                    callback(null, completer.map(function(term){
+                        return term;
+                    }));
+                }
+            }
+            editor.completers = [newCompleter];
         }
     }
 });

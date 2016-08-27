@@ -36,7 +36,20 @@ $(function(){
                 var is_old = '';
 
                 full_path = this.history[h];
-                file_name = nwPATH.basename(this.history[h]);
+                file_name = nwPATH.basename(full_path);
+                
+                // is there another file with the same basename
+                var dupe_count = 0;
+                for (var s = 0; s < this.history.length; s++) {
+                    if (nwPATH.basename(this.history[s]) === file_name) {
+                        dupe_count++;
+                    }
+                }
+                //console.log(file_name ' dupes ' + dupe_count)
+                if (dupe_count > 1) {
+                    var path_parts = full_path.split(nwPATH.sep);
+                    file_name = nwPATH.join(path_parts[path_parts.length - 2], path_parts[path_parts.length - 1]);
+                }
 
                 // is this the file that is currenty opened/being edited
                 if (h == this.history_index) {
@@ -53,9 +66,11 @@ $(function(){
                 $(".file-history").append("<span class='file" + is_current + is_old + "' data-path='" + full_path + "' title='" + full_path + "' onclick='b_history.goToPosition(" + h + ");'>" + file_name + is_not_saved + "</span>");
 
             }
-            // clear history button
+            // clear history button and refresh file button
             if (this.history.length > 0) {
                 $(".file-history").append("<button class='clear-history' onclick='b_history.clear(true);' title='Clear history'><i class='mdi mdi-close'></i></button>");
+                // TODO: work on this later
+                // $(".file-history").append("<button class='refresh-file' onclick='b_editor.refreshFile(b_project.getSetting(\"curr_file\"));' title='Revert and refresh file'><i class='mdi mdi-refresh'></i></button>")
             }
 
             var file_open = $(".file-history > .file.is-open")[0];

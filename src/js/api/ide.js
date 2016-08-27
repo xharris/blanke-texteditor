@@ -2,11 +2,20 @@ var b_ide;
 
 var default_options = {
     "appearance": {
-        "ide": "light",
-        "editor": "chrome"
+        "theme": {
+            "ide": "light",
+            "editor": "chrome",
+        },
+        "font": {
+            "family" : "Courier New",
+            "size" : 14
+        },
     },
     "editor": {
-        "zoom": 14
+        "autocomplete" : {
+            "enabled": true,
+            "live": true
+        }
     }
 }
 
@@ -28,6 +37,8 @@ var editor_themes = [
     "twilight", "vibrant_ink", "xcode"
 ];
 
+var font_families = [ 'Courier New', 'Courier', 'Andale Mono', 'Monaco', 'ProFont', 'Monofur', 'Proggy Clean', 'Proggy Square', 'Inconsolata'];
+
 $(function(){
     console.log('userData: ' + eAPP.getPath('userData'));
 
@@ -36,14 +47,20 @@ $(function(){
     });
 
     // events for when option inputs change
-    $(".opt-theme").on("change", function() {
-        var selected_val = this.options[this.selectedIndex].value;
-        if ($(this).hasClass("ide")) {
-            b_ide.setOption("appearance", "ide", selected_val);
+    $(".opt-input").on("change", function() {
+        var value = '';
+        
+        if ($(this).hasClass("select")) {
+            value = this.options[this.selectedIndex].value;
         }
-        if ($(this).hasClass("editor")) {
-            b_ide.setOption("appearance", "editor", selected_val);
+        if ($(this).hasClass("number")) {
+            value = $(this).val();
         }
+        if ($(this).hasClass("checkbox")) {
+            value = this.checked;
+        }
+        
+        b_ide.saveOption($(this).data("option"), value);
     });
 
     b_ide = {
@@ -61,7 +78,7 @@ $(function(){
         },
 
         isProjectSet: function() {
-            return (typeof(b_project.curr_project) != "undefined" && b_project.curr_project !== "");
+            return (typeof(b_project.curr_project) !== "undefined" && b_project.curr_project !== "");
         },
 
         showProgressBar: function() {
@@ -90,6 +107,7 @@ $(function(){
         },
 
         showIdeOptions: function() {
+            b_ide.loadOptions();
             if ($(".option-tabs > .option.selected").length == 0) {
                 $($(".option-tabs > .option")[0]).trigger("click");
             }
@@ -110,65 +128,84 @@ $(function(){
             $(".option-viewer > ." + tab_name).addClass("active");
         },
 
-        // set option that will be saved in ide_data
-        setOption: function(name, key, value) {
-            if (!Object.keys(b_ide.getData().options).includes(name)) {
-                b_ide.getData().options[name] = default_options[name];
-            }
-            // other actions for certain options
-            if (name === "appearance") {
-                if (key === "ide") {
-                    // set ide theme
-                    $("#main_window").attr("theme", value);
-                }
-                if (key === "editor") {
-                    // set editor theme
-                    editor.setTheme("ace/theme/" + value);
-                }
-            }
-            b_ide.getData().options[name][key] = value;
-
-            b_ide.saveData();
-        },
-
         // get option from ide_data
-        getOption: function(name) {
-            if (!Object.keys(b_ide.getData().options).includes(name)) {
-                b_ide.getData().options[name] = default_options[name];
-            }
-            return b_ide.getData().options[name];
+        getOptions: function() {
+            return b_ide.getData().options;
         },
-
+        
+        // refreshes setting in ide using current options
+        saveOption: function(opt_string, opt_value, save_data=true) {
+            var options = b_ide.getOptions();
+            var opt_split = opt_string.split('.');
+            
+            // set option value
+            obj_assign(options, opt_string, opt_value);
+            
+            // extra actions
+            // theme
+            if (opt_string === 'appearance.theme.ide') {
+                $("#main_window").attr("theme", opt_value);
+            }
+            if (opt_string === 'appearance.theme.editor') {
+                editor.setTheme("ace/theme/" + opt_value);
+            }
+            // font
+            if (opt_string === 'appearance.font.family') {
+                editor.setOption("fontFamily", opt_value);
+            }
+            if (opt_string === 'appearance.font.size') {
+                b_editor.setZoom(opt_value);
+            }
+            // autocomplete
+            if (opt_string === "editor.autocomplete.enabled") {
+                editor.setOption('enableBasicAutocompletion', opt_value);
+            }
+            if (opt_string === "editor.autocomplete.live") {
+                editor.setOption('enableLiveAutocompletion', opt_value);
+            }
+            
+            if (save_data) {
+                b_ide.saveData();
+            }
+        },
+        
         // fill input boxes for option panel
         loadOptions: function() {
             // APPEARANCE
-            var set_appear = b_ide.getOption("appearance");
+            var options = b_ide.getOptions();
+            
+            var set_appear = options.appearance;
+            var set_editor = options.editor;
+            
             // ide theme
-            var curr_ide_theme = set_appear["ide"];
-            b_ide.setOption("appearance", "ide", curr_ide_theme);
-            var ide_theme_html = '';
-            for (var i = 0; i < ide_themes.length; i++) {
-                var selected = '';
-                if (ide_themes[i] === curr_ide_theme) {
-                    selected = ' selected ';
-                }
-                var cap_theme_name = ide_themes[i].charAt(0).toUpperCase() + ide_themes[i].slice(1);
-                ide_theme_html += "<option value='" + ide_themes[i] + "'" + selected + ">" + cap_theme_name + "</option>";
-            }
-            $(".opt-theme.ide").html(ide_theme_html);
+            var curr_ide_theme = set_appear.theme.ide;
+            fillSelect(".opt-input[data-option='appearance.theme.ide']", ide_themes, curr_ide_theme);
+            b_ide.saveOption('appearance.theme.ide', curr_ide_theme, false);
+            
             // editor theme
-            var curr_editor_theme = set_appear["editor"];
-            b_ide.setOption("appearance", "editor", curr_editor_theme);
-            var editor_theme_html = '';
-            for (var i = 0; i < editor_themes.length; i++) {
-                var selected = '';
-                if (editor_themes[i] === curr_editor_theme) {
-                    selected = ' selected ';
-                }
-                var cap_theme_name = editor_themes[i].charAt(0).toUpperCase() + editor_themes[i].slice(1);
-                editor_theme_html += "<option value='" + editor_themes[i] + "'" + selected + ">" + cap_theme_name + "</option>";
-            }
-            $(".opt-theme.editor").html(editor_theme_html);
+            var curr_editor_theme = set_appear.theme.editor;
+            fillSelect(".opt-input[data-option='appearance.theme.editor']", editor_themes, curr_editor_theme);
+            b_ide.saveOption('appearance.theme.editor', curr_editor_theme, false);
+            
+            // font size
+            var curr_font_size = set_appear.font.size;
+            $(".opt-input[data-option='appearance.font.size']").val(curr_font_size);
+            b_ide.saveOption('appearance.font.size', curr_font_size, false);
+            
+            // font family
+            var curr_font_family = set_appear.font.family;
+            fillSelect(".opt-input[data-option='appearance.font.family']", font_families, curr_font_family);
+            b_ide.saveOption('appearance.font.family', curr_font_family, false);
+            
+            // autocomplete enabled
+            var auto_enabled = set_editor.autocomplete.enabled;
+            $(".opt-input[data-option='editor.autocomplete.enabled']")[0].checked = auto_enabled;
+            b_ide.saveOption('editor.autocomplete.enabled', auto_enabled, false);
+            
+            // live autocompletion
+            var live_enabled = set_editor.autocomplete.live;
+            $(".opt-input[data-option='editor.autocomplete.live']")[0].checked = live_enabled;
+            b_ide.saveOption('editor.autocomplete.live', live_enabled, false);
         },
 
         setWinTitle: function(new_title) {
@@ -186,12 +223,10 @@ $(function(){
                         if (!err) {
                             b_ide.data = JSON.parse(data);
 
-            		    b_ide.loadOptions();
+            		        b_ide.loadOptions();
                             b_plugin.loadPlugins(b_ide.getData().plugins);
                             b_project.setFolder(b_ide.getData().current_project);
-                            b_editor.setZoom(b_ide.getOption('editor').zoom);
-
-
+                            b_editor.setZoom(b_ide.getOptions().appearance.font.size);
                         }
                     });
                 } else {
@@ -203,6 +238,7 @@ $(function(){
         },
 
         saveData: function() {
+            console.log('saving ide');
             // b_project.setSetting('history', b_history.save());			
             nwFILE.mkdir(b_ide.data_folder, function() {
                 // save ide settings file

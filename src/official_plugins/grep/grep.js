@@ -7,7 +7,7 @@ $(function() {
             b_search.addCommands(grep);
             var plugin_path = e.detail.path;
 
-            nwGREP = require('simple-grep');
+            nwGREP = require(nwPATH.join(plugin_path,'node_modules','rx-text-search'));//require('simple-grep');
         }
     });
 
@@ -19,13 +19,14 @@ var grep_command = [
 ];
 
 var grep_action = function(input) {
-    b_ide.showProgressBar();
 
     var input_parts = input.split(/[ ]+/);
 
     if (input_parts[0] === "grep") {
+        b_ide.showProgressBar();
         // remove --options
         // ...
+        
         var search_str = input_parts.slice(1,input_parts.length).join(' ');
 
         // do the grep
@@ -33,22 +34,22 @@ var grep_action = function(input) {
         var found_files = [];
         var results_html = '';
 
-        nwGREP = require(simplegrep_path);
-        nwGREP(search_str, b_project.curr_project, function(list){
+        //nwGREP = require(simplegrep_path);
+        nwGREP.findAsPromise(search_str, null ,{cwd: b_ide.getData().current_project})
+        .then(function(list){
             for (var g = 0; g < list.length; g++) {
-                if (list[g].file === "C") {
+                if (nwPATH.extname(list[g].file) !== ".exe") {
+                console.log(list[g])
                     // iterate through results
-                    for (var r = 0; r < list[g].results.length; r++) {
-                        var result = list[g].results[r];
-                        if (!found_files.includes(result.line_number)) {
-                            found_files.push(result.line_number);
-                            results[normalizePath(result.line_number)] = [];
-                        }
-                        results[normalizePath(result.line_number)].push(result.line);
+                    var result = list[g];
+                    
+                    if (!found_files.includes(result.file)) {
+                        found_files.push(result.file);
+                        results[normalizePath(result.file)] = [];
                     }
-
+                    results[normalizePath(result.file)].push([result.line, result.text]);
+                    
                 }
-
             }
 
             // iterate through files
@@ -56,13 +57,15 @@ var grep_action = function(input) {
             results_html += '<div class="result-list">';
             for (var f = 0; f < result_keys.length; f++) {
                 var lines = results[result_keys[f]];
-                var js_filepath = nwPATH.resolve(result_keys[f]).replace(/(\/|\\)/g, '/');
+                var js_filepath = normalizePath(nwPATH.join(b_ide.getData().current_project, result_keys[f]));
 
                 results_html += '<div class="result">'+
-                '<span class="file-path" onclick="toggleCollapsible(this.parentElement)">' + nwPATH.resolve(result_keys[f]) + "</span><br>";
+                '<span class="file-path" onclick="toggleCollapsible(this.parentElement)" title="'+ js_filepath +'">' + js_filepath + "</span><br>";
+                
                 // iterate through line numbers
                 for (var h = 0; h < lines.length; h++) {
-                    results_html += '<p class="line" onclick="b_editor.setFile(\'' + js_filepath + '\',false,false,function(){editor.gotoLine(' + lines[h] + ',0);});">' + lines[h] + '</p>';
+                    var code = $("<div/>").text(lines[h][1]).html().replace(search_str, '<u>'+search_str+'</u>');
+                    results_html += '<p class="line" onclick="b_editor.setFile(\'' + js_filepath + '\',false,false,function(){editor.gotoLine(' + lines[h][0] + ',0);});"><b>' + lines[h][0] + '</b> ' + code + '</p>';
                 }
 
                 results_html += '</div>';
@@ -70,7 +73,7 @@ var grep_action = function(input) {
             results_html += '</div>';
 
             // show result panel
-            var box = b_ui.dragBox(70,$(window).width - 270,250,300);
+            var box = b_ui.dragBox(70,$(window).width() - 420,350,400);
             $(box).html(
                 '<button class="btn-close" onclick="$(\'' + box + '\').remove();"><i class="mdi mdi-close"></i></button>'+
                 '<p class="grep-input"><b>grep</b> ' + search_str + '</p>'+

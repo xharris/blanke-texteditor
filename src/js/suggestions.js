@@ -84,7 +84,7 @@ $(function(){
 
 function prevFileSuggest(input) {
     if (!b_ide.isProjectSet()) return '';
-    
+
     // TODO: add option for case-sensitive searching
     input = input.toLowerCase();
     var input_parts = input.split('/');
@@ -96,15 +96,31 @@ function prevFileSuggest(input) {
         var full_path = normalizePath(b_project.getSetting('recent_files')[r]);
         var file_path = full_path.replace(b_project.curr_project,'');
         var prev_path = nwPATH.basename(file_path);
+        
+        var full_path_preview = nwPATH.dirname(shortenPath(full_path, 4));
 
         if (prev_path.toLowerCase().startsWith(input)) {
             var result_txt = prev_path.replace(input, "<b>" + input + "</b>");
             html += "<div class='suggestion high-priority' tabIndex='$1' data-value='" + file_path + "'>"
-            + result_txt +  "<span class='full-path'>" + full_path + "</span>" +
+            + result_txt +  "<span class='full-path'>" + full_path_preview + "</span>" +
             "<button class='remove-sugg' onclick='b_search.removeSuggestion(\"" + full_path + "\");$(this).parent().remove();'><i class='mdi mdi-close'></i></button></div>";
         }
     }
     return html;
+}
+
+var search_limit = 100;
+function searchArray(array_str, search) {
+  var rx = new RegExp('"([^"]*'+search+'[^"]*)"','gi');
+  
+  var i = 0, results = [];
+  while (result = rx.exec(array_str)) {
+    results.push(result[1]);
+    i += 1;
+    if (i >= search_limit)
+      break;
+  }
+  return results;
 }
 
 function suggest(input) {
@@ -115,29 +131,20 @@ function suggest(input) {
     var input_parts = input.split('/');
     var html = [];
 
-    var files = b_project.tree;
-    // iterate through already typed path dirs
-    if (files && files.length) {
-        for (var p = 0; p < input_parts.length; p++) {
-            var part = input_parts[p];
+    var files = searchArray(b_project.tree, input);
 
-            // find next directory to go down
-            for (var f = 0; f < files.length; f++) {
-                // TODO: if there is for example, '/.git' and '/.gitattributes', the first one gets priority (make this better)
-                if (files[f].name === part) {
-                    files = files[f].children;
-                }
-            }
-        }
-    }
 
     // create html suggestion array
     for (var f = 0; f < files.length; f++) {
-        var full_path = normalizePath(files[f].path)
+        var full_path = files[f];
         var file_path = full_path.replace(b_project.curr_project,'');
 
-        if (file_path.toLowerCase().includes(input)) {
+        if (file_path.toLowerCase().includes(input_parts[input_parts.length - 1])) {
             var result_txt = file_path.replace(input, "<b>" + input + "</b>");
+
+            if (files[f].type === "folder") {
+                result_txt += '/';
+            }
 
             // normal priority suggestion
             if (!b_project.getSetting('recent_files').includes(file_path)) {
@@ -157,7 +164,7 @@ function newInput() {
     var input_text = this.value;
     var is_file_search = false;
     var commands = b_search.getCommands();
-    
+
     // determine type of input
     if (input_text.startsWith('/')) {
         is_file_search = true;
@@ -170,8 +177,9 @@ function newInput() {
     } else {
         for (var c = 0; c < commands.length; c++) {
             var final_html = "";
-            
+
             final_html += prevFileSuggest(input_text);
+
             
             if (is_file_search) {
                 final_html += suggest(input_text);
@@ -229,7 +237,7 @@ function newInput() {
 function submitSearch() {
     var is_file_search = false;
     var input_text = $(el_searchbox).val();
-    
+
     // determine type of input
     if (input_text.startsWith('/')) {
         is_file_search = true;
@@ -238,6 +246,10 @@ function submitSearch() {
     if (is_file_search && b_ide.isProjectSet()) {
         // open file
         b_editor.setFile(nwPATH.join(b_project.curr_project, input_text));
+        
+        // move path to top of search_tree (TODO: needs work)
+        //b_project.tree.replace("\""+input_text+"\" ", '');
+        //b_project.tree = "\"" + input_text + "\" " + b_project.tree;
     } else {
         var commands = b_search.getCmdSubmits();
 

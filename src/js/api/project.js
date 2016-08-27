@@ -1,4 +1,8 @@
 var b_project;
+var MAX_PATH_LIST_LENGTH = 3;
+
+var refreshTimer;
+var refreshTimoutLength = 1500;
 
 var project_settings_template = {
     unsaved_text: {},   // save text from unsaved files from each project
@@ -6,8 +10,10 @@ var project_settings_template = {
     history: {},
     cursor_pos: {},
     recent_ide_commands: [], // recently used ide commands
-    curr_file: ''
+    curr_file: '',
+    completer: ''
 }
+   
 
 $(function(){
     b_project = {
@@ -15,7 +21,7 @@ $(function(){
         curr_project: '',
         curr_file: '',      // currently opened file
         data_path: '',
-        tree: [],
+        tree: '',
 
         setSetting: function(setting_name, new_value) {
             if (b_ide.isProjectSet()) {
@@ -26,14 +32,13 @@ $(function(){
 
         getSetting: function(setting_name) {
             if (b_ide.isProjectSet()) {
-                //console.log('get ' + b_project.curr_project + ' > ' + setting_name);
                 return b_project.settings[setting_name];
             } else {
                 return project_settings_template[setting_name];
             }
         },
 
-        addFolder: function(path) {
+        addFolder: function(path, from_set=false) {
             path = normalizePath(path);
 
             // don't add project if it was previously added
@@ -56,12 +61,31 @@ $(function(){
                 timeout: 1000
             });
 
-            if (b_ide.getData()['project_paths'].length == 1) {
+            if (b_ide.getData()['project_paths'].length == 1 && !from_set) {
                 b_project.setFolder(path);
             } else {
                 b_project._refreshList();
             }
             b_ide.saveData();
+        },
+        
+        removeFolder: function(path) {
+            var path_list = b_ide.getData()['project_paths'].includes(path);
+            
+            if (path_list.includes(path)) {
+                path_list.splice(path_list.indexOf(path), 1);
+                b_project._refreshList();
+                
+                // did the user have this project open?
+                if (b_ide.getData()['current_project'] === path) {
+                    // are there any other projects?
+                    // ...
+                    // YES: open the first project on the list
+                    // ...
+                    // NO: reset editor and everything
+                    b_editor.clear();
+                }
+            }  
         },
 
         // reset attributes and things to default values
@@ -76,6 +100,13 @@ $(function(){
 
         setFolder: function(new_path) {
             if (new_path === undefined || new_path === "") return;
+            
+            new_path = normalizePath(new_path);
+            
+            // does project exist?
+            if (!b_ide.getData()['project_paths'].includes(new_path)) {
+                b_project.addFolder(new_path, true);
+            }
 
             b_project.saveData(function(){
 
@@ -104,16 +135,23 @@ $(function(){
                     b_editor.setFile(b_project.getSetting("curr_file"),true);
 
                     // TODO: needs a closer look at. will this continue to watch previous projects?
-                    nwFILE.watch(b_project.curr_project, (eventType, filename) => {
-                        console.log(eventType);
-                        console.log(filename);
-                        if (filename) {
-                            //b_project.refreshTree(b_project.curr_project);
+                    nwFILE.watch(b_project.curr_project, {'recursive':true}, (eventType, filename) => {
+                        full_path = normalizePath(nwPATH.join(b_project.curr_project, filename));
+                        
+                        if (normalizePath(b_project.getSetting("curr_file")) !== full_path && eventType === "rename") {
+                            b_project.refreshTree();    
                         }
                     })
 
+                     // limit path to 3 levels 
+                     var short_path = b_project.curr_project;
+                    var path_parts = b_project.curr_project.split(nwPATH.sep);
+                    if (path_parts.length > MAX_PATH_LIST_LENGTH) {
+                        short_path = '...' + path_parts.splice(path_parts.length - 3, 3).join(nwPATH.sep);
+                    }
+                    
                     b_ide.addToast({
-                        message: 'set ' + labels['project'] + ' ' + b_project.curr_project,
+                        message: 'set ' + labels.project + ' ' + short_path,
                         can_dismiss: true,
                         timeout: 1000
                     });
@@ -128,39 +166,64 @@ $(function(){
             });
         },
 
+        // refreshes the SELECT element containing a list of folders
         _refreshList: function() {
             // remake project list
             $(".projects").empty();
             var proj_html = '';
             var project_paths = b_ide.getData()['project_paths'];
             for (var p = 0; p < project_paths.length; p++) {
-                var path = project_paths[p];
+                var full_path = project_paths[p];
+                var path = full_path;
+                
+                // limit path to 3 levels 
+                path = shortenPath(path, 4);
+                
                 var selected = '';
-                if (path === b_project.curr_project) {
-                    selected = "selected='selected'";
+                if (full_path === b_project.curr_project) {
+                    selected = "selected";
                 }
-                proj_html += "<option value='" + path + "' " + selected + " >" + path + "</option>";
+                proj_html += "<option value='" + path + "' " + selected + " title='" + full_path + "' value='" + full_path + "'>" + path + "</option>";
             }
             $(".projects").html(proj_html);
         },
 
         refreshTree: function(path, callback) {
-            b_ide.showProgressBar();
-            $("#in-search").prop('disabled', true);
-            dirTree(path, function(err, res) {
-                if (!err) {
-                    b_project.tree = res;
+            // limit how many timouts can be called within a period of time
+            clearTimeout(refreshTimer);
+            refreshTimer = setTimeout(function(){
+                b_ide.showProgressBar();
+                $("#in-search").prop('disabled', true);
+                
+                var the_path = nwPATH.normalize(b_project.curr_project)
+                emitter = nwWALK(the_path);
+            
+                // reset tree
+                b_project.tree = "";
+                
+                // add file path
+                emitter.on('file', function(filename, stat) {
+                    b_project.tree += '\"' + normalizePath(filename) + '\" ';   
+                });
+                
+                // add empty folder paths only
+                emitter.on('empty', function(dirname, stat) {
+                    b_project.tree += '\"' + normalizePath(dirname) + '/\" '; 
+                });
+                
+                // done walking the directories
+                emitter.on('end', function(){ 
                     b_ide.hideProgressBar();
                     $("#in-search").prop('disabled', false);
-
                     if (callback) {
-                        callback(res);
+                        callback(b_project.tree);
                     }
-                }
-            })
+                });
+            }, refreshTimoutLength);
+
         },
 
-        // load current project's .blanke file or make a new one if it doesn't exist
+        // load ide .json file or make a new one if it doesn't exist
         loadData: function(done_callback) {
             nwFILE.lstat(b_project.data_path, function(err, stats) {
                 if (!err && stats.isFile()) {
@@ -186,7 +249,7 @@ $(function(){
             });
         },
 
-        // save current project's .blanke file
+        // save current project's json file
         saveData: function(done_callback) {
             if (b_ide.isProjectSet()) {
                 b_project.settings.history = b_history.save();

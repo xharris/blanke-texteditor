@@ -10,7 +10,7 @@
 .grep-results {
     font-family: 'Roboto', sans-serif;
     margin-top: 4px;
-    max-height: 270px;
+    max-height: 366px;
     padding: 4px;
     overflow: auto;
 }
@@ -59,4 +59,8 @@
     display: inline-block;
     margin: 2px;
     cursor: pointer;
+}
+
+.grep-results .result > .line > u {
+    text-decoration: underline;
 }

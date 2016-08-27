@@ -20,12 +20,31 @@
 
 @font-face {
     font-family: "Roboto";
-    src: url("includes/roboto/Roboto-Regular.ttf") format("truetype");
+    src: url("includes/fonts/roboto/Roboto-Regular.ttf") format("truetype");
 }
 
+@font-face {
+    font-family: 'ProFont';
+    src: url('includes/fonts/profont/ProFontWindows.ttf') format('truetype');
+}
 
-.roboto {
-    font-family: 'Roboto', sans-serif;
+@font-face {
+    font-family: 'Monofur';
+    src: url('includes/fonts/monofur/monof55.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Proggy Clean';
+    src: url('includes/fonts/proggy/ProggyClean.ttf/ProggyClean.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Proggy Square';
+    src: url('includes/fonts/proggy/ProggySquare.ttf/ProggySquare.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Inconsolata';
+    src: url('includes/fonts/Inconsolata/Inconsolata.otf') format('opentype');
 }
 
 html, body{
@@ -79,6 +98,7 @@ html{
 
 *::-webkit-scrollbar-track
 {
+    background-color: transparent;
 	opacity: none;
 }
 
@@ -92,4 +112,5 @@ html{
 *::-webkit-scrollbar-thumb
 {
 	background-color: #bdbdbd;
+	border-radius: 10px;
 }

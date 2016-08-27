@@ -5,13 +5,21 @@ $(function(){
 // [command, arg hints]
 var ideCommands = [
     ['dev-tools','(Show developer tool for this IDE)'],
-    ['cmd','<command-name> -global -delete'],
     ['plugins','(opens plugin dialog)'],
     ['options ide','(Change IDE Appearance, Editor settings, etc.)'],
-    ['project refresh',''],
+    
+    ['project refresh','(Rescan the project directory)'],
     ['project explore','(Open the project in explorer/finder)'],
+    
+    ['file explore','(Show the file in explorer/finder)'],
+    
+    ['editor wrap','(wrap text)'],
+    
+    ['appdata explore','(Explore AppData folder)'],  
+    
     ['system beep',''],
-    ['stop loading','(Stop the loading bar animation if it won\'t stop)']
+    ['stop loading','(Stop the loading bar animation if it won\'t stop)'],
+    ['clear data','(Clears the editors data files. Not your code)']
 ];
 
 var ideActions = function(input) {
@@ -19,12 +27,7 @@ var ideActions = function(input) {
 
     if (input_parts[0] === "dev-tools") {
         b_ide.showDevTools();
-        b_editor.focus();
-    }
-    if (input_parts[0] === "cmd") {
-        if (input_parts.length >= 2) {
-            var extra_options = input_parts.slice(2, input_parts.length);
-        }
+        b_editor.focus()
     }
     if (input_parts[0] === "plugins") {
         b_plugin.showViewer();
@@ -39,7 +42,22 @@ var ideActions = function(input) {
             b_project.refreshTree(b_ide.getData()['current_project']);
         }
         if (input_parts[1] === "explore") {
+            eSHELL.showItemInFolder(b_ide.getData()["current_project"]);
+        }
+    }
+    if (input_parts[0] === "file") {
+        if (input_parts[1] === "explore") {
             eSHELL.showItemInFolder(b_project.getSetting("curr_file"));
+        }
+    }
+    if (input_parts[0] === "editor") {
+        if (input_parts[1] === "wrap") {
+            editor.getSession().setUseWrapMode(!editor.getSession().getUseWrapMode());
+        }
+    }
+    if (input_parts[0] === "appdata") {
+        if (input_parts[1] === "explore") {
+            eSHELL.showItemInFolder(eAPP.getPath("appData"))
         }
     }
     if (input_parts[0] === "system") {
@@ -50,6 +68,11 @@ var ideActions = function(input) {
     if (input_parts[0] === "stop") {
         if (input_parts[1] === "loading") {
             b_ide.hideProgressBar();
+        }
+    }
+    if (input_parts[0] === "clear") {
+        if (input_parts[1] === "data") {
+            
         }
     }
     if (input_parts[0] === "mv") {

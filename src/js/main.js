@@ -2,14 +2,22 @@ var IDE_NAME = "BlankE";
 var ZOOM_AMT = 1;
 var DEV_MODE = false; // use dev_data instead of data for saving
 
+require('electron-cookies');
+
 var nwFILE = require('fs');
 var nwPATH = require('path');
 var nwPROC = require('process');
+var nwCHILD = require('child_process');
+var nwOS = require('os');
+var nwNET = require('net');
+
 var nwZIP = require("unzip");
 var nwRAF = require("rimraf");
+var nwLESS = require('less');
+var nwWALK = require('walkdir');
+var nwMAC = require("getmac");
 
 var eIPC = require('electron').ipcRenderer;
-
 var eREMOTE = require('electron').remote;
 var eAPP = eREMOTE.require('electron').app;
 var eSHELL = eREMOTE.require('electron').shell;
@@ -17,16 +25,28 @@ var eSHELL = eREMOTE.require('electron').shell;
 var editor, aceModeList;
 var re_file_ext = /(?:\.([^.]+))?$/;
 
-$(function(){
-    /* prevent page reload
-    window.onbeforeunload = function() {
-        return false;
-    }
-    */
 
+$(function(){
+    /* disable eval
+    window.eval = global.eval = function() {
+      throw new Error("Sorry, BlankE does not support window.eval() for security reasons.");
+    };
+    */
+    
+    // set user id
+    nwMAC.getMac(function(err, address) {
+       if (!err) {
+           var hash = address.hashCode();
+           analytics.userID = hash;
+           console.log("userID: " + hash);
+       } 
+    });
+    
+    analytics.event('UI', 'initialize', 'main_window', '');
+    
     b_ide.loadData();
     b_plugin.loadOfficialPlugins();
-    
+
     ace.require("ace/ext/language_tools");
     editor = ace.edit("editor");
     editor.$blockScrolling = Infinity;
@@ -34,7 +54,7 @@ $(function(){
     editor.setOptions({
         enableBasicAutocompletion: true,
         enableSnippets: true,
-        enableLiveAutocompletion: false,
+        enableLiveAutocompletion: true,
         fontFamily: "Courier New"
     });
 
@@ -49,7 +69,7 @@ $(function(){
 
     eIPC.on('focus-search', function(event) {
         b_search.focus();
-    })
+    });
 
     var drop_mainwin = document.getElementById("main_window");
 	drop_mainwin.ondragover = () => {
@@ -58,44 +78,31 @@ $(function(){
 			//$(".filedrop-overlay").removeClass("inactive");
 		}
 		return false;
-	}
+	};
 	drop_mainwin.ondragleave = drop_mainwin.ondragend = () => {
 		//$(".filedrop-overlay").addClass("inactive");
 		return false;
-	}
+	};
 	drop_mainwin.ondrop = (e) => {
 		e.preventDefault();
 
 		for (var f of e.dataTransfer.files) {
 			var in_path = f.path;
-			var ext = re_file_ext.exec(in_path)[1];
 
-            var file_type = nwFILE.lstatSync(in_path);
-
-            if (file_type.isDirectory()) {
-                var folder_name = nwPATH.basename(in_path);
-
-                b_project.addFolder(in_path)
-            }
-            else if (file_type.isSymbolicLink()) {
-                b_ide.addToast({
-                    message: " symoblic! " + in_path,
-                    can_dismiss: false,
-                    timeout: 2000
-                });
-            }
-            else if (file_type.isFile()) {
-                b_ide.addToast({
-                    message: labels['file'] + " " + in_path,
-                    can_dismiss: false,
-                    timeout: 2000
-                });
-            }
+            handleDropFile(in_path);
 
 		}
 		$(".filedrop-overlay").addClass("inactive");
 		return false;
-	}
+	};
+	
+    var args = eREMOTE.getGlobal("shareVars").args;
+    
+    if (args.length >= 3) {
+        var in_file = args[2];
+        
+        handleDropFile(in_file);
+    }
 
 
     $("#editor").on("keydown", function(evt) {
@@ -105,21 +112,22 @@ $(function(){
 
         // uses mdi
         var special_chars = {
-            13: 'mdi-keyboard-return', // enter
-            16: 'mdi-chevron-up', // shift
-            20: 'mdi-chevron-double-up', // caps lock
-            32: 'mdi-dots-horizontal', // space
-            91: 'mdi-apple-keyboard-command', // apple META/command
-            93: 'mdi-apple-keyboard-command', // apple META/command
+            13: 'keyboard-return', // enter
+            16: 'chevron-up', // shift
+            20: 'chevron-double-up', // caps lock
+            32: 'dots-horizontal', // space
+            91: 'apple-keyboard-command', // apple META/command
+            93: 'apple-keyboard-command', // apple META/command
         };
 
         // doesn't use mdi
         var special_chars2 = {
             12: 'Clr', // clear
             17: 'Ctrl', // ctrl
+            18: 'Alt',  // alt
             27: 'Esc', // escape
         };
-        
+
         // zoom in
         if (evt.ctrlKey && keyCode == 187) {
             b_editor.zoom(ZOOM_AMT);
@@ -129,17 +137,21 @@ $(function(){
             b_editor.zoom(-ZOOM_AMT);
         }
 
+        var is_special = false;
         if (Object.keys(special_chars).includes(keyCode+"")) {
-            key = '<i class="mdi ' + special_chars[keyCode] + '"></i>';
+            key = '<i class="mdi mdi-' + special_chars[keyCode] + '"></i>';
+            is_special = true;
         }
         else if (Object.keys(special_chars2).includes(keyCode+"")) {
             key = special_chars2[keyCode];
+            is_special = true;
         }
 
         $(".status-bar .keycode").html('<span class="char">' + key + '</span>' + keyCode);
 
         // text changes autosave
-        if (b_ide.isProjectSet() && /^[.]+$/i.test(key)) {
+        if (is_special) console.log('this is a special key!');
+        if (b_ide.isProjectSet() && !is_special) {
             b_project.getSetting('unsaved_text')[b_project.getSetting('curr_file')] = editor.getValue();
             b_history.refreshList();
         }
@@ -182,10 +194,48 @@ $(function(){
 
     // project selection box
     $(".projects")[0].addEventListener("change", function() {
-        var choice = this.options[this.selectedIndex].text;
-        b_project.setFolder(choice);
+        var choice_el = this.options[this.selectedIndex];
+        var choice_path = choice_el.title;
+
+        b_project.setFolder(choice_path);
     });
+
+    editor.resize();
+    
+
 });
+
+function handleDropFile(in_path) {
+    nwFILE.lstat(in_path, function(err, stats) {
+        if (!err) {
+            if (stats.isDirectory()) {
+                var folder_name = nwPATH.basename(in_path);
+            
+                b_project.addFolder(in_path)
+            }
+            else if (stats.isSymbolicLink()) {
+                b_ide.addToast({
+                    message: " symoblic! " + in_path,
+                    can_dismiss: false,
+                    timeout: 2000
+                });
+            }
+            else if (stats.isFile()) {
+                /*
+                b_ide.addToast({
+                    message: labels['file'] + " " + in_path,
+                    can_dismiss: false,
+                    timeout: 2000
+                });
+                
+                b_project.reset();
+                b_project.setFolder(nwPATH.dirname(in_path));
+                b_editor.setFile(normalizePath(in_path));
+                */
+            }
+        }
+    });
+}
 
 function saveCursor() {
     b_ide.addDataValue('cursor', {});
@@ -285,3 +335,62 @@ String.prototype.hashCode = function(){
 function copyObj(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
+
+function shortenPath(path, length) {
+    var path_parts = path.split(/[/]|[\\]/g);
+    if (path_parts.length > length) {
+        return nwPATH.normalize(path_parts.splice(path_parts.length - length, length).join(nwPATH.sep));
+    }
+}
+
+function fillSelect(selector, values, selected_value, capitalize=true) {
+    var html = '';
+    for (var i = 0; i < values.length; i++) {
+        var selected = '';
+        if (values[i] === selected_value) {
+            selected = ' selected ';
+        }
+        var new_val = values[i];
+        if (capitalize) {
+            var new_val = values[i].charAt(0).toUpperCase() + values[i].slice(1);
+        }
+        html += "<option value='" + values[i] + "'" + selected + ">" + new_val + "</option>";
+    }
+    $(selector).html(html);
+}
+
+Array.prototype.includesMulti = function(arr){
+    var is_there = false;
+    this.map(function(val) {
+        is_there = (arr.includes(val));
+    });
+    return is_there;
+}
+
+function obj_assign(obj, prop, value) {
+    if (typeof prop === "string")
+        prop = prop.split(".");
+
+    if (prop.length > 1) {
+        var e = prop.shift();
+        obj_assign(obj[e] =
+                 Object.prototype.toString.call(obj[e]) === "[object Object]"
+                 ? obj[e]
+                 : {},
+               prop,
+               value);
+    } else
+        obj[prop[0]] = value;
+}
+
+function parseXML(str) {
+    parser = new DOMParser();
+    xmlDoc = parser.parseFromString(str, "text/xml");
+    return xmlDoc;
+}
+
+// creates a file and it's necessary directories 
+function createFile() {
+    
+}
+

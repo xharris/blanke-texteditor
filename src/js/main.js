@@ -138,7 +138,7 @@ $(function(){
         }
 
         var is_special = false;
-        if (Object.keys(special_chars).includes(keyCode)) {
+        if (Object.keys(special_chars).includes(keyCode+"")) {
             key = '<i class="mdi mdi-' + special_chars[keyCode] + '"></i>';
             is_special = true;
         }
@@ -221,6 +221,7 @@ function handleDropFile(in_path) {
                 });
             }
             else if (stats.isFile()) {
+                /*
                 b_ide.addToast({
                     message: labels['file'] + " " + in_path,
                     can_dismiss: false,
@@ -230,6 +231,7 @@ function handleDropFile(in_path) {
                 b_project.reset();
                 b_project.setFolder(nwPATH.dirname(in_path));
                 b_editor.setFile(normalizePath(in_path));
+                */
             }
         }
     });
@@ -386,3 +388,9 @@ function parseXML(str) {
     xmlDoc = parser.parseFromString(str, "text/xml");
     return xmlDoc;
 }
+
+// creates a file and it's necessary directories 
+function createFile() {
+    
+}
+

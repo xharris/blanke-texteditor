@@ -18,7 +18,8 @@ var ideCommands = [
     ['appdata explore','(Explore AppData folder)'],  
     
     ['system beep',''],
-    ['stop loading','(Stop the loading bar animation if it won\'t stop)']
+    ['stop loading','(Stop the loading bar animation if it won\'t stop)'],
+    ['clear data','(Clears the editors data files. Not your code)']
 ];
 
 var ideActions = function(input) {
@@ -67,6 +68,11 @@ var ideActions = function(input) {
     if (input_parts[0] === "stop") {
         if (input_parts[1] === "loading") {
             b_ide.hideProgressBar();
+        }
+    }
+    if (input_parts[0] === "clear") {
+        if (input_parts[1] === "data") {
+            
         }
     }
     if (input_parts[0] === "mv") {

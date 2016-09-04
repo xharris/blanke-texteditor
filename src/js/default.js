@@ -73,10 +73,10 @@ var ideActions = function(input) {
     if (input_parts[0] === "clear") {
         if (input_parts[1] === "data") {
             
+            nwFILE.rmdir(b_ide.data_folder, function(){
+                
+            });
         }
-    }
-    if (input_parts[0] === "mv") {
-
     }
 }
 

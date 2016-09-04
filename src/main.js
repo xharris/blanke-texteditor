@@ -39,10 +39,10 @@ function createWindow () {
         width: 800,
         height: 600
     });
-    
+
     mainWindow.on("close", function() {
         var win_bounds = mainWindow.getBounds();
-        
+
         var data = {
             title: "BlankE",
             autoHideMenuBar: true,
@@ -53,7 +53,7 @@ function createWindow () {
         };
         fs.writeFileSync(initPath, JSON.stringify(data));
     })
-        
+
   global.shareVars = {args: process.argv};
 
   // and load the index.html of the app.
@@ -90,8 +90,8 @@ function createWindow () {
     ];
 
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
-    
-    
+
+
 }
 
 // Emitted when the window is closed.

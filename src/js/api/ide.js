@@ -49,7 +49,7 @@ $(function(){
     // events for when option inputs change
     $(".opt-input").on("change", function() {
         var value = '';
-        
+
         if ($(this).hasClass("select")) {
             value = this.options[this.selectedIndex].value;
         }
@@ -59,7 +59,7 @@ $(function(){
         if ($(this).hasClass("checkbox")) {
             value = this.checked;
         }
-        
+
         b_ide.saveOption($(this).data("option"), value);
     });
 
@@ -132,15 +132,15 @@ $(function(){
         getOptions: function() {
             return b_ide.getData().options;
         },
-        
+
         // refreshes setting in ide using current options
         saveOption: function(opt_string, opt_value, save_data=true) {
             var options = b_ide.getOptions();
             var opt_split = opt_string.split('.');
-            
+
             // set option value
             obj_assign(options, opt_string, opt_value);
-            
+
             // extra actions
             // theme
             if (opt_string === 'appearance.theme.ide') {
@@ -163,45 +163,45 @@ $(function(){
             if (opt_string === "editor.autocomplete.live") {
                 editor.setOption('enableLiveAutocompletion', opt_value);
             }
-            
+
             if (save_data) {
                 b_ide.saveData();
             }
         },
-        
+
         // fill input boxes for option panel
         loadOptions: function() {
             // APPEARANCE
             var options = b_ide.getOptions();
-            
+
             var set_appear = options.appearance;
             var set_editor = options.editor;
-            
+
             // ide theme
             var curr_ide_theme = set_appear.theme.ide;
             fillSelect(".opt-input[data-option='appearance.theme.ide']", ide_themes, curr_ide_theme);
             b_ide.saveOption('appearance.theme.ide', curr_ide_theme, false);
-            
+
             // editor theme
             var curr_editor_theme = set_appear.theme.editor;
             fillSelect(".opt-input[data-option='appearance.theme.editor']", editor_themes, curr_editor_theme);
             b_ide.saveOption('appearance.theme.editor', curr_editor_theme, false);
-            
+
             // font size
             var curr_font_size = set_appear.font.size;
             $(".opt-input[data-option='appearance.font.size']").val(curr_font_size);
             b_ide.saveOption('appearance.font.size', curr_font_size, false);
-            
+
             // font family
             var curr_font_family = set_appear.font.family;
             fillSelect(".opt-input[data-option='appearance.font.family']", font_families, curr_font_family);
             b_ide.saveOption('appearance.font.family', curr_font_family, false);
-            
+
             // autocomplete enabled
             var auto_enabled = set_editor.autocomplete.enabled;
             $(".opt-input[data-option='editor.autocomplete.enabled']")[0].checked = auto_enabled;
             b_ide.saveOption('editor.autocomplete.enabled', auto_enabled, false);
-            
+
             // live autocompletion
             var live_enabled = set_editor.autocomplete.live;
             $(".opt-input[data-option='editor.autocomplete.live']")[0].checked = live_enabled;
@@ -238,9 +238,10 @@ $(function(){
         },
 
         saveData: function() {
-            console.log('saving ide');
-            // b_project.setSetting('history', b_history.save());			
+            // b_project.setSetting('history', b_history.save());
             nwFILE.mkdir(b_ide.data_folder, function() {
+                console.log("saving ide data: ");
+                console.log(JSON.stringify(b_ide.getData()))
                 // save ide settings file
                 nwFILE.writeFile(b_ide.data_path, JSON.stringify(b_ide.getData()), {flag: 'w+'}, function(err) {
                     // save project settings file
@@ -248,7 +249,7 @@ $(function(){
                 });
             });
         },
-        
+
         hasPlugin: function(plugin_name) {
             return (Object.keys(b_ide.data.plugins).includes(plugin_name));
         },

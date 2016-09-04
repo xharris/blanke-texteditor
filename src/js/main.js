@@ -32,18 +32,19 @@ $(function(){
       throw new Error("Sorry, BlankE does not support window.eval() for security reasons.");
     };
     */
-    
+
     // set user id
     nwMAC.getMac(function(err, address) {
        if (!err) {
            var hash = address.hashCode();
            analytics.userID = hash;
+           analytics.clientID = hash;
            console.log("userID: " + hash);
-       } 
+       }
     });
-    
+
     analytics.event('UI', 'initialize', 'main_window', '');
-    
+
     b_ide.loadData();
     b_plugin.loadOfficialPlugins();
 
@@ -95,12 +96,12 @@ $(function(){
 		$(".filedrop-overlay").addClass("inactive");
 		return false;
 	};
-	
+
     var args = eREMOTE.getGlobal("shareVars").args;
-    
+
     if (args.length >= 3) {
         var in_file = args[2];
-        
+
         handleDropFile(in_file);
     }
 
@@ -150,7 +151,6 @@ $(function(){
         $(".status-bar .keycode").html('<span class="char">' + key + '</span>' + keyCode);
 
         // text changes autosave
-        if (is_special) console.log('this is a special key!');
         if (b_ide.isProjectSet() && !is_special) {
             b_project.getSetting('unsaved_text')[b_project.getSetting('curr_file')] = editor.getValue();
             b_history.refreshList();
@@ -201,7 +201,7 @@ $(function(){
     });
 
     editor.resize();
-    
+
 
 });
 
@@ -210,7 +210,7 @@ function handleDropFile(in_path) {
         if (!err) {
             if (stats.isDirectory()) {
                 var folder_name = nwPATH.basename(in_path);
-            
+
                 b_project.addFolder(in_path)
             }
             else if (stats.isSymbolicLink()) {
@@ -227,7 +227,7 @@ function handleDropFile(in_path) {
                     can_dismiss: false,
                     timeout: 2000
                 });
-                
+
                 b_project.reset();
                 b_project.setFolder(nwPATH.dirname(in_path));
                 b_editor.setFile(normalizePath(in_path));
@@ -389,8 +389,7 @@ function parseXML(str) {
     return xmlDoc;
 }
 
-// creates a file and it's necessary directories 
+// creates a file and it's necessary directories
 function createFile() {
-    
-}
 
+}

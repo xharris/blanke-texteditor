@@ -109,7 +109,7 @@ function prevFileSuggest(input) {
     return html;
 }
 
-var search_limit = 100;
+var search_limit = 20;
 function searchArray(array_str, search) {
   var rx = new RegExp('"([^"]*'+search+'[^"]*)"','gi');
   

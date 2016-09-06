@@ -340,6 +340,8 @@ function shortenPath(path, length) {
     var path_parts = path.split(/[/]|[\\]/g);
     if (path_parts.length > length) {
         return nwPATH.normalize(path_parts.splice(path_parts.length - length, length).join(nwPATH.sep));
+    } else {
+        return path;
     }
 }
 

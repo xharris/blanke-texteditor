@@ -3,12 +3,12 @@ var b_ide;
 var default_options = {
     "appearance": {
         "theme": {
-            "ide": "light",
-            "editor": "chrome",
+            "ide": "dark",
+            "editor": "monokai",
         },
         "font": {
-            "family" : "Courier New",
-            "size" : 14
+            "family" : "Inconsolata",
+            "size" : 16
         },
     },
     "editor": {

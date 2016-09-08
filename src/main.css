@@ -206,7 +206,7 @@
   -ms-user-select: none;
   user-select: none;
   position: absolute;
-  top: 37px;
+  top: 39px !important;
   right: 0px;
   left: 0px;
   height: 37px;
@@ -219,7 +219,7 @@
 .file-history .clear-history,
 .file-history .refresh-file {
   position: fixed;
-  top: 40px;
+  top: 43px;
   width: 20px;
   height: 20px;
   background: none;

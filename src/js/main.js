@@ -1,6 +1,6 @@
 var IDE_NAME = "BlankE";
 var ZOOM_AMT = 1;
-var DEV_MODE = false; // use dev_data instead of data for saving
+var DEV_MODE = true; // use dev_data instead of data for saving
 
 require('electron-cookies');
 

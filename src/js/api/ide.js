@@ -37,10 +37,15 @@ var editor_themes = [
     "twilight", "vibrant_ink", "xcode"
 ];
 
-var font_families = [ 'Courier New', 'Courier', 'Andale Mono', 'Monaco', 'ProFont', 'Monofur', 'Proggy Clean', 'Proggy Square', 'Inconsolata'];
+var font_families = [ 'Courier New', 'Courier', 'ProFont', 'Monofur', 'Proggy Clean', 'Proggy Square', 'Inconsolata'];
 
 $(function(){
     console.log('userData: ' + eAPP.getPath('userData'));
+    
+    // fonts only available on mac
+    if (nwOS.platform() === "Darwin") {
+        font_families.push("Andale Mono", "Monaco");
+    }
 
     $(".option-tabs").on("click", ".option", function() {
         b_ide.selectIdeOptionTab($(this).attr("for"));

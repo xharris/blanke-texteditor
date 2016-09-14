@@ -169,6 +169,8 @@ $(function(){
         // refreshes the SELECT element containing a list of folders
         _refreshList: function() {
             // remake project list
+            
+            /*
             $(".projects").empty();
             var proj_html = '';
             var project_paths = b_ide.getData()['project_paths'];
@@ -186,6 +188,7 @@ $(function(){
                 proj_html += "<option value='" + path + "' " + selected + " title='" + full_path + "' value='" + full_path + "'>" + path + "</option>";
             }
             $(".projects").html(proj_html);
+            */
             
             // refresh fileview list
             b_fileview.refreshProjects();

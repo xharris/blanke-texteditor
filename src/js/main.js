@@ -1,6 +1,6 @@
 var IDE_NAME = "BlankE";
 var ZOOM_AMT = 1;
-var DEV_MODE = true; // use dev_data instead of data for saving
+var DEV_MODE = false; // use dev_data instead of data for saving
 
 require('electron-cookies');
 
@@ -33,6 +33,20 @@ $(function(){
       throw new Error("Sorry, BlankE does not support window.eval() for security reasons.");
     };
     */
+    b_ide.setTitleColor("#2196f3");
+    
+    $("#main_window").addClass(nwOS.type());
+    
+    // title bar buttons
+    $(".title-bar #btn-close").on("click", function() {
+        eIPC.send('close');
+    });
+    $(".title-bar #btn-maximize").on("click", function() {
+        eIPC.send('maximize');
+    });
+    $(".title-bar #btn-minimize").on("click", function() {
+        eIPC.send('minimize');
+    });
 
     // set user id
     nwMAC.getMac(function(err, address) {
@@ -192,14 +206,6 @@ $(function(){
             b_history.forward();
         },
         readOnly: true // false if this command should not apply in readOnly mode
-    });
-
-    // project selection box
-    $(".projects")[0].addEventListener("change", function() {
-        var choice_el = this.options[this.selectedIndex];
-        var choice_path = choice_el.title;
-
-        b_project.setFolder(choice_path);
     });
 
     editor.resize();

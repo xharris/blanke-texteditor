@@ -1,0 +1,143 @@
+.Windows_NT {
+    .title-bar {
+        right: 3px;
+    
+        &.linux,&.darwin {
+            display: none;
+        }
+    }
+    
+    .title-bar-container > .title {
+        left: 0px;
+        right: 158px;
+        margin-left: 20px;
+    }
+
+}
+    
+
+.Darwin {
+    .title-bar {
+        left: 3px;
+        
+        &.win {
+            display: none;
+        }
+    }
+    
+    .title-bar-container > .title {
+            left: 75px;
+            right: 0px;
+        }
+}
+
+.Linux {
+    .title-bar {
+        left: 0px;
+        
+        &.win {
+            display: none;
+        }
+    }
+    
+    .title-bar-container > .title {
+        left: 75px;
+        right: 0px;
+    }
+}
+
+.title-bar-container {
+    .win-drag();
+    
+    height: 21px;
+    margin: 1px;
+    
+    .title {
+        margin: 0px;
+        position: absolute;
+        z-index: 50;
+        font-size: 13px;
+        text-align: center;
+        pointer-events: none;
+        top: 5px;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+}
+
+.title-bar {
+    .no-select();
+    .win-nodrag();
+    
+    position: absolute;
+    z-index: 100;
+    
+    >button {
+        border: none;
+        outline: none;
+    }
+    
+    &.win {
+        >button {
+            padding: 0px;
+            width: 50px;
+            height: 21px;
+            font-size: 16px;
+            
+            background-color: transparent;
+            
+            transition: background-color ease-in-out 0.1s;
+            
+            &:hover {
+                &#btn-close {
+                    background-color: #e53935;
+                }
+                &#btn-maximize {
+                    background-color: rgba(0,0,0,0.2);
+                }
+                &#btn-minimize {
+                    background-color: rgba(0,0,0,0.2);
+                }
+            }
+            
+            >.mdi {
+                margin: 3px 0px;
+            }
+        }
+    }
+    
+    &.linux, &.darwin {
+        &:hover {
+            .mdi {
+                opacity: 1;
+            }    
+        }
+        
+        >button {
+            border-radius: 100%;
+            width: 16px;
+            height: 16px;
+            margin: 3px;
+            padding: 0px;
+            text-align: center;
+            font-size: 12px;
+            box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.1);
+            
+            &#btn-close {
+                background-color: #FF5A5A;
+            }
+            &#btn-maximize {
+                background-color: #00C946;
+            }
+            &#btn-minimize {
+                background-color: #FFBD35;
+            }
+            
+            .mdi {
+                opacity: 0;
+                
+                transition: all 0.1s ease-in-out;
+            }
+        }
+    }
+}

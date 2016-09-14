@@ -69,9 +69,21 @@
 <body>
 
     <div id="main_window">
-
-
         <div class="search-bar-container">
+            <div class="title-bar-container">
+                <p class="title"></p>
+                <div class="win title-bar">
+                    <button id="btn-minimize"><i class="mdi mdi-window-minimize"></i></button>
+                    <button id="btn-maximize"><i class="mdi mdi-window-maximize"></i></button>
+                    <button id="btn-close"><i class="mdi mdi-close"></i></button>
+                </div>
+                <div class="darwin linux title-bar">
+                    <button id="btn-close"><i class="mdi mdi-close"></i></button>
+                    <button id="btn-minimize"><i class="mdi mdi-window-minimize"></i></button>
+                    <button id="btn-maximize"><i class="mdi mdi-plus"></i></button>
+                </div>
+            </div>
+            
             <div class="search-icon">
                 <div class="loading-bar">
                     <div class="bar1"></div>
@@ -164,7 +176,6 @@
 
         <div class="status-bar">
             <div class="keycode"></div>
-            <select class="projects"></select>
         </div>
 
         <div class="alert">

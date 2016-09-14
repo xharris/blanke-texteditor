@@ -3,7 +3,7 @@
     .no-select();
     
     position: absolute;
-    top: 56px;
+    top: 77px;
     bottom: 28px;
     width: 200px;
     z-index: 75;
@@ -24,6 +24,12 @@
                 }
             }
             
+            &.folder {
+                >.filename {
+                    color: #BDBDBD;
+                }
+            }
+            
             
             p {
                 margin: 0; 
@@ -35,7 +41,7 @@
             }
             
             &:not(.expanded) {
-                overflow-x: hidden;
+                overflow: hidden;
                 
                 >p .mdi-minus {
                     display: none;    
@@ -44,7 +50,8 @@
                     display: initial;
                 }
                 
-                .children {
+                >.children {
+                    padding-left: 32px;
                     height: 0px;
                     
                     transition: all ease-in-out 0.2s;
@@ -59,11 +66,16 @@
                     display: none;
                 }
                 
-                .children {
+                >.children {
                     padding-left: 16px;
                     
                     >.file {
-                        border-left: 1px dashed #616161;
+                        border-left: 1px dashed rgba(255,255,255,0.2);
+                        margin-left: 8px;
+                
+                        .filename {
+                            margin-left: 8px;
+                        }
                     }
                 }
             }
@@ -88,9 +100,5 @@
                 margin: 0px;
             }
         }
-    }
-    
-    .files {
-        
     }
 }

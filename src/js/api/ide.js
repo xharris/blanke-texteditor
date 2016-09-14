@@ -215,6 +215,7 @@ $(function(){
 
         setWinTitle: function(new_title) {
             eIPC.send('set-win-title', new_title);
+            $(".title-bar-container > .title").html(new_title);
         },
 
         getData: function() {
@@ -299,6 +300,10 @@ $(function(){
             $(el_toast_container).append(el_newline);
 
             $(el_toast).show();
+        },
+        
+        setTitleColor: function(color) {
+            $(".search-icon").css("background-color", color);
         }
     }
 });

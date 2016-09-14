@@ -10,7 +10,6 @@ $(function(){
     // directory selected
     $(".file-view").on('click', '.folder.container > .filename', function() {
         var parent = $(this).parent();
-        parent.toggleClass("expanded");
         
         // has it already been opened?
         if (!parent.hasClass("loaded")) {
@@ -23,6 +22,8 @@ $(function(){
                 }
             });            
         }
+        
+        parent.toggleClass("expanded");
     });
     
     // project selected
@@ -40,7 +41,7 @@ $(function(){
             for (var p = 0; p < projects.length; p++) {
                 var short_path = shortenPath(projects[p], 1);
                 $(".file-view > .projects").append(
-                    "<a class='project' data-path='"+projects[p]+"'>"+
+                    "<a class='project' title='"+projects[p]+"' data-path='"+projects[p]+"'>"+
                         "<i class='mdi mdi-star'></i>"+
                         "<p class='file-path'>"+short_path+"</p>"+
                     "</a>"
@@ -72,22 +73,20 @@ $(function(){
                 location_selector = ".file-view > .files .folder[data-uuid='"+folder_hash+"'] > .children";
             } 
             
-            console.log(file + ' - ' + file_hash);
-            
             if (is_dir) {
                 $(location_selector).append(
-                    "<div class='folder container' data-fullpath='"+full_path+"' data-uuid='"+file_hash+"'>"+
+                    "<div class='folder container' title='"+full_path+"' data-fullpath='"+full_path+"' data-uuid='"+file_hash+"'>"+
                         "<p class='filename'>"+
                             "<i class='mdi mdi-plus'></i>"+
                             "<i class='mdi mdi-minus'></i>"+
-                            filename+
+                            filename+"/"+
                         "</p>"+
                         "<div class='children'></div>"+
                     "</div>"  
                 );
             } else {
                 $(location_selector).append(
-                    "<div class='file container' data-fullpath='"+full_path+"' data-uuid='"+file_hash+"'>"+
+                    "<div class='file container' title='"+full_path+"' data-fullpath='"+full_path+"' data-uuid='"+file_hash+"'>"+
                         "<p class='filename'>"+
                             filename+
                         "</p>"+

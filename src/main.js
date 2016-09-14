@@ -1,4 +1,4 @@
-const DEV_MODE = true; // show dev tools
+const DEV_MODE = false; // show dev tools
 
 /* electron start */
 const electron = require('electron');
@@ -31,13 +31,14 @@ function createWindow () {
     catch(e) {
     }
     // Create the browser window.
-    mainWindow = new BrowserWindow(data ? data : {
+    mainWindow = new BrowserWindow({
         // default window settings
-        title: "BlankE",
-        center: true,
+        title: data.title ? data.title : "BlankE",
+        center: data.x ? false : true,
         autoHideMenuBar: true,
-        width: 800,
-        height: 600
+        width: data.width ? data.width : 800,
+        height: data.height ? data.height : 600,
+        frame: false,
     });
 
     mainWindow.on("close", function() {
@@ -45,7 +46,6 @@ function createWindow () {
 
         var data = {
             title: "BlankE",
-            autoHideMenuBar: true,
             x: win_bounds.x,
             y: win_bounds.y,
             width: win_bounds.width,
@@ -145,4 +145,27 @@ ipcMain.on('show-dev-tools', function(event) {
 
 ipcMain.on('set-win-title', function(event, title) {
     mainWindow.setTitle(title);
+});
+
+ipcMain.on('close', function(event) {
+    console.log('close');
+    mainWindow.close();
+});
+
+ipcMain.on('maximize', function(event) {
+    console.log('max');
+    if (mainWindow.isMaximized()) {
+        mainWindow.unmaximize();
+    } else {
+        mainWindow.maximize();
+    }
+});
+
+ipcMain.on('minimize', function(event) {
+    console.log('min');
+    if (mainWindow.isMinimized()) {
+        mainWindow.restore();
+    } else {
+        mainWindow.minimize();
+    }
 });

@@ -1,9 +1,9 @@
 .loading-bar {
     position: fixed;
-    top: 4px;
-    left: 5px;
-    right: 4px;
-    height: 30px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: 55px;
     text-align: center;
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
@@ -11,6 +11,7 @@
     pointer-events: none;
 
     transition: opacity 0.2s ease-in-out;
+    transition: background-color 0.5s ease-in-out;
 
     &.active {
         opacity: 1;

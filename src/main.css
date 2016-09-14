@@ -1,6 +1,6 @@
 #editor {
   position: absolute;
-  top: 56px;
+  top: 82px;
   right: 0;
   bottom: 28px;
   left: 200px;
@@ -164,7 +164,7 @@
   -ms-user-select: none;
   user-select: none;
   position: absolute;
-  top: 56px;
+  top: 77px;
   bottom: 28px;
   width: 200px;
   z-index: 75;
@@ -181,6 +181,9 @@
 .file-view .files .container.file .filename {
   margin-left: 16px;
 }
+.file-view .files .container.folder > .filename {
+  color: #BDBDBD;
+}
 .file-view .files .container p {
   margin: 0;
   transition: all ease-in-out 0.1s;
@@ -189,7 +192,7 @@
   background-color: rgba(255, 255, 255, 0.2);
 }
 .file-view .files .container:not(.expanded) {
-  overflow-x: hidden;
+  overflow: hidden;
 }
 .file-view .files .container:not(.expanded) > p .mdi-minus {
   display: none;
@@ -197,7 +200,8 @@
 .file-view .files .container:not(.expanded) > p .mdi-plus {
   display: initial;
 }
-.file-view .files .container:not(.expanded) .children {
+.file-view .files .container:not(.expanded) > .children {
+  padding-left: 32px;
   height: 0px;
   transition: all ease-in-out 0.2s;
 }
@@ -207,11 +211,15 @@
 .file-view .files .container.expanded > p .mdi-plus {
   display: none;
 }
-.file-view .files .container.expanded .children {
+.file-view .files .container.expanded > .children {
   padding-left: 16px;
 }
-.file-view .files .container.expanded .children > .file {
-  border-left: 1px solid #bdbdbd;
+.file-view .files .container.expanded > .children > .file {
+  border-left: 1px dashed rgba(255, 255, 255, 0.2);
+  margin-left: 8px;
+}
+.file-view .files .container.expanded > .children > .file .filename {
+  margin-left: 8px;
 }
 .file-view .projects {
   margin: 2.5px 0px;
@@ -281,7 +289,7 @@
   -ms-user-select: none;
   user-select: none;
   position: absolute;
-  top: 31px;
+  top: 56px;
   right: 0px;
   left: 0px;
   height: 25px;
@@ -486,15 +494,16 @@
 }
 .loading-bar {
   position: fixed;
-  top: 4px;
-  left: 5px;
-  right: 4px;
-  height: 30px;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  height: 55px;
   text-align: center;
   opacity: 0;
   overflow: hidden;
   pointer-events: none;
   transition: opacity 0.2s ease-in-out;
+  transition: background-color 0.5s ease-in-out;
 }
 .loading-bar.active {
   opacity: 1;
@@ -642,7 +651,7 @@
   background-color: #e0e0e0;
 }
 .search-bar-container {
-  height: 30px;
+  height: 55px;
   position: absolute;
   top: 0px;
   right: 0px;
@@ -663,13 +672,13 @@
   position: absolute;
   right: 0px;
   left: 0px;
-  height: 30px;
+  top: 0px;
+  height: 55px;
   border: none;
   outline: none;
   cursor: default;
   text-align: left;
   line-height: 30px;
-  background-color: #2196f3;
   color: white;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -686,11 +695,11 @@
 }
 .search-bar-container .input-wrapper {
   position: absolute;
-  top: 0px;
+  top: 22px;
   left: 0px;
   right: 0px;
-  bottom: 0px;
-  padding: 1px;
+  height: 28px;
+  padding: 3px;
 }
 .search-bar-container .input-wrapper > input {
   width: 100%;
@@ -745,6 +754,121 @@
 .status-bar .projects:empty {
   opacity: 0;
   pointer-events: none;
+}
+.Windows_NT .title-bar {
+  right: 3px;
+}
+.Windows_NT .title-bar.linux,
+.Windows_NT .title-bar.darwin {
+  display: none;
+}
+.Windows_NT .title-bar-container > .title {
+  left: 0px;
+  right: 158px;
+  margin-left: 20px;
+}
+.Darwin .title-bar {
+  left: 3px;
+}
+.Darwin .title-bar.win {
+  display: none;
+}
+.Darwin .title-bar-container > .title {
+  left: 75px;
+  right: 0px;
+}
+.Linux .title-bar {
+  left: 0px;
+}
+.Linux .title-bar.win {
+  display: none;
+}
+.Linux .title-bar-container > .title {
+  left: 75px;
+  right: 0px;
+}
+.title-bar-container {
+  -webkit-app-region: drag;
+  height: 21px;
+  margin: 1px;
+}
+.title-bar-container .title {
+  margin: 0px;
+  position: absolute;
+  z-index: 50;
+  font-size: 13px;
+  text-align: center;
+  pointer-events: none;
+  top: 5px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.title-bar {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-app-region: no-drag;
+  position: absolute;
+  z-index: 100;
+}
+.title-bar > button {
+  border: none;
+  outline: none;
+}
+.title-bar.win > button {
+  padding: 0px;
+  width: 50px;
+  height: 21px;
+  font-size: 16px;
+  background-color: transparent;
+  transition: background-color ease-in-out 0.1s;
+}
+.title-bar.win > button:hover#btn-close {
+  background-color: #e53935;
+}
+.title-bar.win > button:hover#btn-maximize {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.title-bar.win > button:hover#btn-minimize {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.title-bar.win > button > .mdi {
+  margin: 3px 0px;
+}
+.title-bar.linux:hover .mdi,
+.title-bar.darwin:hover .mdi {
+  opacity: 1;
+}
+.title-bar.linux > button,
+.title-bar.darwin > button {
+  border-radius: 100%;
+  width: 16px;
+  height: 16px;
+  margin: 3px;
+  padding: 0px;
+  text-align: center;
+  font-size: 12px;
+  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.1);
+}
+.title-bar.linux > button#btn-close,
+.title-bar.darwin > button#btn-close {
+  background-color: #FF5A5A;
+}
+.title-bar.linux > button#btn-maximize,
+.title-bar.darwin > button#btn-maximize {
+  background-color: #00C946;
+}
+.title-bar.linux > button#btn-minimize,
+.title-bar.darwin > button#btn-minimize {
+  background-color: #FFBD35;
+}
+.title-bar.linux > button .mdi,
+.title-bar.darwin > button .mdi {
+  opacity: 0;
+  transition: all 0.1s ease-in-out;
 }
 .suggestions {
   font-family: 'Roboto', sans-serif;

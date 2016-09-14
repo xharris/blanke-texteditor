@@ -49,6 +49,7 @@
     <script src="js/api/alert.js"></script>
     <script src="js/api/ide.js"></script>
     <script src="js/api/editor.js"></script>
+    <script src="js/api/fileview.js"></script>
     <script src="js/api/history.js"></script>
     <script src="js/api/plugin.js"></script>
     <script src="js/api/project.js"></script>
@@ -76,7 +77,6 @@
                     <div class="bar1"></div>
                     <div class="bar2"></div>
                 </div>
-                <i class="mdi mdi-magnify" aria-hidden="true"></i>
             </div>
             <div class="input-wrapper">
                 <input type="text" id="in-search" placeholder="search" tabindex="0">
@@ -88,6 +88,11 @@
         </div>
 
         <div class="file-history"></div>
+        
+        <div class="file-view">
+            <div class="projects"></div>
+            <div class="files"></div>
+        </div>
 
         <div id="editor" tabindex="1000"></div>
 

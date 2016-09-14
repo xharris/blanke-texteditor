@@ -16,6 +16,7 @@ var nwRAF = require("rimraf");
 var nwLESS = require('less');
 var nwWALK = require('walkdir');
 var nwMAC = require("getmac");
+var nwTREE = require("tree-view");
 
 var eIPC = require('electron').ipcRenderer;
 var eREMOTE = require('electron').remote;
@@ -44,6 +45,7 @@ $(function(){
     });
 
     analytics.event('UI', 'initialize', 'main_window', '');
+
 
     b_ide.loadData();
     b_plugin.loadOfficialPlugins();

@@ -1,0 +1,96 @@
+.file-view {
+    .roboto();
+    .no-select();
+    
+    position: absolute;
+    top: 56px;
+    bottom: 28px;
+    width: 200px;
+    z-index: 75;
+    
+    overflow: auto;
+    
+    .files {
+        width: auto;
+        
+        .container {
+            cursor: default;
+            white-space: nowrap;
+            min-width: 150px;
+            
+            &.file {
+                .filename {
+                    margin-left: 16px;
+                }
+            }
+            
+            
+            p {
+                margin: 0; 
+                transition: all ease-in-out 0.1s;
+                
+                &:hover {
+                    background-color: rgba(255,255,255,0.2);    
+                }
+            }
+            
+            &:not(.expanded) {
+                overflow-x: hidden;
+                
+                >p .mdi-minus {
+                    display: none;    
+                }
+                >p .mdi-plus {
+                    display: initial;
+                }
+                
+                .children {
+                    height: 0px;
+                    
+                    transition: all ease-in-out 0.2s;
+                }
+            }
+            
+            &.expanded {
+                >p .mdi-minus {
+                    display: initial;    
+                }
+                >p .mdi-plus {
+                    display: none;
+                }
+                
+                .children {
+                    padding-left: 16px;
+                    
+                    >.file {
+                        border-left: 1px dashed #616161;
+                    }
+                }
+            }
+        }
+    }
+    .projects {
+        margin: 2.5px 0px;
+        border-bottom: 2px solid black;
+        padding: 2.5px 0px;
+
+        .project {
+            display: block;
+            width: 100%;
+            cursor: pointer;
+            
+            &:hover {
+                background-color: rgba(255,255,255,0.2);
+            }
+            
+            .file-path {
+                display: inline-block;
+                margin: 0px;
+            }
+        }
+    }
+    
+    .files {
+        
+    }
+}

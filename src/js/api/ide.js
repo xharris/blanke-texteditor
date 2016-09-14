@@ -245,8 +245,8 @@ $(function(){
         saveData: function() {
             // b_project.setSetting('history', b_history.save());
             nwFILE.mkdir(b_ide.data_folder, function() {
-                console.log("saving ide data: ");
-                console.log(JSON.stringify(b_ide.getData()))
+                //console.log("saving ide data: ");
+                //console.log(JSON.stringify(b_ide.getData()))
                 // save ide settings file
                 nwFILE.writeFile(b_ide.data_path, JSON.stringify(b_ide.getData()), {flag: 'w+'}, function(err) {
                     // save project settings file

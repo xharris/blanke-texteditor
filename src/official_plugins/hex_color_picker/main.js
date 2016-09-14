@@ -23,10 +23,34 @@ var selected_color = '';
 var selected_pos = '';
 var range, sel_range, sel_range2;
 
+// [command, arg hints]
+var color_commands = [
+    ['title shufflecolor','(change the title bar to a random color)'],
+];
+
+var color = {
+    commands: color_commands,
+    action: color_action
+};
+
+function color_action(input) {
+    var input_parts = input.split(/[ ]+/);
+    
+
+    if (input_parts[0] === 'title') {
+        if (input_parts[1] === 'shufflecolor') {
+            b_ide.setTitleColor("#"+bar_random_color[Math.floor(Math.random()*bar_random_color.length)]);
+        }           
+    }
+}
+
 document.addEventListener("plugin_js_loaded", function(e) {
     if (e.detail.plugin.name === "Hex Color Picker") {
+        
         range = ace.require("ace/range").Range;
 
+        // stuff for random title bar color
+        b_search.addCommands(color);
         b_ide.setTitleColor("#"+bar_random_color[Math.floor(Math.random()*bar_random_color.length)]);
 
         // Plugin has loaded

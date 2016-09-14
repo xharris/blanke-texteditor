@@ -109,21 +109,28 @@ function prevFileSuggest(input) {
     return html;
 }
 
+var searchTimeout;
+var searchTimeoutLength = 200;
+
 var search_limit = 20;
-function searchArray(array_str, search) {
-  var rx = new RegExp('"([^"]*'+search+'[^"]*)"','gi');
+function searchArray(array_str, search, callback) {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(function(){
+        var rx = new RegExp('"([^"]*'+search+'[^"]*)"','gi');
   
-  var i = 0, results = [];
-  while (result = rx.exec(array_str)) {
-    results.push(result[1]);
-    i += 1;
-    if (i >= search_limit)
-      break;
-  }
-  return results;
+        var i = 0, results = [];
+        while (result = rx.exec(array_str)) {
+            results.push(result[1]);
+            i += 1;
+        if (i >= search_limit)
+            break;
+        }
+        callback(results);
+    }, searchTimeoutLength);
+
 }
 
-function suggest(input) {
+function suggest(input, callback) {
     if (!b_ide.isProjectSet()) return '';
 
     // TODO: add option for case-sensitive searching
@@ -131,33 +138,35 @@ function suggest(input) {
     var input_parts = input.split('/');
     var html = [];
 
-    var files = searchArray(b_project.tree, input);
-
-
-    // create html suggestion array
-    for (var f = 0; f < files.length; f++) {
-        var full_path = files[f];
-        var file_path = full_path.replace(b_project.curr_project,'');
-
-        if (file_path.toLowerCase().includes(input_parts[input_parts.length - 1])) {
-            var result_txt = file_path.replace(input, "<b>" + input + "</b>");
-
-            if (files[f].type === "folder") {
-                result_txt += '/';
-            }
-
-            // normal priority suggestion
-            if (!b_project.getSetting('recent_files').includes(file_path)) {
-                html.push("<div class='suggestion' tabIndex='$1' data-value='" + file_path + "'>" + result_txt + "</div>");
+    searchArray(b_project.tree, input, function(files){
+        // create html suggestion array
+        for (var f = 0; f < files.length; f++) {
+            var full_path = files[f];
+            var file_path = full_path.replace(b_project.curr_project,'');
+    
+            if (file_path.toLowerCase().includes(input_parts[input_parts.length - 1])) {
+                var result_txt = file_path.replace(input, "<b>" + input + "</b>");
+    
+                if (files[f].type === "folder") {
+                    result_txt += '/';
+                }
+    
+                // normal priority suggestion
+                if (!b_project.getSetting('recent_files').includes(file_path)) {
+                    html.push("<div class='suggestion' tabIndex='$1' data-value='" + file_path + "'>" + result_txt + "</div>");
+                }
             }
         }
-    }
-    // turn it into a string
-    var html_str = '';
-    for (var h = 0; h < html.length; h++) {
-        html_str += html[h].replace('$1', h+1);
-    }
-    return html_str;
+        // turn it into a string
+        var html_str = '';
+        for (var h = 0; h < html.length; h++) {
+            html_str += html[h].replace('$1', h+1);
+        }
+        callback(html_str);
+    });
+
+
+
 }
 
 function newInput() {
@@ -182,7 +191,16 @@ function newInput() {
 
             
             if (is_file_search) {
-                final_html += suggest(input_text);
+                suggest(input_text, function(more_html) {
+                    final_html += more_html;
+                    
+                    $(".suggestions").html(final_html);
+                    
+                    if (final_html.length > 1) {
+                        $(".suggestions").addClass("active");
+                        sugg_index = -1;
+                    }
+                });
 
             } else {
                 var input_parts = input_text.split(' ');
@@ -217,12 +235,12 @@ function newInput() {
                 for (var h = 0; h < html.length; h++) {
                     final_html += html[h].replace('$1', h+1);
                 }
-            }
-
-            $(".suggestions").html(final_html);
-            if (final_html.length > 1) {
-                $(".suggestions").addClass("active");
-                sugg_index = -1;
+                
+                $(".suggestions").html(final_html);
+                if (final_html.length > 1) {
+                    $(".suggestions").addClass("active");
+                    sugg_index = -1;
+                }
             }
         }
 

@@ -303,7 +303,7 @@ $(function(){
         },
         
         setTitleColor: function(color) {
-            $(".search-icon").css("background-color", color);
+            $(".search-icon").animate({"background-color": color}, 200);
         }
     }
 });

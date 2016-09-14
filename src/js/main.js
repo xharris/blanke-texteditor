@@ -16,7 +16,6 @@ var nwRAF = require("rimraf");
 var nwLESS = require('less');
 var nwWALK = require('walkdir');
 var nwMAC = require("getmac");
-var nwTREE = require("tree-view");
 
 var eIPC = require('electron').ipcRenderer;
 var eREMOTE = require('electron').remote;
@@ -34,9 +33,9 @@ $(function(){
     };
     */
     b_ide.setTitleColor("#2196f3");
-    
+
     $("#main_window").addClass(nwOS.type());
-    
+
     // title bar buttons
     $(".title-bar #btn-close").on("click", function() {
         eIPC.send('close');

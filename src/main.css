@@ -177,6 +177,7 @@
   cursor: default;
   white-space: nowrap;
   min-width: 150px;
+  transition: all 0.2s ease-in-out;
 }
 .file-view .files .container.file .filename {
   margin-left: 16px;
@@ -193,6 +194,7 @@
 }
 .file-view .files .container:not(.expanded) {
   overflow: hidden;
+  height: 20px;
 }
 .file-view .files .container:not(.expanded) > p .mdi-minus {
   display: none;
@@ -212,7 +214,9 @@
   display: none;
 }
 .file-view .files .container.expanded > .children {
-  padding-left: 16px;
+  padding-left: 8px;
+  border-left: 1px dashed rgba(255, 255, 255, 0.2);
+  margin-left: 8px;
 }
 .file-view .files .container.expanded > .children > .file {
   border-left: 1px dashed rgba(255, 255, 255, 0.2);
@@ -223,7 +227,6 @@
 }
 .file-view .projects {
   margin: 2.5px 0px;
-  border-bottom: 2px solid black;
   padding: 2.5px 0px;
 }
 .file-view .projects .project {
@@ -231,12 +234,35 @@
   width: 100%;
   cursor: pointer;
 }
-.file-view .projects .project:hover {
+.file-view .projects .project > .selection-container {
+  position: absolute;
+  left: 0px;
+  right: 20px;
+  transition: all 0.1s ease-in-out;
+}
+.file-view .projects .project > .selection-container:hover {
   background-color: rgba(255, 255, 255, 0.2);
 }
-.file-view .projects .project .file-path {
+.file-view .projects .project > .selection-container .file-path {
   display: inline-block;
   margin: 0px;
+}
+.file-view .projects .project > .btn-close {
+  position: absolute;
+  right: 0px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 2px;
+  transition: all 0.1s ease-in-out;
+}
+.file-view .projects .project > .btn-close:hover {
+  background-color: #e53935;
+}
+.file-view .projects .project > .filler {
+  height: 20px;
 }
 .filedrop-overlay {
   position: absolute;
@@ -292,7 +318,7 @@
   top: 55px;
   right: 0px;
   left: 0px;
-  height: 25px;
+  height: 26px;
   padding: 0px;
   white-space: nowrap;
   overflow-x: hidden;

@@ -70,11 +70,11 @@ $(function(){
         },
         
         removeFolder: function(path) {
-            var path_list = b_ide.getData()['project_paths'].includes(path);
+            var path_list = b_ide.getData()['project_paths'];
             
             if (path_list.includes(path)) {
                 path_list.splice(path_list.indexOf(path), 1);
-                b_project._refreshList();
+                //b_project._refreshList();
                 
                 // did the user have this project open?
                 if (b_ide.getData()['current_project'] === path) {
@@ -84,6 +84,10 @@ $(function(){
                     // ...
                     // NO: reset editor and everything
                     b_editor.clear();
+                    b_fileview.clearTree();
+                    b_fileview.refreshProjects();
+                    b_history.clear();
+                    b_history.refreshList();
                 }
             }  
         },
@@ -131,12 +135,14 @@ $(function(){
                     b_history.loadHistory(b_project.settings.history);
                     b_project.refreshTree(b_project.curr_project);
 
-                    // TODO: will be a problem once alerts is implemented and USED (huh?)
+                    // set currently opened file
                     b_editor.setFile(b_project.getSetting("curr_file"),true);
 
                     // TODO: needs a closer look at. will this continue to watch previous projects?
                     nwFILE.watch(b_project.curr_project, {'recursive':true}, (eventType, filename) => {
                         full_path = normalizePath(nwPATH.join(b_project.curr_project, filename));
+                        
+                        b_fileview.refreshPath(nwPATH.join(b_project.curr_project, filename));
                         
                         if (normalizePath(b_project.getSetting("curr_file")) !== full_path && eventType === "rename") {
                             b_project.refreshTree();    
@@ -168,30 +174,9 @@ $(function(){
 
         // refreshes the SELECT element containing a list of folders
         _refreshList: function() {
-            // remake project list
-            
-            /*
-            $(".projects").empty();
-            var proj_html = '';
-            var project_paths = b_ide.getData()['project_paths'];
-            for (var p = 0; p < project_paths.length; p++) {
-                var full_path = project_paths[p];
-                var path = full_path;
-                
-                // limit path to 3 levels 
-                path = shortenPath(path, 4);
-                
-                var selected = '';
-                if (full_path === b_project.curr_project) {
-                    selected = "selected";
-                }
-                proj_html += "<option value='" + path + "' " + selected + " title='" + full_path + "' value='" + full_path + "'>" + path + "</option>";
-            }
-            $(".projects").html(proj_html);
-            */
-            
             // refresh fileview list
             b_fileview.refreshProjects();
+            b_fileview.refreshFiles();
         },
 
         refreshTree: function(path, callback) {

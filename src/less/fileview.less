@@ -40,8 +40,11 @@
                 }
             }
             
+            transition: all 0.2s ease-in-out;
+            
             &:not(.expanded) {
                 overflow: hidden;
+                height: 20px;
                 
                 >p .mdi-minus {
                     display: none;    
@@ -67,7 +70,9 @@
                 }
                 
                 >.children {
-                    padding-left: 16px;
+                    padding-left: 8px;
+                    border-left: 1px dashed rgba(255,255,255,0.2);
+                    margin-left: 8px;
                     
                     >.file {
                         border-left: 1px dashed rgba(255,255,255,0.2);
@@ -83,7 +88,6 @@
     }
     .projects {
         margin: 2.5px 0px;
-        border-bottom: 2px solid black;
         padding: 2.5px 0px;
 
         .project {
@@ -91,13 +95,42 @@
             width: 100%;
             cursor: pointer;
             
-            &:hover {
-                background-color: rgba(255,255,255,0.2);
+            >.selection-container {
+                position: absolute;
+                left: 0px;
+                right: 20px;
+                
+                transition: all 0.1s ease-in-out;
+                
+                &:hover {
+                    background-color: rgba(255,255,255,0.2);
+                }
+                
+                .file-path {
+                    display: inline-block;
+                    margin: 0px;
+                }
             }
             
-            .file-path {
-                display: inline-block;
-                margin: 0px;
+            >.btn-close {
+                position: absolute;
+                right: 0px;
+                cursor: pointer;
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+                text-align: center;
+                border-radius: 2px;
+                
+                transition: all 0.1s ease-in-out;
+                
+                &:hover {
+                    background-color: #e53935;
+                }
+            }
+            
+            >.filler {
+                height: 20px;
             }
         }
     }

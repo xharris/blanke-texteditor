@@ -27,26 +27,39 @@ $(function(){
     });
     
     // project selected
-    $(".file-view > .projects").on("click", ".project", function() {
-        b_project.setFolder($(this).data('path'));
+    $(".file-view > .projects").on("click", ".project > .selection-container", function() {
+        b_project.setFolder($(this).parent().data('path'));
     });
     
     b_fileview = {
+        clearTree: function() {
+            $(".file-view > .files").empty();
+        },
+        
         refreshProjects: function() {
             // refresh project list
             $(".file-view > .projects").empty();
-            $(".file-view > .files").empty();
             
             var projects = b_ide.getData().project_paths;
             for (var p = 0; p < projects.length; p++) {
                 var short_path = shortenPath(projects[p], 1);
                 $(".file-view > .projects").append(
-                    "<a class='project' title='"+projects[p]+"' data-path='"+projects[p]+"'>"+
-                        "<i class='mdi mdi-star'></i>"+
-                        "<p class='file-path'>"+short_path+"</p>"+
+                    "<a class='project' data-path='"+projects[p]+"'>"+
+                        "<span class='selection-container' title='"+projects[p]+"'>"+
+                            "<i class='mdi mdi-star'></i>"+
+                            "<p class='file-path'>"+short_path+"</p>"+
+                        "</span>"+
+                        "<span class='btn-close' onclick='b_project.removeFolder(\""+projects[p]+"\");' title='remove project'>"+
+                            "<i class='mdi mdi-close'></i>"+
+                        "</span>"+
+                        "<div class='filler'></div>"+
                     "</a>"
                 );
             }
+        },
+        
+        refreshFiles: function() {
+            $(".file-view > .files").empty();
             
             // refresh first level file list
             nwFILE.readdir(b_project.curr_project, function(err, files) {
@@ -94,6 +107,18 @@ $(function(){
                 );
             }
             
+        },
+        
+        refreshPath: function(file) {
+            // check if file exists
+            // ...
+            // YES:     
+            // 
+            // NO: does the fileview element exist?
+            //      YES: remove it
+            
+            
+            console.log(file)
         }
     }
 });

@@ -45,7 +45,7 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-node_modules/
+src/node_modules/
 ide_data.json
 dist/
 src/main.css
@@ -56,3 +56,5 @@ electron-v1.3.2-win32-ia32/
 electron/
 npm-debug.log
 *.zedstate
+
+node_modules

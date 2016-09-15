@@ -303,6 +303,7 @@ $(function(){
         },
         
         setTitleColor: function(color) {
+            console.log("background: linear-gradient(to bottom, "+color+" 50%, transparent);");
             $(".search-icon").animate({"background-color": color}, 200);
         }
     }

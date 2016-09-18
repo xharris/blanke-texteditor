@@ -71,7 +71,8 @@ $(function(){
         enableBasicAutocompletion: true,
         enableSnippets: true,
         enableLiveAutocompletion: true,
-        fontFamily: "Courier New"
+        fontFamily: "Courier New",
+        scrollPastEnd: true
     });
 
     b_editor.setMode('Text');

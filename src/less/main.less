@@ -2,6 +2,7 @@
 
 @import "ace";
 @import "classes";
+@import "console";
 @import "alert";
 @import "comboBox";
 @import "fileview";
@@ -71,25 +72,31 @@ html{
     bottom: 0px;
     left: 0px;
     
-    .side-content {
+    .edit-container {
         position: absolute;
-        top: 72px;
-        left: 100%;
-        right: -100%;
-        bottom: 28px;
+        top: 82px;
+        left: 200px;
+        right: 0px;
+        bottom: 30px;
+    }
+    
+    .side-content {
+        width: 0%;
+        height: 0%;
+        display: inline-block;
+        box-sizing: border-box;
+         
         pointer-events: none;
         opacity: 0;
-        margin: 0px 6px;
+        margin: 0px;
         border-radius: 2px;
     
-        transition: all 0.2s ease-in-out;
+        transition: width 0.2s ease-in-out;
 
         &.active {
-            position: absolute;
-            top: 72px;
-            left: 50%;
-            right: 0;
-            bottom: 28px;
+            width: 49%;
+            height: 100%;
+            
             pointer-events: all;
             opacity: 1;
     

@@ -207,6 +207,7 @@ $(function(){
                     b_ide.hideProgressBar();
                     $("#in-search").prop('disabled', false);
                     if (callback) {
+                        console.log(b_project.tree)
                         callback(b_project.tree);
                     }
                 });

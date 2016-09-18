@@ -47,6 +47,7 @@
     <link rel="stylesheet" href="main.css" media="screen"/>
 
     <script src="js/api/alert.js"></script>
+    <script src="js/api/console.js"></script>
     <script src="js/api/ide.js"></script>
     <script src="js/api/editor.js"></script>
     <script src="js/api/fileview.js"></script>
@@ -85,6 +86,7 @@
             </div>
             
             <div class="search-icon">
+                <div class="background"></div>
                 <div class="loading-bar">
                     <div class="bar1"></div>
                     <div class="bar2"></div>
@@ -106,9 +108,11 @@
             <div class="files"></div>
         </div>
 
-        <div id="editor" tabindex="1000"></div>
-
-        <div class="side-content"></div>
+        <div class="edit-container">
+            <div id="editor" tabindex="1000"></div>
+    
+            <div class="side-content"></div>
+        </div>
 
         <div class="filedrop-overlay inactive">
             <div class="inner-border">
@@ -171,11 +175,17 @@
         </div>
 
         <div class="toast-container"></div>
-
-        <div class="button-bar"></div>
+        
+        <div class="context-menu"></div>
+        
+        <div class="console">
+            <div class="output"></div>
+            <input class="input" type="text">
+        </div>
 
         <div class="status-bar">
             <div class="keycode"></div>
+            <!--button class="btn-console-toggle" onclick="b_console.toggleVisibility()">CONSOLE</button-->
         </div>
 
         <div class="alert">

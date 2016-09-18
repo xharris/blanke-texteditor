@@ -75,8 +75,13 @@ $(function(){
             var full_path = file;
             
             // is it a dir or file
-            var is_dir = nwFILE.lstatSync(full_path).isDirectory();
-                  
+            var is_dir = false;
+            try {
+                is_dir = nwFILE.lstatSync(full_path).isDirectory();
+            } catch (err) {
+                return;
+            }  
+            
             var location_selector = ".file-view > .files"; 
             var file_hash = file.replace(/\\/g, '/').hashCode();
             var folder_hash = folder_path.hashCode();
@@ -110,15 +115,18 @@ $(function(){
         },
         
         refreshPath: function(file) {
-            // check if file exists
-            // ...
-            // YES:     
-            // 
-            // NO: does the fileview element exist?
-            //      YES: remove it
+            var file_hash = file.replace(/\\/g, '/').hashCode();
+            var el_file = $(".file-view > .files .container[data-uuid='"+file_hash+"']")
+            var was_open = el_file.hasClass("expanded");
             
+            // refresh that folder in the tree
+            el_file.remove();
+            b_fileview.addPath(file);
             
-            console.log(file)
+            // if the folder was previously opened, open it
+            if (was_open) {
+                el_file.children(".filename").trigger('click');
+            }
         }
     }
 });

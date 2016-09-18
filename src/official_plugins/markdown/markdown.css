@@ -1,3 +1,7 @@
 .side-content {
     overflow: auto;
 }
+
+.markdown-body {
+    padding: 5px;
+}

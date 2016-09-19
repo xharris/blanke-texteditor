@@ -34,8 +34,9 @@ var grep_action = function(input) {
         var found_files = [];
         var results_html = '';
 
-        //nwGREP = require(simplegrep_path);
-        nwGREP.findAsPromise(search_str, null ,{cwd: b_ide.getData().current_project})
+        var exp = new RegExp(search_str);
+        
+        nwGREP.findAsPromise(exp, null ,{cwd: b_ide.getData().current_project})
         .then(function(list){
             for (var g = 0; g < list.length; g++) {
                 if (nwPATH.extname(list[g].file) !== ".exe") {

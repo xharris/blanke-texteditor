@@ -199,6 +199,7 @@
   bottom: 28px;
   width: 200px;
   z-index: 75;
+  font-size: 14px;
   overflow: auto;
 }
 .file-view .files {
@@ -208,10 +209,12 @@
   cursor: default;
   white-space: nowrap;
   min-width: 150px;
+  margin: 3px 0px;
   transition: all 0.2s ease-in-out;
 }
 .file-view .files .container.file .filename {
   margin-left: 16px;
+  font-size: 14px;
 }
 .file-view .files .container.folder > .filename {
   color: #BDBDBD;
@@ -277,6 +280,7 @@
 .file-view .projects .project > .selection-container .file-path {
   display: inline-block;
   margin: 0px;
+  margin-left: 4px;
 }
 .file-view .projects .project > .btn-close {
   position: absolute;
@@ -345,6 +349,7 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  -webkit-app-region: drag;
   position: absolute;
   top: 55px;
   right: 0px;
@@ -379,6 +384,7 @@
   right: 6px;
 }
 .file-history .file {
+  -webkit-app-region: no-drag;
   line-height: 30px;
   padding: 5px;
   position: relative;

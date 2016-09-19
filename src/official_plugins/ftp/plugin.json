@@ -1,0 +1,1 @@
+{ "name": "FTP", "version": "1", "main_js": "ftp.js", "less": ["ftp.less"]}

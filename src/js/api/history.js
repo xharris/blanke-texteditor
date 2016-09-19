@@ -225,4 +225,11 @@ $(function(){
             }
         }
     }
+    
+    // right click: delete 
+    $(".file-history").on('contextmenu', '.file', function(){
+        var path = $(this).data('path');
+        b_history.removeFile(path);
+        console.log(path);
+    })
 });

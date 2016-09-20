@@ -70,18 +70,14 @@ $(function(){
         },
         
         addPath: function(file) {
+            console.log('adding ' + file)
             var folder_path = nwPATH.dirname(file).replace(/\\/g, '/');
             var filename = nwPATH.basename(file);
             var full_path = file;
             
             // is it a dir or file
-            var is_dir = false;
-            try {
-                is_dir = nwFILE.lstatSync(full_path).isDirectory();
-            } catch (err) {
-                return;
-            }  
-            
+            var is_dir = nwFILE.lstatSync(full_path).isDirectory();
+                  
             var location_selector = ".file-view > .files"; 
             var file_hash = file.replace(/\\/g, '/').hashCode();
             var folder_hash = folder_path.hashCode();
@@ -92,7 +88,7 @@ $(function(){
             } 
             
             if (is_dir) {
-                $(location_selector).append(
+                $(location_selector).prepend(
                     "<div class='folder container' title='"+full_path+"' data-fullpath='"+full_path+"' data-uuid='"+file_hash+"'>"+
                         "<p class='filename'>"+
                             "<i class='mdi mdi-plus'></i>"+
@@ -115,18 +111,15 @@ $(function(){
         },
         
         refreshPath: function(file) {
-            var file_hash = file.replace(/\\/g, '/').hashCode();
-            var el_file = $(".file-view > .files .container[data-uuid='"+file_hash+"']")
-            var was_open = el_file.hasClass("expanded");
+            // check if file exists
+            // ...
+            // YES:     `
+            // 
+            // NO: does the fileview element exist?
+            //      YES: remove it
             
-            // refresh that folder in the tree
-            el_file.remove();
-            b_fileview.addPath(file);
             
-            // if the folder was previously opened, open it
-            if (was_open) {
-                el_file.children(".filename").trigger('click');
-            }
+            console.log(file)
         }
     }
 });

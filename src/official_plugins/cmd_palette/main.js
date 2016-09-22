@@ -41,6 +41,7 @@ document.addEventListener("plugin_js_loaded", function(e) {
             if (!Object.keys(scripts).includes(b_ide.getData().current_project)) {
                 scripts[b_ide.getData().current_project] = {};
             }
+            cmd_refreshList();
         });
         
         $(".cmd-palette textarea").change(function(){

@@ -762,7 +762,7 @@
   right: 0px;
   top: 0px;
   height: 55px;
-  background: linear-gradient(to bottom, transparent 50%, #424242);
+  background: linear-gradient(to bottom, transparent 50%, white 95%);
 }
 .search-bar-container .input-wrapper {
   position: absolute;
@@ -1080,6 +1080,9 @@
 #main_window[theme=dark] input[type=text] {
   background-color: #212121;
   color: #f5f5f5;
+}
+#main_window[theme=dark] .search-icon .background {
+  background: linear-gradient(to bottom, transparent 50%, #424242 95%);
 }
 #main_window[theme=dark] .loading-bar > .bar1,
 #main_window[theme=dark] .loading-bar .bar2 {

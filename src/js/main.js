@@ -1,6 +1,6 @@
 var IDE_NAME = "BlankE";
 var ZOOM_AMT = 1;
-var DEV_MODE = false; // use dev_data instead of data for saving
+var DEV_MODE = true; // use dev_data instead of data for saving
 
 require('electron-cookies');
 
@@ -16,6 +16,7 @@ var nwRAF = require("rimraf");
 var nwLESS = require('less');
 var nwWALK = require('walkdir');
 var nwMAC = require("getmac");
+//var nwUA = require("universal-analytics");
 
 var eIPC = require('electron').ipcRenderer;
 var eREMOTE = require('electron').remote;
@@ -49,15 +50,16 @@ $(function(){
 
     // set user id
     nwMAC.getMac(function(err, address) {
-       if (!err) {
-           var hash = address.hashCode();
-           analytics.userID = hash;
-           analytics.clientID = hash;
-           console.log("userID: " + hash);
+       if (!err && !DEV_MODE) {
+            var hash = address.hashCode();
+        //   analytics.userID = hash;
+        //   analytics.clientID = hash;
+            
+            console.log("userID: " + hash);
        }
     });
 
-    analytics.event('UI', 'initialize', 'main_window', '');
+    //analytics.event('UI', 'initialize', 'main_window', '');
 
 
     b_ide.loadData();

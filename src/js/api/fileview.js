@@ -92,7 +92,7 @@ $(function(){
             } 
             
             if (is_dir) {
-                $(location_selector).append(
+                $(location_selector).prepend(
                     "<div class='folder container' title='"+full_path+"' data-fullpath='"+full_path+"' data-uuid='"+file_hash+"'>"+
                         "<p class='filename'>"+
                             "<i class='mdi mdi-plus'></i>"+

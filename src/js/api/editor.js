@@ -75,14 +75,9 @@ $(function(){
                         // YES
                         onYes: function(ans) {
                             // make the file!
-                            nwFILE.writeFileSync(
-                                file_path,
-                                "",
-                                {
-                                    flag: 'w+'
-                                }
-                            );
-                            b_editor.setFile(file_path);
+                            nwFILE.writeFile(file_path, "", {flag: 'w+'}, function(err) {
+                                b_editor.setFile(file_path);
+                            });
                         },
                         // NO
                         onNo: function (ans) {

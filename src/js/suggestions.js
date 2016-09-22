@@ -87,8 +87,11 @@ function prevFileSuggest(input) {
 
     // TODO: add option for case-sensitive searching
     input = input.toLowerCase();
-    var input_parts = input.split('/');
+    var input_parts = input.split('/')
+    input_parts.shift();
     var html = '';
+    
+    console.log(input_parts)
 
     var files = b_project.tree;
     // previous suggestion (higher priority)
@@ -101,7 +104,7 @@ function prevFileSuggest(input) {
 
         if (prev_path.toLowerCase().startsWith(input)) {
             var result_txt = prev_path.replace(input, "<b>" + input + "</b>");
-            html += "<div class='suggestion high-priority' tabIndex='$1' data-value='" + file_path + "'>"
+            html += "<div class='suggestion high-priority' tabIndex='$1' data-value='" + file_path + "'>/"
             + result_txt +  "<span class='full-path'>" + full_path_preview + "</span>" +
             "<button class='remove-sugg' onclick='b_search.removeSuggestion(\"" + full_path + "\");$(this).parent().remove();'><i class='mdi mdi-close'></i></button></div>";
         }
@@ -187,10 +190,9 @@ function newInput() {
         for (var c = 0; c < commands.length; c++) {
             var final_html = "";
 
-            final_html += prevFileSuggest(input_text);
-
-            
             if (is_file_search) {
+                // final_html += prevFileSuggest(input_text);
+                
                 suggest(input_text, function(more_html) {
                     final_html += more_html;
                     

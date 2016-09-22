@@ -7,7 +7,7 @@ $(function() {
             b_search.addCommands(grep);
             var plugin_path = e.detail.path;
 
-            nwGREP = require(nwPATH.join(plugin_path,'node_modules','rx-text-search'));//require('simple-grep');
+            nwGREP = require(nwPATH.join(plugin_path,'node_modules','rx-text-search'));
         }
     });
 

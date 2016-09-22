@@ -70,7 +70,6 @@ $(function(){
         },
         
         addPath: function(file) {
-            console.log('adding ' + file)
             var folder_path = nwPATH.dirname(file).replace(/\\/g, '/');
             var filename = nwPATH.basename(file);
             var full_path = file;
